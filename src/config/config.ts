@@ -1,22 +1,26 @@
-import { createConnection } from 'typeorm';
+import { DataSource } from 'typeorm';
 import { DBOPTIONS } from '../environment';
 
-export const connectDB = async () => {
+const { DBHOST, DBNAME, DBPASS, DBUSER } = DBOPTIONS;
+export const connectDB = new DataSource({
+	type: 'postgres',
+	host: DBHOST,
+	port: 5432,
+	username: DBUSER,
+	password: DBPASS,
+	database: DBNAME,
+	entities: ['src/entities_DB/*.ts'],
+	synchronize: true,
+});
+
+export const main = async () => {
+	console.log("entra al try");
 	try {
-		const { DBHOST, DBNAME, DBPASS, DBUSER } = DBOPTIONS;
-		await createConnection({
-			type: 'postgres',
-			host: DBHOST,
-			port: 5432,
-			username: DBUSER,
-			password: DBPASS,
-			database: DBNAME,
-			entities: ['src/entities_DB/*.ts', 'build/src/entities_DB/*.js'],
-			synchronize: true,
-		});
+		await connectDB.initialize();
 		console.log(`BASE DE DATOS CONECTADA A: ${DBNAME} `);
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	} catch (error: any) {
 		console.log(`ERROR BASE DE DATOS: ${error.message}`);
 	}
 };
+
+// main();
