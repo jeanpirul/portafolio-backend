@@ -1,5 +1,4 @@
 import { DataSource } from 'typeorm';
-import { Test } from '../entities_DB/test';
 import { DBOPTIONS } from '../environment';
 
 const { DBHOST, DBNAME, DBPASS, DBUSER } = DBOPTIONS;
@@ -13,5 +12,3 @@ export const connectDB = new DataSource({
 	entities: ['src/entities_DB/*.ts'],
 	synchronize: true,
 });
-
-
