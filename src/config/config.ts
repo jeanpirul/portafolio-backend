@@ -1,4 +1,5 @@
 import { DataSource } from 'typeorm';
+import { Test } from '../entities_DB/test';
 import { DBOPTIONS } from '../environment';
 
 const { DBHOST, DBNAME, DBPASS, DBUSER } = DBOPTIONS;
@@ -13,14 +14,4 @@ export const connectDB = new DataSource({
 	synchronize: true,
 });
 
-export const main = async () => {
-	console.log("entra al try");
-	try {
-		await connectDB.initialize();
-		console.log(`BASE DE DATOS CONECTADA A: ${DBNAME} `);
-	} catch (error: any) {
-		console.log(`ERROR BASE DE DATOS: ${error.message}`);
-	}
-};
 
-// main();
