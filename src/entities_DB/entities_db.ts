@@ -1,5 +1,5 @@
-import { Test } from "./test";
+import { Client } from "./client";
 
 export const entities_db = {
-    Test,
+    Client,
 };

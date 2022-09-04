@@ -4,17 +4,19 @@ import { connectDB } from './config/config';
 import { DBNAME } from './environment';
 
 const port = process.env.PORT || 4000;
-
-const main = async () => {
-	try {
-		await connectDB.initialize();
-		console.log(`BASE DE DATOS CONECTADA A: ${DBNAME} `);
-	} catch (error: any) {
-		console.log(`ERROR BASE DE DATOS: ${error.message}`);
-	}
-};
 app.listen(port || 4000, () => {
 	console.log(`Server is running on port ${port}`);
 });
 
-main()
+const main = async () => {
+	await connectDB
+		.initialize()
+		.then(() => {
+			console.log(`BASE DE DATOS CONECTADA A: ${DBNAME}`);
+		})
+		.catch((error) =>
+			console.log(`ERROR CONEXIÓN BASE DE DATOS: ${error.message}`)
+		);
+};
+
+main();
