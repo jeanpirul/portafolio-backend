@@ -113,7 +113,7 @@ export const updateClient = async (req: Request, res: Response) => {
 export const deleteClient = async (req: Request, res: Response) => {
 	try {
 		const id = req.params;
-		if (!id) return res.status(404).json({ message: 'No client found' });
+		if (!id) return res.status(404).json(await error(res.statusCode));
 
 		const result: any = await Client.delete(id);
 		return result
