@@ -1,12 +1,15 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { ClientEntity } from '../entities/client';
 
 @Entity('client')
 export class Client extends BaseEntity {
 	@PrimaryGeneratedColumn()
-    id!: string;
+	id: string;
 	@Column()
-    firstName!: string;
+	firstName: string;
 	@Column()
-    lastName!: string;
+	lastName: string;
+	@Column()
+	email: string;
+	@Column()
+	phone: string;
 }
