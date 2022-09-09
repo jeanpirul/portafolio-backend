@@ -3,7 +3,7 @@ import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity('detail')
 export class Detail extends BaseEntity {
 	@PrimaryGeneratedColumn()
-	id_detail: string;
+	id: string;
 	@Column()
 	address: string;
 	@Column()

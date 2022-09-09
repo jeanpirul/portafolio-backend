@@ -49,7 +49,7 @@ export const getClient = async (req: Request, res: Response) => {
 		const client = await Client.find();
 		!client
 			? res.status(404).json({ message: 'No users found' })
-			: res.json(client);
+			: res.json({ listClient: client });
 	} catch (error) {
 		console.log(error);
 		//check if error is instance of Error
@@ -70,7 +70,7 @@ export const getClientById = async (req: Request, res: Response) => {
 
 		!client
 			? res.status(404).json({ message: 'No client found' })
-			: res.json(client);
+			: res.json({ listClient: client });
 	} catch (error) {
 		console.log(error);
 		//check if error is instance of Error
