@@ -11,7 +11,7 @@ router.get('/user', (req, res) => {
 		{
 			id: '1',
 			name: 'Jean',
-			lastName: 'Pirulón',
+			lastName: 'Pirul',
 		},
 		{
 			id: '2',

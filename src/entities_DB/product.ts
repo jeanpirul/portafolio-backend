@@ -1,12 +1,18 @@
-import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Warehouse } from './Warehouse';
+import {
+	BaseEntity,
+	Column,
+	Entity,
+	OneToMany,
+	PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Warehouse } from './warehouse';
 
 @Entity('product')
 export class Product extends BaseEntity {
 	@PrimaryGeneratedColumn()
-	id_prod: string;
-	@OneToMany(() => Warehouse, (warehouse) => warehouse.id_warehouse)
-    warehouse: Warehouse[]
+	id: string;
+	@OneToMany(() => Warehouse, (warehouse) => warehouse.id)
+	warehouse: Warehouse[];
 	@Column()
 	availability: string;
 	@Column()
