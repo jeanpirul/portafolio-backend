@@ -5,8 +5,8 @@ import { Warehouse } from './Warehouse';
 export class Product extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id_prod: string;
-	@OneToMany(() => Warehouse, (wharehouse) => wharehouse.id_warehouse)
-    wharehouse: Warehouse[]
+	@OneToMany(() => Warehouse, (warehouse) => warehouse.id_warehouse)
+    warehouse: Warehouse[]
 	@Column()
 	availability: string;
 	@Column()
