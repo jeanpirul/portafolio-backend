@@ -3,7 +3,7 @@ import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity('warehouse')
 export class Warehouse extends BaseEntity {
 	@PrimaryGeneratedColumn()
-	id_bodega: string;
+	id_warehouse: string;
 	@Column()
 	address: string;
 	@Column()
