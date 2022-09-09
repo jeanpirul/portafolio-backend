@@ -5,7 +5,7 @@ export class Client extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id: string;
 	@Column()
-	firstName: string; 
+	firstName: string;
 	@Column()
 	lastName: string;
 	@Column()
