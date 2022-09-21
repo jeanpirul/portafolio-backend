@@ -1,11 +1,11 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity('report')
+@Entity("report")
 export class Report extends BaseEntity {
-	@PrimaryGeneratedColumn()
-	id: string;
-	@Column()
-	reason: string;
-	@Column()
-	status: string;
+  @PrimaryGeneratedColumn()
+  id: string;
+  @Column()
+  reason: string;
+  @Column()
+  status: string;
 }
