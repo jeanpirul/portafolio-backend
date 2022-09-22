@@ -6,12 +6,14 @@ import * as jwt from "jsonwebtoken";
 import { SECRET_KEY } from "../environment";
 
 export const register = async (req: Request, res: Response) => {
-  const { firstName, lastName, email, phoneNumber, password } = req.body;
   try {
+    const { firstName, lastName, email, phoneNumber, password } = req.body;
+
     const data = await Client.query(`SELECT * FROM client WHERE email= $1;`, [
       email,
     ]);
     console.log("data ", data); //Checking if client already exists
+    console.log("data.length ", data.length); //Checking if client already exists
     console.log("data[0] ", data[0]); //Checking if client already exists
     console.log("data[0].email ", data[0].email); //Checking if client already exists
 
@@ -39,7 +41,7 @@ export const register = async (req: Request, res: Response) => {
 
         //Inserting data into the database
         Client.query(
-          `INSERT INTO client (name, email, phoneNumber, password) VALUES ($1,$2,$3,$4);`,
+          `INSERT INTO client (firstName, lastName, email, phoneNumber, password) VALUES ($1,$2,$3,$4,$5);`,
           [
             client.firstName,
             client.lastName,

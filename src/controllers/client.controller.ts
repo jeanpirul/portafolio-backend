@@ -5,6 +5,27 @@ import { Client } from "../entities_DB/client";
 export const createClient = async (req: Request, res: Response) => {
   try {
     const { firstName, lastName, email, phoneNumber, password } = req.body;
+
+    const data = await Client.query(`SELECT * FROM client WHERE email= $1;`, [
+      email,
+    ]);
+    console.log("data ", data);
+    console.log("data.rows ", data.rows.length);
+    console.log("data.lenght ", data.lenght);
+    if (data.length == undefined) {
+      console.log("la wea es undefined");
+    }
+    const arr = data[0].email;
+
+    console.log("arr ", arr);
+    console.log("data[0] ", data[0]);
+    console.log("data[0].email ", data[0].email);
+
+    if (arr.length != undefined) {
+      return res.status(400).json({
+        error: "Email already there, No need to register again.",
+      });
+    }
     const client = new Client();
     client.firstName = firstName;
     client.lastName = lastName;
