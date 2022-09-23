@@ -1,6 +1,8 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity("client")
+@Entity("client", {
+  synchronize: false,
+})
 export class Client extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: string;
@@ -12,6 +14,6 @@ export class Client extends BaseEntity {
   email: string;
   @Column()
   phoneNumber: string;
-  @Column()
+  @Column({ nullable: true })
   password: string;
 }
