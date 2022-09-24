@@ -5,15 +5,20 @@ import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 })
 export class Client extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id: string;
-  @Column()
-  firstName: string;
-  @Column()
-  lastName: string;
-  @Column()
-  email: string;
-  @Column()
-  phoneNumber: string;
-  @Column({ nullable: true })
-  password: string;
+  public id: string;
+
+  @Column({ type: "varchar", length: 100, nullable: false })
+  public firstName: string;
+
+  @Column({ type: "varchar", length: 100, nullable: false })
+  public lastName: string;
+
+  @Column({ type: "varchar", length: 100, nullable: false })
+  public email: string;
+
+  @Column({ type: "varchar", length: 100, nullable: false })
+  public phoneNumber: string;
+
+  @Column({ type: "varchar", length: 100, nullable: true })
+  public password: string;
 }
