@@ -1,15 +1,15 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 // Proveedor
-@Entity('supplier')
+@Entity("supplier")
 export class Supplier extends BaseEntity {
-	@PrimaryGeneratedColumn()
-	id: string;
-	@Column()
-	name: string;
-	@Column()
-	contact: string;
-	@Column()
-	supplier_type: string;
-    @Column()
-	product_type: string;
+  @PrimaryGeneratedColumn()
+  id: string;
+  @Column()
+  name: string;
+  @Column()
+  contact: string;
+  @Column()
+  supplier_type: string;
+  @Column()
+  product_type: string;
 }

@@ -5,4 +5,5 @@ export const router = express.Router();
 
 router.use('/client', routes.client);
 router.use('/finance', routes.finance);
+router.use('/appRegister', routes.appRegister);
 router.use('/', routes.root);

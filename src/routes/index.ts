@@ -1,3 +1,4 @@
+import appRegister from './appRegister';
 import client from './client';
 import finance from './finance';
 
@@ -7,4 +8,5 @@ export const routes = {
 	client,
 	finance,
 	root,
+	appRegister,
 };

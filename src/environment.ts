@@ -5,4 +5,5 @@ export const DBNAME: string = process.env.DBNAME || '';
 export const DBHOST: string = process.env.DBHOST || '';
 export const DBUSER: string = process.env.DBUSER || '';
 export const DBPASS: string = process.env.DBPASS || '';
+export const SECRET_KEY : string = process.env.SECRET_KEY || '';
 export const DBOPTIONS = { DBNAME, DBHOST, DBPASS, DBUSER };
