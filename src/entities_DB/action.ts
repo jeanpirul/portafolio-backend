@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from "typeorm";
 
-@Entity({ name: "action" })
+@Entity("action")
 export class Action extends BaseEntity {
   @PrimaryGeneratedColumn({ type: "int4" })
   public idAction?: number;
@@ -22,7 +22,7 @@ export class Action extends BaseEntity {
   public actionCreation?: Date;
 
   @Column({ type: "varchar", length: 100, nullable: false })
-  public clientFirstName: string;
+  public emailIdentifier: string;
 
   @Column({ type: "varchar", length: 100, nullable: false })
   public actionDetail: string;

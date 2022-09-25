@@ -1,6 +1,6 @@
 import appRegister from "./appRegister";
 import client from "./client";
-import createAction from "./createAction";
+import action from "./action";
 import finance from "./finance";
 
 import root from "./root";
@@ -10,5 +10,5 @@ export const routes = {
   finance,
   root,
   appRegister,
-  createAction,
+  action,
 };

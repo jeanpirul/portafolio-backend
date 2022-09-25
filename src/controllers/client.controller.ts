@@ -4,6 +4,9 @@ import { Client } from "../entities_DB/client";
 import bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 import { SECRET_KEY } from "../environment";
+import { insertBitacora } from "./action.controller";
+import { Action } from "../entities_DB/action";
+import { SaveOptions, RemoveOptions } from "typeorm";
 
 export const createClient = async (req: Request, res: Response) => {
   const { firstName, lastName, email, phoneNumber, password } = req.body;
@@ -11,7 +14,6 @@ export const createClient = async (req: Request, res: Response) => {
     const data = await Client.query(`SELECT * FROM client WHERE email= $1;`, [
       email,
     ]);
-    const client = new Client();
     if (data.length != 0) {
       return res.status(400).json({
         error: "Email ya existe, no necesita registrarlo de nuevo.",
@@ -23,16 +25,46 @@ export const createClient = async (req: Request, res: Response) => {
         res.status(500).json({
           error: "Server error",
         });
-
-      client.firstName = firstName;
-      client.lastName = lastName;
-      client.email = email;
-      client.phoneNumber = phoneNumber;
-      client.password = password;
       let flag = 1; //Declaring a flag
 
       //Inserting data into the database
-      await client.save();
+      const result = await Client.save({
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        phoneNumber: phoneNumber,
+        password: password,
+      });
+
+      await insertBitacora({
+        nameTableAction: "client",
+        idTableAction: result.id,
+        idClient: result.id,
+        emailIdentifier: result.email,
+        actionDetail: `Creación de nuevo cliente con ID "${result.id}"`,
+        hasId: function (): boolean {
+          throw new Error("Function not implemented.");
+        },
+        save: function (options?: SaveOptions | undefined): Promise<Action> {
+          throw new Error("Function not implemented.");
+        },
+        remove: function (
+          options?: RemoveOptions | undefined
+        ): Promise<Action> {
+          throw new Error("Function not implemented.");
+        },
+        softRemove: function (
+          options?: SaveOptions | undefined
+        ): Promise<Action> {
+          throw new Error("Function not implemented.");
+        },
+        recover: function (options?: SaveOptions | undefined): Promise<Action> {
+          throw new Error("Function not implemented.");
+        },
+        reload: function (): Promise<void> {
+          throw new Error("Function not implemented.");
+        },
+      });
 
       (err: any) => {
         if (err) {
@@ -52,7 +84,7 @@ export const createClient = async (req: Request, res: Response) => {
         const token = jwt.sign(
           //Signing a jwt token
           {
-            email: client.email,
+            email: email,
           },
           SECRET_KEY
         );
