@@ -5,14 +5,13 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Warehouse } from "./warehouse";
 
 @Entity("product")
 export class Product extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id: string;
-  @OneToMany(() => Warehouse, (warehouse) => warehouse.id)
-  warehouse: Warehouse[];
+  id_prod: string;
+  @Column()
+  id_bodega: string;
   @Column()
   availability: string;
   @Column()
