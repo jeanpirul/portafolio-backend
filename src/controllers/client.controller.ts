@@ -143,25 +143,57 @@ export const getClientById = async (req: Request, res: Response) => {
 
 export const updateClient = async (req: Request, res: Response) => {
   try {
-    const { id, firstName, lastName, email, phoneNumber, password } = req.body;
-    if (!id) return res.status(400).json({ message: "Client not found" });
+    console.log("Se ha solicitado una actualización de la entidad Cliente.");
+    const { password, email } = req.body;
+    if (!email) return res.status(400).json({ message: "Email no existe" });
 
     const clienteExist: any = await Client.findOneBy({
-      id: id,
+      email: email,
     });
 
     if (clienteExist) {
       const result = await Client.update(clienteExist, {
-        id: id,
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        phoneNumber: phoneNumber,
         password: password,
       });
-      return result
-        ? res.status(200).json(await success({ data: result }, res.statusCode))
-        : res.status(422).json(await error(res.statusCode));
+
+      if (result) {
+        await insertBitacora({
+          nameTableAction: "client",
+          idTableAction: clienteExist.id,
+          idClient: clienteExist.id,
+          emailIdentifier: clienteExist.email,
+          actionDetail: `Se actualizó la contraseña del Email: "${clienteExist.email}"`,
+          hasId: function (): boolean {
+            throw new Error("Function not implemented.");
+          },
+          save: function (options?: SaveOptions | undefined): Promise<Action> {
+            throw new Error("Function not implemented.");
+          },
+          remove: function (
+            options?: RemoveOptions | undefined
+          ): Promise<Action> {
+            throw new Error("Function not implemented.");
+          },
+          softRemove: function (
+            options?: SaveOptions | undefined
+          ): Promise<Action> {
+            throw new Error("Function not implemented.");
+          },
+          recover: function (
+            options?: SaveOptions | undefined
+          ): Promise<Action> {
+            throw new Error("Function not implemented.");
+          },
+          reload: function (): Promise<void> {
+            throw new Error("Function not implemented.");
+          },
+        });
+        return result
+          ? res
+              .status(200)
+              .json(await success({ data: result }, res.statusCode))
+          : res.status(422).json(await error(res.statusCode));
+      }
     }
   } catch (err) {
     console.log(err);
@@ -171,13 +203,55 @@ export const updateClient = async (req: Request, res: Response) => {
 
 export const deleteClient = async (req: Request, res: Response) => {
   try {
-    const id = req.params;
+    console.log("Se ha solicitado la eliminación de una entidad Cliente.");
+    const { id } = req.params;
     if (!id) return res.status(404).json(await error(res.statusCode));
 
-    const result: any = await Client.delete(id);
-    return result
-      ? res.status(200).json(await success({ data: result }, res.statusCode))
-      : res.status(422).json(await error(res.statusCode));
+    const clienteExist: any = await Client.findOneBy({
+      id: id,
+    });
+
+    if (clienteExist) {
+      const result: any = await Client.delete(id);
+      if (result) {
+        await insertBitacora({
+          nameTableAction: "client",
+          idTableAction: clienteExist.id,
+          idClient: clienteExist.id,
+          emailIdentifier: clienteExist.email,
+          actionDetail: `Se Eliminó el cliente con Email: "${clienteExist.email}"`,
+          hasId: function (): boolean {
+            throw new Error("Function not implemented.");
+          },
+          save: function (options?: SaveOptions | undefined): Promise<Action> {
+            throw new Error("Function not implemented.");
+          },
+          remove: function (
+            options?: RemoveOptions | undefined
+          ): Promise<Action> {
+            throw new Error("Function not implemented.");
+          },
+          softRemove: function (
+            options?: SaveOptions | undefined
+          ): Promise<Action> {
+            throw new Error("Function not implemented.");
+          },
+          recover: function (
+            options?: SaveOptions | undefined
+          ): Promise<Action> {
+            throw new Error("Function not implemented.");
+          },
+          reload: function (): Promise<void> {
+            throw new Error("Function not implemented.");
+          },
+        });
+        return result
+          ? res
+              .status(200)
+              .json(await success({ data: result }, res.statusCode))
+          : res.status(422).json(await error(res.statusCode));
+      }
+    }
   } catch (err) {
     console.log(err);
     return res.status(500).json(await error(res.statusCode));

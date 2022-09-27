@@ -18,7 +18,7 @@ router.get("/:id", async (req, res) => {
   await clientController.getClientById(req, res);
 });
 
-router.put("/", async (req, res) => {
+router.patch("/", async (req, res) => {
   //Este endpoint permite actualizar los datos de cada clienmte existente en la base de datos
   await clientController.updateClient(req, res);
 });
