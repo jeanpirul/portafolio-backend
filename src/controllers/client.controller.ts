@@ -41,7 +41,7 @@ export const createClient = async (req: Request, res: Response) => {
         idTableAction: result.id,
         idClient: result.id,
         emailIdentifier: result.email,
-        actionDetail: `Creación de nuevo cliente con ID "${result.id}"`,
+        actionDetail: `Creación de nuevo cliente con email: "${result.email}"`,
         hasId: function (): boolean {
           throw new Error("Function not implemented.");
         },
