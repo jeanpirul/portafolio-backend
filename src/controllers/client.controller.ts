@@ -9,8 +9,8 @@ const checkCreateClientParams = (req: Request, res: Response) => {
 		res.status(404).send('lastName parameter not found.');
 	} else if (!req.body.email) {
 		res.status(404).send('email parameter not found.');
-	} else if (!req.body.phone) {
-		res.status(404).send('phone parameter not found.');
+	} else if (!req.body.phoneNumber) {
+		res.status(404).send('phoneNumber parameter not found.');
 	} else if (typeof req.body.firstName != 'string') {
 		res.status(400).send('firstName parameter has to be a string');
 	} else if (typeof req.body.lastName != 'string') {
@@ -25,12 +25,13 @@ const checkCreateClientParams = (req: Request, res: Response) => {
 
 export const createClient = async (req: Request, res: Response) => {
 	try {
-		const { firstName, lastName, email, phone } = req.body;
+		const { firstName, lastName, email, phoneNumber, password } = req.body;
 		const client = new Client();
 		client.firstName = firstName;
 		client.lastName = lastName;
 		client.email = email;
-		client.phone = phone;
+		client.phoneNumber = phoneNumber;
+		client.password = password;
 
 		await client.save();
 		return res.json(client);
@@ -83,7 +84,7 @@ export const getClientById = async (req: Request, res: Response) => {
 
 export const updateClient = async (req: Request, res: Response) => {
 	try {
-		const { id, firstName, lastName, email, phone } = req.body;
+		const { id, firstName, lastName, email, phoneNumber, password } = req.body;
 		if (!id) return res.status(400).json({ message: 'Client not found' });
 
 		const clienteExist: any = await Client.findOneBy({
@@ -92,12 +93,13 @@ export const updateClient = async (req: Request, res: Response) => {
 
 		if (clienteExist) {
 			const result = await Client.update(clienteExist, {
-				id: id,
-				firstName: firstName,
-				lastName: lastName,
-				email: email,
-				phone: phone,
-			});
+        id: id,
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        phoneNumber: phoneNumber,
+        password: password,
+      });
 			return result
 				? res
 						.status(200)
