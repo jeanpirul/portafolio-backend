@@ -18,15 +18,7 @@ export const createClient = async (req: Request, res: Response) => {
       return res.status(400).json({
         error: "Email ya existe, no necesita registrarlo de nuevo.",
       });
-    }
-
-    bcrypt.hash(password, 10, async (err, hash) => {
-      if (err)
-        res.status(500).json({
-          error: "Server error",
-        });
-      let flag = 1; //Declaring a flag
-
+    } else {
       //Inserting data into the database
       const result = await Client.save({
         firstName: firstName,
@@ -65,35 +57,10 @@ export const createClient = async (req: Request, res: Response) => {
           throw new Error("Function not implemented.");
         },
       });
-
-      (err: any) => {
-        if (err) {
-          flag = 0; //If client is not inserted is not inserted to database assigning flag as 0/false.
-          console.error(err);
-          return res.status(500).json({
-            error: "Database error",
-          });
-        } else {
-          flag = 1;
-          res
-            .status(200)
-            .send({ message: "User added to database, not verified" });
-        }
-      };
-      if (flag) {
-        const token = jwt.sign(
-          //Signing a jwt token
-          {
-            email: email,
-          },
-          SECRET_KEY
-        );
-        res.status(201).json({
-          message: "Usuario registrado exitosamente!",
-          token: token,
-        });
-      }
-    });
+      res.status(201).json({
+        message: "Usuario registrado exitosamente!",
+      });
+    }
   } catch (error) {
     //check if error is a instance of Error
     console.log("Error de creación", error);
