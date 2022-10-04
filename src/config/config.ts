@@ -4,7 +4,7 @@ import { DBOPTIONS } from "../environment";
 const { DBHOST, DBNAME, DBPASS, DBUSER } = DBOPTIONS;
 export const connectDB = new DataSource({
   type: "postgres",
-  host: DBHOST,
+  host: "172.105.149.33",
   port: 5432,
   username: DBUSER,
   password: DBPASS,

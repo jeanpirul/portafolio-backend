@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { InsertResult } from "typeorm";
+import { getRepository, InsertResult } from "typeorm";
 import { error, success } from "../config/responseApi";
 import { Action } from "../entities_DB/action";
 
