@@ -20,7 +20,7 @@ export const login = async (req: Request, res: Response) => {
       SECRET_KEY,
       { expiresIn: 86400 }
     );
-    //devolvera un objeto json y añadira a la respuesta el token que utilizaremos para las acciones necesarias segun el rol
+    //Devolverá un objeto json y añadira a la respuesta el token que utilizaremos para las acciones necesarias segun el rol
     let resultCli = { ...result, token };
     res.status(200).json(resultCli);
   } else {

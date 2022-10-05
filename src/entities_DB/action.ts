@@ -3,7 +3,7 @@ import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from "typeorm";
 @Entity("action")
 export class Action extends BaseEntity {
   @PrimaryGeneratedColumn({ type: "int4" })
-  public idAction?: number;
+  public idAction: number;
 
   @Column({ type: "varchar", length: 50, nullable: false })
   public nameTableAction: string;
