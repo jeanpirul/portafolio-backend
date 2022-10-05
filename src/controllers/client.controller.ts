@@ -1,13 +1,7 @@
 import { Request, Response } from "express";
 import { error, success } from "../config/responseApi";
 import { Client } from "../entities_DB/client";
-import bcrypt from "bcrypt";
-import * as jwt from "jsonwebtoken";
-import { SECRET_KEY } from "../environment";
 import { insertBitacora } from "./action.controller";
-import { Action } from "../entities_DB/action";
-import { SaveOptions, RemoveOptions } from "typeorm";
-
 export const createClient = async (req: Request, res: Response) => {
   const { firstName, lastName, email, phoneNumber, password } = req.body;
   try {
@@ -34,31 +28,11 @@ export const createClient = async (req: Request, res: Response) => {
         idClient: result.id,
         emailIdentifier: result.email,
         actionDetail: `Creación de nuevo cliente con email: "${result.email}"`,
-        hasId: function (): boolean {
-          throw new Error("Function not implemented.");
-        },
-        save: function (options?: SaveOptions | undefined): Promise<Action> {
-          throw new Error("Function not implemented.");
-        },
-        remove: function (
-          options?: RemoveOptions | undefined
-        ): Promise<Action> {
-          throw new Error("Function not implemented.");
-        },
-        softRemove: function (
-          options?: SaveOptions | undefined
-        ): Promise<Action> {
-          throw new Error("Function not implemented.");
-        },
-        recover: function (options?: SaveOptions | undefined): Promise<Action> {
-          throw new Error("Function not implemented.");
-        },
-        reload: function (): Promise<void> {
-          throw new Error("Function not implemented.");
-        },
       });
+
       res.status(201).json({
         message: "Usuario registrado exitosamente!",
+        result,
       });
     }
   } catch (error) {
@@ -66,7 +40,8 @@ export const createClient = async (req: Request, res: Response) => {
     console.log("Error de creación", error);
     //send a json response with the error message
     res.status(500).json({
-      error: "Database error while registring client!", //Database connection error
+      //Database connection error
+      error: "Error en la base de datos al registrar un nuevo cliente!",
     });
   }
 };
@@ -112,7 +87,8 @@ export const updateClient = async (req: Request, res: Response) => {
   try {
     console.log("Se ha solicitado una actualización de la entidad Cliente.");
     const { password, email } = req.body;
-    if (!email) return res.status(400).json({ message: "Email no existe" });
+    if (!email)
+      return res.status(400).json({ message: "Parámetro Email no ingresado" });
 
     const clienteExist: any = await Client.findOneBy({
       email: email,
@@ -130,30 +106,6 @@ export const updateClient = async (req: Request, res: Response) => {
           idClient: clienteExist.id,
           emailIdentifier: clienteExist.email,
           actionDetail: `Se actualizó la contraseña del Email: "${clienteExist.email}"`,
-          hasId: function (): boolean {
-            throw new Error("Function not implemented.");
-          },
-          save: function (options?: SaveOptions | undefined): Promise<Action> {
-            throw new Error("Function not implemented.");
-          },
-          remove: function (
-            options?: RemoveOptions | undefined
-          ): Promise<Action> {
-            throw new Error("Function not implemented.");
-          },
-          softRemove: function (
-            options?: SaveOptions | undefined
-          ): Promise<Action> {
-            throw new Error("Function not implemented.");
-          },
-          recover: function (
-            options?: SaveOptions | undefined
-          ): Promise<Action> {
-            throw new Error("Function not implemented.");
-          },
-          reload: function (): Promise<void> {
-            throw new Error("Function not implemented.");
-          },
         });
         return result
           ? res
@@ -187,30 +139,6 @@ export const deleteClient = async (req: Request, res: Response) => {
           idClient: clienteExist.id,
           emailIdentifier: clienteExist.email,
           actionDetail: `Se Eliminó el cliente con Email: "${clienteExist.email}"`,
-          hasId: function (): boolean {
-            throw new Error("Function not implemented.");
-          },
-          save: function (options?: SaveOptions | undefined): Promise<Action> {
-            throw new Error("Function not implemented.");
-          },
-          remove: function (
-            options?: RemoveOptions | undefined
-          ): Promise<Action> {
-            throw new Error("Function not implemented.");
-          },
-          softRemove: function (
-            options?: SaveOptions | undefined
-          ): Promise<Action> {
-            throw new Error("Function not implemented.");
-          },
-          recover: function (
-            options?: SaveOptions | undefined
-          ): Promise<Action> {
-            throw new Error("Function not implemented.");
-          },
-          reload: function (): Promise<void> {
-            throw new Error("Function not implemented.");
-          },
         });
         return result
           ? res

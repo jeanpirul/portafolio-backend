@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { getRepository, InsertResult } from "typeorm";
 import { error, success } from "../config/responseApi";
 import { Action } from "../entities_DB/action";
+import { InsertBitacoraInterface } from "../models/insertBitacora";
 
 export const createAction = async (
   req: Request,
@@ -56,11 +57,13 @@ export const readAction = async (
   }
 };
 
-export const insertBitacora = async (action: Action): Promise<InsertResult> => {
+export const insertBitacora = async (
+  action: InsertBitacoraInterface
+): Promise<InsertResult> => {
   try {
-    const resultado: any = await Action.insert(action);
+    const resultado = await Action.insert(action);
     return resultado;
-  } catch (err: any) {
-    return err;
+  } catch (err) {
+    throw err;
   }
 };
