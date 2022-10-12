@@ -13,7 +13,7 @@ const main = async () => {
   await connectDB
     .initialize()
     .then(() => {
-      console.log(`|  BASE DE DATOS CONECTADA A: ${DBNAME} 🚘⚽  |`);
+      console.log(`|BASE DE DATOS CONECTADA A: ${DBNAME}DB 🚘⚽|`);
       console.log("|--------------------------------------------|");
     })
     .catch((error) =>
