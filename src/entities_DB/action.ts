@@ -22,7 +22,7 @@ export class Action extends BaseEntity {
   public actionCreation?: Date;
 
   @Column({ type: "varchar", length: 100, nullable: false })
-  public emailIdentifier: string;
+  public userName: string;
 
   @Column({ type: "varchar", length: 100, nullable: false })
   public actionDetail: string;

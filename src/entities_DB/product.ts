@@ -1,19 +1,17 @@
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from "typeorm";
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("product")
 export class Product extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id_prod: string;
+  idProduct: string;
   @Column()
-  id_bodega: string;
+  amount: number;
   @Column()
-  availability: string;
+  nameProduct: string;
+  @Column()
+  availability: number;
   @Column()
   price: number;
+  @Column()
+  username: string;
 }
