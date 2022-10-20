@@ -15,11 +15,6 @@ router.get("/", async (req, res) => {
   await productCtrl.getProduct;
 });
 
-router.get("/:id", async (req, res) => {
-  //Este endpoint permite listar 1 producto existente en la base de datos por el ID
-  await productCtrl.getProductById(req, res);
-});
-
 router.patch("/:id", async (req, res) => {
   //Este endpoint permite actualizar los datos de cada producto existente en la base de datos
   await productCtrl.updateProduct(req, res);

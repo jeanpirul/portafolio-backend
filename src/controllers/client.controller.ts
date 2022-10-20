@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { error, success } from "../config/responseApi";
 import { Client } from "../entities_DB/client";
 import { insertBitacora } from "./action.controller";
+import bcrypt from "bcrypt";
+
 export const createClient = async (req: Request, res: Response) => {
   const { firstName, lastName, email, phoneNumber, password } = req.body;
   try {
@@ -19,7 +21,7 @@ export const createClient = async (req: Request, res: Response) => {
         lastName: lastName,
         email: email,
         phoneNumber: phoneNumber,
-        password: password,
+        password: await Client.encryptPassword(password),
       });
 
       await insertBitacora({

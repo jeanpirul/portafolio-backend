@@ -131,12 +131,12 @@ export const deleteFinance = async (req: Request, res: Response) => {
     const { id } = req.params;
     if (!id) return res.status(404).json(await error(res.statusCode));
 
-    const financeExist: any = await Finance.findOneBy({
+    const financeExist = await Finance.findOneBy({
       id: id,
     });
 
     if (financeExist) {
-      const result: any = await Finance.delete(id);
+      const result = await Finance.delete(id);
       if (result) {
         await insertBitacora({
           nameTableAction: "finance",

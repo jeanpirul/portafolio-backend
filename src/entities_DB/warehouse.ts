@@ -8,14 +8,18 @@ import {
 
 @Entity("warehouse")
 export class Warehouse extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: string;
-  @Column()
-  address: string;
-  @Column()
-  quantity: number;
-  @Column()
-  idProd: string;
-  @Column()
-  idProv: string;
+  @PrimaryGeneratedColumn({ type: "int4" })
+  public id: number;
+
+  @Column({ type: "varchar", length: 50, nullable: false })
+  public address: string;
+
+  @Column({ type: "int4" })
+  public quantity: number;
+
+  @Column({ type: "int4" })
+  public idProd: number;
+
+  @Column({ type: "int4" })
+  public idProv: number;
 }
