@@ -8,12 +8,15 @@ import {
 
 @Entity("product")
 export class Product extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id_prod: string;
-  @Column()
-  id_bodega: string;
-  @Column()
-  availability: string;
-  @Column()
-  price: number;
+  @PrimaryGeneratedColumn({ type: "int4" })
+  public idProd: number;
+
+  @Column({ type: "int4" })
+  public idBodega: number;
+
+  @Column({ type: "varchar", length: 50, nullable: false })
+  public availability: string;
+
+  @Column({ type: "int4" })
+  public price: number;
 }
