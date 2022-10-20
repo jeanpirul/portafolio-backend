@@ -2,8 +2,8 @@ import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("client")
 export class Client extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  public id: string;
+  @PrimaryGeneratedColumn({ type: "int4" })
+  public id: number;
 
   @Column({ type: "varchar", length: 100, nullable: false })
   public firstName: string;
