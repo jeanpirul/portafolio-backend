@@ -14,9 +14,13 @@ export class Finance extends BaseEntity {
   @Column({ type: "varchar", length: 150, nullable: false })
   public purchaseDetail: string; //Detalle de compras del restaurant.
 
-  @Column({type: "timestamp",nullable: false})
-  public purchaseDate: Date; //Fecha de compras del restaurant.
-  
+  @Column({
+    type: "timestamp",
+    nullable: false,
+    default: () => "CURRENT_TIMESTAMP",
+  })
+  public purchaseDate?: Date; //Fecha de compras del restaurant.
+
   @Column({ type: "varchar", length: 100, nullable: false })
   public userName: string; //Nombre del responsable de la caja
 }

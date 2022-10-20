@@ -26,7 +26,7 @@ export const createFinance = async (req: Request, res: Response) => {
       nameTableAction: "finance",
       idTableAction: result.id,
       idClient: result.id,
-      emailIdentifier: result.userName,
+      userName: result.userName,
       actionDetail: `Creación de nueva cuenta del usuario: "${result.userName}" responsable de la caja.`,
     });
 
@@ -109,7 +109,7 @@ export const updateFinance = async (req: Request, res: Response) => {
           nameTableAction: "finance",
           idTableAction: financeExist.id,
           idClient: financeExist.id,
-          emailIdentifier: financeExist.userName,
+          userName: financeExist.userName,
           actionDetail: `Se actualizaron parámetros de la finanza con id ${financeExist.id} a cargo del responsable de la caja: "${financeExist.userName}".`,
         });
 
@@ -131,18 +131,18 @@ export const deleteFinance = async (req: Request, res: Response) => {
     const { id } = req.params;
     if (!id) return res.status(404).json(await error(res.statusCode));
 
-    const financeExist: any = await Finance.findOneBy({
+    const financeExist = await Finance.findOneBy({
       id: id,
     });
 
     if (financeExist) {
-      const result: any = await Finance.delete(id);
+      const result = await Finance.delete(id);
       if (result) {
         await insertBitacora({
           nameTableAction: "finance",
           idTableAction: financeExist.id,
           idClient: financeExist.id,
-          emailIdentifier: financeExist.id,
+          userName: financeExist.id,
           actionDetail: `Se Eliminó la finanza con Id: "${financeExist.id}"`,
         });
 

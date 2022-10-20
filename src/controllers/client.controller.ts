@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { error, success } from "../config/responseApi";
 import { Client } from "../entities_DB/client";
 import { insertBitacora } from "./action.controller";
+import bcrypt from "bcrypt";
+
 export const createClient = async (req: Request, res: Response) => {
   const { firstName, lastName, email, phoneNumber, password } = req.body;
   try {
@@ -19,14 +21,14 @@ export const createClient = async (req: Request, res: Response) => {
         lastName: lastName,
         email: email,
         phoneNumber: phoneNumber,
-        password: password,
+        password: await Client.encryptPassword(password),
       });
 
       await insertBitacora({
         nameTableAction: "client",
         idTableAction: result.id,
         idClient: result.id,
-        emailIdentifier: result.email,
+        userName: result.email,
         actionDetail: `Creación de nuevo cliente con email: "${result.email}"`,
       });
 
@@ -104,7 +106,7 @@ export const updateClient = async (req: Request, res: Response) => {
           nameTableAction: "client",
           idTableAction: clienteExist.id,
           idClient: clienteExist.id,
-          emailIdentifier: clienteExist.email,
+          userName: clienteExist.email,
           actionDetail: `Se actualizó la contraseña del Email: "${clienteExist.email}"`,
         });
         return result
@@ -137,7 +139,7 @@ export const deleteClient = async (req: Request, res: Response) => {
           nameTableAction: "client",
           idTableAction: clienteExist.id,
           idClient: clienteExist.id,
-          emailIdentifier: clienteExist.email,
+          userName: clienteExist.email,
           actionDetail: `Se Eliminó el cliente con Email: "${clienteExist.email}"`,
         });
         return result

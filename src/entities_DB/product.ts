@@ -1,22 +1,22 @@
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from "typeorm";
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("product")
 export class Product extends BaseEntity {
   @PrimaryGeneratedColumn({ type: "int4" })
-  public idProd: number;
+  public idProduct: number;
 
   @Column({ type: "int4" })
-  public idBodega: number;
+  public amount: number;
 
   @Column({ type: "varchar", length: 50, nullable: false })
-  public availability: string;
+  public nameProduct: string;
+
+  @Column({ type: "int4" })
+  public availability: number;
 
   @Column({ type: "int4" })
   public price: number;
+
+  @Column({ type: "varchar", length: 50, nullable: false })
+  public username: string;
 }
