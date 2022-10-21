@@ -2,7 +2,8 @@ import { Request, Response } from "express";
 import { error, success } from "../config/responseApi";
 import { Client } from "../entities_DB/client";
 import { insertBitacora } from "./action.controller";
-import bcrypt from "bcrypt";
+import * as jwt from "jsonwebtoken";
+import { SECRET_KEY } from "../environment";
 
 export const createClient = async (req: Request, res: Response) => {
   const { firstName, lastName, email, phoneNumber, password } = req.body;
@@ -23,6 +24,11 @@ export const createClient = async (req: Request, res: Response) => {
         phoneNumber: phoneNumber,
         password: await Client.encryptPassword(password),
       });
+
+      const tokenClient = jwt.sign({ id: result.id }, SECRET_KEY, {
+        expiresIn: 86400,
+      });
+      console.log("token client ", tokenClient);
 
       await insertBitacora({
         nameTableAction: "client",
