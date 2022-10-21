@@ -25,4 +25,11 @@ export class Client extends BaseEntity {
     const salt = await bcrypt.genSalt(10);
     return await bcrypt.hash(password, salt);
   };
+
+  static comparePassword = async (
+    password: string,
+    receivedPassword: string
+  ) => {
+    return await bcrypt.compare(password, receivedPassword);
+  };
 }
