@@ -25,7 +25,7 @@ export const createFinance = async (req: Request, res: Response) => {
     await insertBitacora({
       nameTableAction: "finance",
       idTableAction: result.id,
-      idClient: result.id,
+      idUser: result.id,
       userName: result.userName,
       actionDetail: `Creación de nueva cuenta del usuario: "${result.userName}" responsable de la caja.`,
     });
@@ -108,7 +108,7 @@ export const updateFinance = async (req: Request, res: Response) => {
         await insertBitacora({
           nameTableAction: "finance",
           idTableAction: financeExist.id,
-          idClient: financeExist.id,
+          idUser: financeExist.id,
           userName: financeExist.userName,
           actionDetail: `Se actualizaron parámetros de la finanza con id ${financeExist.id} a cargo del responsable de la caja: "${financeExist.userName}".`,
         });
@@ -141,7 +141,7 @@ export const deleteFinance = async (req: Request, res: Response) => {
         await insertBitacora({
           nameTableAction: "finance",
           idTableAction: financeExist.id,
-          idClient: financeExist.id,
+          idUser: financeExist.id,
           userName: financeExist.id,
           actionDetail: `Se Eliminó la finanza con Id: "${financeExist.id}"`,
         });

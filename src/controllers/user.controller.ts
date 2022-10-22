@@ -1,41 +1,41 @@
 import { Request, Response } from "express";
 import { error, success } from "../config/responseApi";
-import { Client } from "../entities_DB/client";
+import { User } from "../entities_DB/user";
 import { insertBitacora } from "./action.controller";
 import * as jwt from "jsonwebtoken";
 import { SECRET_KEY } from "../environment";
 
-export const createClient = async (req: Request, res: Response) => {
-  const { firstName, lastName, email, phoneNumber, password } = req.body;
+export const createUser = async (req: Request, res: Response) => {
+  const { userName, email, phoneNumber, password, nameRole } = req.body;
   try {
-    const data = await Client.query(`SELECT * FROM client WHERE email= $1;`, [
-      email,
-    ]);
-    if (data.length != 0) {
+    const userFound = await User.findOneBy({
+      email: email,
+    });
+    if (userFound) {
       return res.status(400).json({
         error: "Email ya existe, no necesita registrarlo de nuevo.",
       });
     } else {
       //Inserting data into the database
-      const result = await Client.save({
-        firstName: firstName,
-        lastName: lastName,
+      const result = await User.save({
+        userName: userName,
         email: email,
         phoneNumber: phoneNumber,
-        password: await Client.encryptPassword(password),
+        password: await User.encryptPassword(password),
+        nameRole: nameRole,
       });
 
-      const tokenClient = jwt.sign({ id: result.id }, SECRET_KEY, {
+      const tokenUser = jwt.sign({ id: result.idUser }, SECRET_KEY, {
         expiresIn: 86400,
       });
-      console.log("token client ", tokenClient);
+      console.log("token user ", tokenUser);
 
       await insertBitacora({
-        nameTableAction: "client",
-        idTableAction: result.id,
-        idUser: result.id,
+        nameTableAction: "user",
+        idTableAction: result.idUser,
+        idUser: result.idUser,
         userName: result.email,
-        actionDetail: `Creación de nuevo cliente con email: "${result.email}"`,
+        actionDetail: `Creación de nuevo user con email: "${result.email}"`,
       });
 
       res.status(201).json({
@@ -49,17 +49,17 @@ export const createClient = async (req: Request, res: Response) => {
     //send a json response with the error message
     res.status(500).json({
       //Database connection error
-      error: "Error en la base de datos al registrar un nuevo cliente!",
+      error: "Error en la base de datos al registrar un nuevo user!",
     });
   }
 };
 
-export const getClient = async (req: Request, res: Response) => {
+export const getUser = async (req: Request, res: Response) => {
   try {
-    const client = await Client.find();
-    !client
+    const user = await User.find();
+    !user
       ? res.status(404).json({ message: "No users found" })
-      : res.json({ listClient: client });
+      : res.json({ listUser: user });
   } catch (error) {
     console.log(error);
     //check if error is instance of Error
@@ -71,16 +71,16 @@ export const getClient = async (req: Request, res: Response) => {
   }
 };
 
-export const getClientById = async (req: Request, res: Response) => {
-  const { id } = req.params;
+export const getUserById = async (req: Request, res: Response) => {
+  const { idUser } = req.params;
   try {
-    const client = await Client.findOneBy({
-      id: id,
+    const user = await User.findOneBy({
+      idUser: idUser,
     });
 
-    !client
-      ? res.status(404).json({ message: "No client found" })
-      : res.json({ listClient: client });
+    !user
+      ? res.status(404).json({ message: "No user found" })
+      : res.json({ listUser: user });
   } catch (error) {
     console.log(error);
     //check if error is instance of Error
@@ -91,29 +91,29 @@ export const getClientById = async (req: Request, res: Response) => {
   }
 };
 
-export const updateClient = async (req: Request, res: Response) => {
+export const updateUser = async (req: Request, res: Response) => {
   try {
-    console.log("Se ha solicitado una actualización de la entidad Cliente.");
+    console.log("Se ha solicitado una actualización de la entidad Usere.");
     const { password, email } = req.body;
     if (!email)
       return res.status(400).json({ message: "Parámetro Email no ingresado" });
 
-    const clienteExist: any = await Client.findOneBy({
+    const userExist: any = await User.findOneBy({
       email: email,
     });
 
-    if (clienteExist) {
-      const result = await Client.update(clienteExist, {
+    if (userExist) {
+      const result = await User.update(userExist, {
         password: password,
       });
 
       if (result) {
         await insertBitacora({
-          nameTableAction: "client",
-          idTableAction: clienteExist.id,
-          idUser: clienteExist.id,
-          userName: clienteExist.email,
-          actionDetail: `Se actualizó la contraseña del Email: "${clienteExist.email}"`,
+          nameTableAction: "user",
+          idTableAction: userExist.id,
+          idUser: userExist.id,
+          userName: userExist.email,
+          actionDetail: `Se actualizó la contraseña del Email: "${userExist.email}"`,
         });
         return result
           ? res
@@ -128,25 +128,25 @@ export const updateClient = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteClient = async (req: Request, res: Response) => {
+export const deleteUser = async (req: Request, res: Response) => {
   try {
-    console.log("Se ha solicitado la eliminación de una entidad Cliente.");
-    const { id } = req.params;
-    if (!id) return res.status(404).json(await error(res.statusCode));
+    console.log("Se ha solicitado la eliminación de una entidad Usere.");
+    const { idUser } = req.params;
+    if (!idUser) return res.status(404).json(await error(res.statusCode));
 
-    const clienteExist: any = await Client.findOneBy({
-      id: id,
+    const userExist: any = await User.findOneBy({
+      idUser: idUser,
     });
 
-    if (clienteExist) {
-      const result: any = await Client.delete(id);
+    if (userExist) {
+      const result: any = await User.delete(idUser);
       if (result) {
         await insertBitacora({
-          nameTableAction: "client",
-          idTableAction: clienteExist.id,
-          idUser: clienteExist.id,
-          userName: clienteExist.email,
-          actionDetail: `Se Eliminó el cliente con Email: "${clienteExist.email}"`,
+          nameTableAction: "user",
+          idTableAction: userExist.id,
+          idUser: userExist.id,
+          userName: userExist.email,
+          actionDetail: `Se Eliminó el user con Email: "${userExist.email}"`,
         });
         return result
           ? res

@@ -12,7 +12,7 @@ export class Action extends BaseEntity {
   public idTableAction: string;
 
   @Column({ type: "varchar", length: 100, nullable: false })
-  public idClient: string;
+  public idUser: string;
 
   @Column({
     type: "timestamp",

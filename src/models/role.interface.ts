@@ -1,7 +1,7 @@
 export enum Role {
-  "Administrador" = 0,
-  "Cliente" = 1,
-  "Bodega" = 2,
-  "Finanzas" = 3,
-  "Cocina" = 4,
+  "Admin" = "Administrador",
+  "Cliente" = "Cliente",
+  "Bodega" = "Bodega",
+  "Finanzas" = "Finanzas",
+  "Cocina" = "Cocina",
 }
