@@ -5,7 +5,6 @@ import cors from "cors"; //CORS es un paquete de node.js para proporcionar un mi
 import morgan from "morgan";
 
 export const app = express();
-
 app
   .use(cors())
   .use(morgan("dev"))

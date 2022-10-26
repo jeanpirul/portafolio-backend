@@ -32,7 +32,7 @@ export const createUser = async (req: Request, res: Response) => {
 
       await insertBitacora({
         nameTableAction: "user",
-        idTableAction: result.idUser,
+        nameRole: result.nameRole,
         idUser: result.idUser,
         userName: result.email,
         actionDetail: `Creación de nuevo user con email: "${result.email}"`,
@@ -93,7 +93,7 @@ export const getUserById = async (req: Request, res: Response) => {
 
 export const updateUser = async (req: Request, res: Response) => {
   try {
-    console.log("Se ha solicitado una actualización de la entidad Usere.");
+    console.log("Se ha solicitado una actualización de la entidad User.");
     const { password, email } = req.body;
     if (!email)
       return res.status(400).json({ message: "Parámetro Email no ingresado" });
@@ -110,10 +110,49 @@ export const updateUser = async (req: Request, res: Response) => {
       if (result) {
         await insertBitacora({
           nameTableAction: "user",
-          idTableAction: userExist.id,
+          nameRole: userExist.nameRole,
           idUser: userExist.id,
           userName: userExist.email,
-          actionDetail: `Se actualizó la contraseña del Email: "${userExist.email}"`,
+          actionDetail: `Se actualizó la contraseña del Usuario: "${userExist.email}"`,
+        });
+        return result
+          ? res
+              .status(200)
+              .json(await success({ data: result }, res.statusCode))
+          : res.status(422).json(await error(res.statusCode));
+      }
+    }
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(await error(res.statusCode));
+  }
+};
+
+export const updateRole = async (req: Request, res: Response) => {
+  try {
+    console.log("Se ha solicitado una actualización del rol del User.");
+    const { nameRole, email } = req.body;
+    if (!nameRole)
+      return res
+        .status(400)
+        .json({ message: "Parámetro nameRole no ingresado" });
+
+    const userExist: any = await User.findOneBy({
+      email: email,
+    });
+
+    if (userExist) {
+      const result = await User.update(userExist, {
+        nameRole: nameRole,
+      });
+
+      if (result) {
+        await insertBitacora({
+          nameTableAction: "user",
+          nameRole: userExist.nameRole,
+          idUser: userExist.id,
+          userName: userExist.email,
+          actionDetail: `Se actualizó el rol del usuario: "${userExist.email}"`,
         });
         return result
           ? res
@@ -130,7 +169,7 @@ export const updateUser = async (req: Request, res: Response) => {
 
 export const deleteUser = async (req: Request, res: Response) => {
   try {
-    console.log("Se ha solicitado la eliminación de una entidad Usere.");
+    console.log("Se ha solicitado la eliminación de una entidad User.");
     const { idUser } = req.params;
     if (!idUser) return res.status(404).json(await error(res.statusCode));
 
@@ -143,7 +182,7 @@ export const deleteUser = async (req: Request, res: Response) => {
       if (result) {
         await insertBitacora({
           nameTableAction: "user",
-          idTableAction: userExist.id,
+          nameRole: userExist.nameRole,
           idUser: userExist.id,
           userName: userExist.email,
           actionDetail: `Se Eliminó el user con Email: "${userExist.email}"`,

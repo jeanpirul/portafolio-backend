@@ -27,7 +27,7 @@ export const createProduct = async (req: Request, res: Response) => {
     if (result)
       await insertBitacora({
         nameTableAction: "product",
-        idTableAction: result.idProduct.toExponential(),
+        nameRole: result.idProduct.toExponential(),
         idUser: result.idProduct.toString(),
         userName: result.username,
         actionDetail: `Creación de nuevo producto : "${result.nameProduct}"`,
@@ -79,7 +79,7 @@ export const updateProduct = async (req: Request, res: Response) => {
       if (result) {
         await insertBitacora({
           nameTableAction: "product",
-          idTableAction: financeExist.id,
+          nameRole: financeExist.id,
           idUser: financeExist.id,
           userName: financeExist.userName,
           actionDetail: `Se actualizaron parámetros de la finanza con id ${financeExist.id} a cargo del responsable de la caja: "${financeExist.userName}".`,

@@ -2,13 +2,10 @@ import {
   BaseEntity,
   Column,
   Entity,
-  ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
 } from "typeorm";
 import bcrypt from "bcrypt";
-import { Role } from "./roles";
 
 @Entity("user")
 @Unique(["idUser"])
@@ -25,12 +22,11 @@ export class User extends BaseEntity {
   @Column({ type: "varchar", length: 100, nullable: false })
   public phoneNumber: string;
 
-  @Column({ type: "varchar", length: 100, nullable: true })
+  @Column({ type: "varchar", length: 100, nullable: false })
   public password: string;
 
-  @Column({ type: "varchar", nullable: false, array: true })
-  @OneToMany((type) => Role, (role) => role.nameRole)
-  public nameRole: string[] | Role[];
+  @Column({ type: "varchar", nullable: false })
+  public nameRole: string;
 
   static encryptPassword = async (password: string) => {
     const salt = await bcrypt.genSalt(10);

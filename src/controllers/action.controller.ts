@@ -13,7 +13,7 @@ export const createAction = async (
 
     const {
       nameTableAction,
-      idTableAction,
+      nameRole,
       idUser,
       clientFirstName,
       actionDetail,
@@ -21,7 +21,7 @@ export const createAction = async (
 
     if (
       !nameTableAction ||
-      !idTableAction ||
+      !nameRole ||
       !idUser ||
       !clientFirstName ||
       !actionDetail

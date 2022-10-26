@@ -1,7 +1,7 @@
 export interface InsertBitacoraInterface {
   nameTableAction: string;
-  idTableAction: string;
   idUser: string;
+  nameRole: string;
   userName: string;
   actionDetail: string;
 }
