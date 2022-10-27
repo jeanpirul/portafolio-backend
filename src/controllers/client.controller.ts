@@ -32,8 +32,8 @@ export const createClient = async (req: Request, res: Response) => {
 
       await insertBitacora({
         nameTableAction: "client",
-        idTableAction: result.id,
-        idClient: result.id,
+        nameRole: result.id,
+        idUser: result.id,
         userName: result.email,
         actionDetail: `Creación de nuevo cliente con email: "${result.email}"`,
       });
@@ -110,8 +110,8 @@ export const updateClient = async (req: Request, res: Response) => {
       if (result) {
         await insertBitacora({
           nameTableAction: "client",
-          idTableAction: clienteExist.id,
-          idClient: clienteExist.id,
+          nameRole: clienteExist.id,
+          idUser: clienteExist.id,
           userName: clienteExist.email,
           actionDetail: `Se actualizó la contraseña del Email: "${clienteExist.email}"`,
         });
@@ -143,8 +143,8 @@ export const deleteClient = async (req: Request, res: Response) => {
       if (result) {
         await insertBitacora({
           nameTableAction: "client",
-          idTableAction: clienteExist.id,
-          idClient: clienteExist.id,
+          nameRole: clienteExist.id,
+          idUser: clienteExist.id,
           userName: clienteExist.email,
           actionDetail: `Se Eliminó el cliente con Email: "${clienteExist.email}"`,
         });

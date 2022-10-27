@@ -1,4 +1,5 @@
 import express from "express";
+import { error } from "../config/responseApi";
 import { verifyToken } from "../config/tokenMiddleware";
 import { login } from "../controllers/login.controller";
 import { admin } from "../entities_DB/admin";
@@ -10,8 +11,12 @@ router.post("/login", async (req, res) => {
   await login(req, res);
 });
 
-router.get("/client/:id/ventas", verifyToken, (req, res) => {
-  res.json(admin);
+router.get("/client/:id/ventas", verifyToken, async (req, res) => {
+  try {
+    res.json(admin);
+  } catch (err) {
+    res.status(400).json(await error(res.statusCode));
+  }
 });
 
 // router.get("/client/:id/ventas", (req, res) => {

@@ -13,16 +13,16 @@ export const createAction = async (
 
     const {
       nameTableAction,
-      idTableAction,
-      idClient,
+      nameRole,
+      idUser,
       clientFirstName,
       actionDetail,
     } = req.body;
 
     if (
       !nameTableAction ||
-      !idTableAction ||
-      !idClient ||
+      !nameRole ||
+      !idUser ||
       !clientFirstName ||
       !actionDetail
     )

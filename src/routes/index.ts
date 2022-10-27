@@ -4,6 +4,7 @@ import action from "./action";
 import finance from "./finance";
 import products from "./products";
 import root from "./root";
+import user from "./user";
 
 export const routes = {
   client,
@@ -12,4 +13,5 @@ export const routes = {
   appRegister,
   action,
   products,
+  user,
 };
