@@ -9,8 +9,8 @@ import { DataSource, getConnection } from "typeorm";
 import { connectDB } from "../config/config";
 
 export const createUser = async (req: Request, res: Response) => {
-  const { userName, email, phoneNumber, password, rol } = req.body;
-    const queryRunner = connectDB.createQueryRunner();
+  const { userName, email, phoneNumber, password } = req.body;
+  const queryRunner = connectDB.createQueryRunner();
   try {
     const userFound = await User.findOneBy({
       email: email,
@@ -22,6 +22,10 @@ export const createUser = async (req: Request, res: Response) => {
     } else {
       await queryRunner.connect();
       await queryRunner.startTransaction();
+      // Asignamos el rol por defecto de Cliente para un nuevo Usuario.
+      let rolDefault = 2;
+      let rol = rolDefault;
+
       //Inserting data into the database
       const result = await User.save({
         userName: userName,
@@ -37,8 +41,8 @@ export const createUser = async (req: Request, res: Response) => {
       console.log("token user ", tokenUser);
 
       const getRol = await Rol.findOneBy({ idRol: rol });
-      
-      const userRegistered = await insertBitacora({
+
+      await insertBitacora({
         nameTableAction: "user",
         nameRole: getRol?.nameRol,
         idUser: result.idUser,

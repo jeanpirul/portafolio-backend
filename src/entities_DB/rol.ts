@@ -3,7 +3,7 @@ import {
   Column,
   PrimaryGeneratedColumn,
   BaseEntity,
-  OneToOne,
+  OneToMany,
 } from "typeorm";
 import { User } from "./user";
 
@@ -15,6 +15,6 @@ export class Rol extends BaseEntity {
   @Column({ type: "varchar", length: 50, nullable: false })
   public nameRol: string;
 
-  @OneToOne(() => User, (user) => user.rol)
+  @OneToMany(() => User, (user) => user.rol)
   user: User;
 }

@@ -3,7 +3,8 @@ import {
   Column,
   Entity,
   JoinColumn,
-  OneToOne,
+  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
 } from "typeorm";
@@ -31,7 +32,7 @@ export class User extends BaseEntity {
   @Column({ type: "int4", nullable: false })
   public fk_Rol: number;
 
-  @OneToOne(() => Rol, (rol) => rol.idRol)
+  @ManyToOne(() => Rol, (rol) => rol.idRol)
   @JoinColumn([{ name: "fk_Rol", referencedColumnName: "idRol" }])
   rol: Rol;
 
