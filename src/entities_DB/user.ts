@@ -2,10 +2,13 @@ import {
   BaseEntity,
   Column,
   Entity,
+  JoinColumn,
+  OneToOne,
   PrimaryGeneratedColumn,
   Unique,
 } from "typeorm";
 import bcrypt from "bcrypt";
+import { Rol } from "./rol";
 
 @Entity("user")
 @Unique(["idUser"])
@@ -25,8 +28,12 @@ export class User extends BaseEntity {
   @Column({ type: "varchar", length: 100, nullable: false })
   public password: string;
 
-  @Column({ type: "varchar", nullable: false })
-  public nameRole: string;
+  @Column({ type: "int4", nullable: false })
+  public fk_Rol: number;
+
+  @OneToOne(() => Rol, (rol) => rol.idRol)
+  @JoinColumn([{ name: "fk_Rol", referencedColumnName: "idRol" }])
+  rol: Rol;
 
   static encryptPassword = async (password: string) => {
     const salt = await bcrypt.genSalt(10);
