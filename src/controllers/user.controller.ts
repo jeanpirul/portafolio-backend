@@ -221,7 +221,7 @@ export const deleteUser = async (req: Request, res: Response) => {
           nameRole: userExist.nameRole,
           idUser: userExist.id,
           userName: userExist.email,
-          actionDetail: `, Se, Eliminó, el, user, con, Email, "${userExist.email}" `,
+          actionDetail: `Se Eliminó el user con Email "${userExist.email}" `,
         });
         return result
           ? res
