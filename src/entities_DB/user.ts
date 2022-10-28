@@ -34,7 +34,7 @@ export class User extends BaseEntity {
 
   @ManyToOne(() => Rol, (rol) => rol.idRol)
   @JoinColumn([{ name: "fk_Rol", referencedColumnName: "idRol" }])
-  rol: Rol;
+  rol: Rol[];
 
   static encryptPassword = async (password: string) => {
     const salt = await bcrypt.genSalt(10);

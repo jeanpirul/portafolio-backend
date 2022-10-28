@@ -5,7 +5,6 @@ import { insertBitacora } from "./action.controller";
 import * as jwt from "jsonwebtoken";
 import { SECRET_KEY } from "../environment";
 import { Rol } from "../entities_DB/rol";
-import { DataSource, getConnection } from "typeorm";
 import { connectDB } from "../config/config";
 
 export const createUser = async (req: Request, res: Response) => {
@@ -110,7 +109,8 @@ export const getUserById = async (req: Request, res: Response) => {
   }
 };
 
-export const updateUser = async (req: Request, res: Response) => {
+export const updatePassword = async (req: Request, res: Response) => {
+  const queryRunner = connectDB.createQueryRunner();
   try {
     console.log("Se ha solicitado una actualización de la entidad User.");
     const { password, email } = req.body;
@@ -123,14 +123,19 @@ export const updateUser = async (req: Request, res: Response) => {
 
     if (userExist) {
       const result = await User.update(userExist, {
-        password: password,
+        password: await User.encryptPassword(password),
       });
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
 
+      let setRol = 2 || req.body.rol;
+      let rol = setRol;
+      const getRol = await Rol.findOneBy({ idRol: rol });
       if (result) {
         await insertBitacora({
           nameTableAction: "user",
-          nameRole: userExist.nameRole,
-          idUser: userExist.id,
+          nameRole: getRol?.nameRol,
+          idUser: userExist.idUser,
           userName: userExist.email,
           actionDetail: `Se actualizó la contraseña del Usuario: "${userExist.email}"`,
         });
@@ -141,17 +146,23 @@ export const updateUser = async (req: Request, res: Response) => {
           : res.status(422).json(await error(res.statusCode));
       }
     }
+    await queryRunner.commitTransaction();
   } catch (err) {
     console.log(err);
     return res.status(500).json(await error(res.statusCode));
+  } finally {
+    // you need to release query runner which is manually created:
+    await queryRunner.release();
   }
 };
 
 export const updateRole = async (req: Request, res: Response) => {
+  const queryRunner = connectDB.createQueryRunner();
   try {
     console.log("Se ha solicitado una actualización del rol del User.");
-    const { rol, email } = req.body;
-    if (!rol)
+    const { email, fk_Rol } = req.body;
+
+    if (!fk_Rol)
       return res.status(400).json({ message: "Parámetro rol no ingresado" });
 
     const userExist: any = await User.findOneBy({
@@ -159,21 +170,22 @@ export const updateRole = async (req: Request, res: Response) => {
     });
 
     if (userExist) {
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
+
+      // const result = await User.update(userExist, { fk_Rol: fk_Rol });
       const result = await User.update(userExist, {
-        fk_Rol: rol,
+        fk_Rol: fk_Rol,
       });
 
-      console.log(
-        "🚀 ~ file: user.controller.ts ~ line 150 ~ updateRole ~ result.generatedMaps[0].rol",
-        result.generatedMaps[0].rol
-      );
+      const getRol = await Rol.findOneBy({ idRol: fk_Rol });
       if (result) {
         await insertBitacora({
           nameTableAction: "user",
-          nameRole: result.generatedMaps[0].rol,
-          idUser: userExist.id,
+          nameRole: getRol?.nameRol,
+          idUser: userExist.idUser,
           userName: userExist.email,
-          actionDetail: `Se actualizó el rol del usuario: "${userExist.email}"`,
+          actionDetail: `Se actualizó el rol del usuario a "${getRol?.nameRol}" `,
         });
         return result
           ? res
@@ -185,6 +197,9 @@ export const updateRole = async (req: Request, res: Response) => {
   } catch (err) {
     console.log(err);
     return res.status(500).json(await error(res.statusCode));
+  } finally {
+    // you need to release query runner which is manually created:
+    await queryRunner.release();
   }
 };
 
@@ -206,7 +221,7 @@ export const deleteUser = async (req: Request, res: Response) => {
           nameRole: userExist.nameRole,
           idUser: userExist.id,
           userName: userExist.email,
-          actionDetail: `Se Eliminó el user con Email: "${userExist.email}"`,
+          actionDetail: `, Se, Eliminó, el, user, con, Email, "${userExist.email}" `,
         });
         return result
           ? res

@@ -20,7 +20,12 @@ router.get("/:id", async (req, res) => {
 
 router.patch("/", async (req, res) => {
   //Este endpoint permite actualizar los datos de cada clienmte existente en la base de datos
-  await userController.updateUser(req, res);
+  await userController.updatePassword(req, res);
+});
+
+router.patch("/role/", async (req, res) => {
+  //Este endpoint permite actualizar los datos de cada clienmte existente en la base de datos
+  await userController.updateRole(req, res);
 });
 
 router.delete("/:id", async (req, res) => {
