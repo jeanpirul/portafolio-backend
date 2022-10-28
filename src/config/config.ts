@@ -9,6 +9,6 @@ export const connectDB = new DataSource({
   username: DBUSER,
   password: DBPASS,
   database: DBNAME,
-  entities: ["src/entities_DB/*.ts"],
+  entities: ["src/entities_DB/*.{js,ts}"],
   synchronize: true,
 });
