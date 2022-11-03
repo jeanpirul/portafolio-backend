@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
-import { getRepository, InsertResult } from "typeorm";
+import { InsertResult } from "typeorm";
 import { error, success } from "../config/responseApi";
 import { Action } from "../entities_DB/action";
 import { InsertBitacoraInterface } from "../models/insertBitacora";
+import * as jwt from "jsonwebtoken";
 
 export const createAction = async (
   req: Request,
@@ -11,13 +12,8 @@ export const createAction = async (
   try {
     console.log("Se ha solicitado una creación de la entidad Acciones");
 
-    const {
-      nameTableAction,
-      nameRole,
-      idUser,
-      clientFirstName,
-      actionDetail,
-    } = req.body;
+    const { nameTableAction, nameRole, idUser, clientFirstName, actionDetail } =
+      req.body;
 
     if (
       !nameTableAction ||
@@ -43,7 +39,16 @@ export const readAction = async (
   res: Response
 ): Promise<Response> => {
   try {
-    console.log("Se ha solicitado una lista de la entidad Acciones");
+    //esto es para obtener los parametros del token y guardar con esos atributos en la bitacora
+    // const decodedToken: any = jwt.decode(
+    //   req.headers.authorization
+    //     ? req.headers.authorization.toString().replace("Bearer ", "")
+    //     : ""
+    // );
+    // console.log(
+    //   "Se ha solicitado una lista de la entidad Acciones ",
+    //   decodedToken
+    // );
 
     const result: any = await Action.find({
       order: { actionCreation: "DESC" },
@@ -51,9 +56,8 @@ export const readAction = async (
     return result
       ? res.status(200).json(await success({ data: result }, res.statusCode))
       : res.status(422).json(await error(res.statusCode));
-  } catch (err: any) {
-    console.log(err);
-    return res.status(500).json(await error(res.statusCode));
+  } catch (err) {
+    return res.status(401).json(await error(res.statusCode));
   }
 };
 

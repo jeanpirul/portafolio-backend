@@ -113,6 +113,11 @@ export const updatePassword = async (req: Request, res: Response) => {
   const queryRunner = connectDB.createQueryRunner();
   try {
     console.log("Se ha solicitado una actualización de la entidad User.");
+    // const decodedToken: any = jwt.decode(
+    //   req.headers.authorization
+    //     ? req.headers.authorization.toString().replace("Bearer ", "")
+    //     : ""
+    // );
     const { password, email } = req.body;
     if (!email)
       return res.status(400).json({ message: "Parámetro Email no ingresado" });
@@ -168,16 +173,14 @@ export const updateRole = async (req: Request, res: Response) => {
     const userExist: any = await User.findOneBy({
       email: email,
     });
-
-    if (userExist) {
+    if (!userExist) {
+      return res.status(404).json({
+        error: "Usuario no existe para actualizar.",
+      });
+    } else if (userExist) {
       await queryRunner.connect();
       await queryRunner.startTransaction();
-
-      // const result = await User.update(userExist, { fk_Rol: fk_Rol });
-      const result = await User.update(userExist, {
-        fk_Rol: fk_Rol,
-      });
-
+      const result = await User.update(userExist, { fk_Rol: fk_Rol });
       const getRol = await Rol.findOneBy({ idRol: fk_Rol });
       if (result) {
         await insertBitacora({
@@ -187,6 +190,7 @@ export const updateRole = async (req: Request, res: Response) => {
           userName: userExist.email,
           actionDetail: `Se actualizó el rol del usuario a "${getRol?.nameRol}" `,
         });
+
         return result
           ? res
               .status(200)

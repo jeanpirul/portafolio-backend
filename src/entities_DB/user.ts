@@ -12,7 +12,6 @@ import bcrypt from "bcrypt";
 import { Rol } from "./rol";
 
 @Entity("user")
-@Unique(["idUser"])
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   public idUser: string;
