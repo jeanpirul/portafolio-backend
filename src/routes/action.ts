@@ -11,7 +11,7 @@ router.post("/create", async (req, res) => {
 
 router.get(
   "/",
-  [JWTVerifyToken.verifyToken, JWTVerifyToken.esBodeguero],
+  [JWTVerifyToken.verifyToken, JWTVerifyToken.esBodega],
   async (req: Request, res: Response) => {
     //este endpoint permite listar todas las acciones con autentificacion de usuario.
     await actionController.readAction(req, res);
