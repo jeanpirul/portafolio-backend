@@ -4,9 +4,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
-  Unique,
 } from "typeorm";
 import bcrypt from "bcrypt";
 import { Rol } from "./rol";
