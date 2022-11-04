@@ -29,6 +29,70 @@ export const verifyToken = async (
   }
 };
 
+// FUNCION PARA VERIFICACIÓN DE ROL: Administrador
+export const esAdmin = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const decodedToken: any = jwt.decode(
+      req.headers.authorization
+        ? req.headers.authorization.toString().replace("Bearer ", "")
+        : ""
+    );
+    const roleExtist = await Rol.findOneBy({ idRol: decodedToken.idRol });
+    let arr = [roleExtist];
+
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i]?.nameRol === "Administrador") {
+        next();
+        return;
+      }
+    }
+  } catch (err) {
+    res
+      .status(404)
+      .send("Se necesitan permisos de acuerdo al Rol de Administrador!.")
+      .json(await error(res.statusCode));
+  }
+};
+
+// FUNCION PARA VERIFICACIÓN DE ROL: Cliente
+export const esCliente = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const decodedToken: any = jwt.decode(
+      req.headers.authorization
+        ? req.headers.authorization.toString().replace("Bearer ", "")
+        : ""
+    );
+    const roleExtist = await Rol.findOneBy({ idRol: decodedToken.idRol });
+    let arr = [roleExtist];
+
+    for (let i = 0; i < arr.length; i++) {
+      if (
+        arr[i]?.nameRol === "Administrador" ||
+        arr[i]?.nameRol === "Cliente" ||
+        arr[i]?.nameRol === "Bodega" ||
+        arr[i]?.nameRol === "Cocina" ||
+        arr[i]?.nameRol === "Finanza"
+      ) {
+        next();
+        return;
+      }
+    }
+  } catch (err) {
+    res
+      .status(404)
+      .send("Se necesitan permisos de acuerdo al Rol de Cliente!.")
+      .json(await error(res.statusCode));
+  }
+};
+
 // FUNCION PARA VERIFICACIÓN DE ROL: Bodega
 export const esBodega = async (
   req: Request,
@@ -41,7 +105,6 @@ export const esBodega = async (
         ? req.headers.authorization.toString().replace("Bearer ", "")
         : ""
     );
-    const userExist = await User.findOneBy({ idUser: decodedToken.idUser });
     const roleExtist = await Rol.findOneBy({ idRol: decodedToken.idRol });
     let arr = [roleExtist];
 
@@ -51,11 +114,42 @@ export const esBodega = async (
         return;
       }
     }
-    return res.status(403).json({ message: "Requiere Rol de Bodega!" });
   } catch (err) {
     res
       .status(404)
-      .send("Se necesitan permisos de acuerdo al Rol indicado.")
+      .send("Se necesitan permisos de acuerdo al Rol de Bodega!.")
+      .json(await error(res.statusCode));
+  }
+};
+
+// FUNCION PARA VERIFICACIÓN DE ROL: Finanza
+export const esFinanza = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const decodedToken: any = jwt.decode(
+      req.headers.authorization
+        ? req.headers.authorization.toString().replace("Bearer ", "")
+        : ""
+    );
+    const roleExtist = await Rol.findOneBy({ idRol: decodedToken.idRol });
+    let arr = [roleExtist];
+
+    for (let i = 0; i < arr.length; i++) {
+      if (
+        arr[i]?.nameRol === "Administrador" ||
+        arr[i]?.nameRol === "Finanza"
+      ) {
+        next();
+        return;
+      }
+    }
+  } catch (err) {
+    res
+      .status(404)
+      .send("Se necesitan permisos de acuerdo al Rol de Finanza!.")
       .json(await error(res.statusCode));
   }
 };
@@ -72,7 +166,6 @@ export const esCocina = async (
         ? req.headers.authorization.toString().replace("Bearer ", "")
         : ""
     );
-    const userExist = await User.findOneBy({ idUser: decodedToken.idUser });
     const roleExtist = await Rol.findOneBy({ idRol: decodedToken.idRol });
     let arr = [roleExtist];
 
@@ -82,42 +175,10 @@ export const esCocina = async (
         return;
       }
     }
-    return res.status(403).json({ message: "Requiere Rol de Cocina!" });
   } catch (err) {
     res
       .status(404)
-      .send("Se necesitan permisos de acuerdo al Rol indicado.")
-      .json(await error(res.statusCode));
-  }
-};
-
-// FUNCION PARA VERIFICACIÓN DE ROL: Administrador
-export const esAdmin = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const decodedToken: any = jwt.decode(
-      req.headers.authorization
-        ? req.headers.authorization.toString().replace("Bearer ", "")
-        : ""
-    );
-    const userExist = await User.findOneBy({ idUser: decodedToken.idUser });
-    const roleExtist = await Rol.findOneBy({ idRol: decodedToken.idRol });
-    let arr = [roleExtist];
-
-    for (let i = 0; i < arr.length; i++) {
-      if (arr[i]?.nameRol === "Administrador") {
-        next();
-        return;
-      }
-    }
-    return res.status(403).json({ message: "Requiere Rol de Administrador!" });
-  } catch (err) {
-    res
-      .status(404)
-      .send("Se necesitan permisos de acuerdo al Rol indicado.")
+      .send("Se necesitan permisos de acuerdo al Rol de Cocina!.")
       .json(await error(res.statusCode));
   }
 };
