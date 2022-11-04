@@ -28,6 +28,7 @@ export const login = async (req: Request, res: Response) => {
           idRol: userFound.fk_Rol,
           idUser: userFound.idUser,
           email: userFound.email,
+          userName: userFound.userName,
         },
         SECRET_KEY,
         {

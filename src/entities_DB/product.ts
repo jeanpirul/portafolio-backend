@@ -1,4 +1,12 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
+import { User } from "./user";
 
 @Entity("product")
 export class Product extends BaseEntity {
@@ -17,6 +25,10 @@ export class Product extends BaseEntity {
   @Column({ type: "int4" })
   public price: number;
 
-  @Column({ type: "varchar", length: 50, nullable: false })
-  public username: string;
+  @Column({ type: "int4", nullable: true })
+  public fk_User: number;
+
+  @ManyToOne(() => User, (user) => user.idUser)
+  @JoinColumn([{ name: "fk_User", referencedColumnName: "idUser" }])
+  user: User[];
 }

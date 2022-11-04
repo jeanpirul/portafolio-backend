@@ -4,10 +4,12 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import bcrypt from "bcrypt";
 import { Rol } from "./rol";
+import { Product } from "./product";
 
 @Entity("user")
 export class User extends BaseEntity {
@@ -32,6 +34,9 @@ export class User extends BaseEntity {
   @ManyToOne(() => Rol, (rol) => rol.idRol)
   @JoinColumn([{ name: "fk_Rol", referencedColumnName: "idRol" }])
   rol: Rol[];
+
+  @OneToMany(() => Product, (product) => product.user)
+  product: Product;
 
   static encryptPassword = async (password: string) => {
     const salt = await bcrypt.genSalt(10);
