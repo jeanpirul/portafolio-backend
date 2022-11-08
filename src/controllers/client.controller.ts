@@ -2,9 +2,9 @@ import { Request, Response } from "express";
 import { insertBitacora } from "./action.controller";
 import { error, success } from "../config/responseApi";
 import { Client } from "../entities_DB/client";
-import { User } from "../entities_DB/user";
-import * as jwt from "jsonwebtoken";
 import { Rol } from "../entities_DB/rol";
+import * as jwt from "jsonwebtoken";
+import { User } from "../entities_DB/user";
 
 export const getClient = async (req: Request, res: Response) => {
   try {
@@ -53,19 +53,26 @@ export const deleteClient = async (req: Request, res: Response) => {
     const { id } = req.params;
     if (!id) return res.status(404).json(await error(res.statusCode));
 
-    const clienteExist: any = await Client.findOneBy({
-      id: id,
+    const decodedToken: any = jwt.decode(
+      req.headers.authorization
+        ? req.headers.authorization.toString().replace("Bearer ", "")
+        : ""
+    );
+
+    const clienteExist: any = await User.findOneBy({
+      idUser: id,
     });
 
+    const getRol = await Rol.findOneBy({ idRol: decodedToken.idRol });
     if (clienteExist) {
-      const result: any = await Client.delete(id);
+      const result: any = await User.delete(id);
       if (result) {
         await insertBitacora({
           nameTableAction: "client",
-          nameRole: clienteExist.id,
-          idUser: clienteExist.id,
-          userName: clienteExist.email,
-          actionDetail: `Se Eliminó el cliente con Email: "${clienteExist.email}"`,
+          nameRole: getRol?.nameRol,
+          idUser: decodedToken.idUser,
+          userName: decodedToken.email,
+          actionDetail: `El administrador "${decodedToken.userName}" eliminó el cliente con Email: "${clienteExist.email}"`,
         });
         return result
           ? res

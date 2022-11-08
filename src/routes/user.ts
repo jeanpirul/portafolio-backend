@@ -37,7 +37,7 @@ router.patch(
 );
 
 router.delete(
-  "/admin/:id",
+  "/adminRole/:id",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],
   async (req: Request, res: Response) => {
     /* Este endpoint permite eliminar los datos de cada usere existente en la base de datos segun el id */
