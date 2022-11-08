@@ -25,6 +25,7 @@ export const createAction = async (
       return res.status(400).json(await error(res.statusCode));
 
     const result = await Action.save(req.body);
+    
     return result
       ? res.status(201).json(await success({ data: result }, res.statusCode))
       : res.status(422).json(await error(res.statusCode));
@@ -39,17 +40,6 @@ export const readAction = async (
   res: Response
 ): Promise<Response> => {
   try {
-    //esto es para obtener los parametros del token y guardar con esos atributos en la bitacora
-    // const decodedToken: any = jwt.decode(
-    //   req.headers.authorization
-    //     ? req.headers.authorization.toString().replace("Bearer ", "")
-    //     : ""
-    // );
-    // console.log(
-    //   "Se ha solicitado una lista de la entidad Acciones ",
-    //   decodedToken
-    // );
-
     const result: any = await Action.find({
       order: { actionCreation: "DESC" },
     });

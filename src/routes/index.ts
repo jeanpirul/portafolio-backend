@@ -5,6 +5,7 @@ import finance from "./finance";
 import products from "./products";
 import root from "./root";
 import user from "./user";
+import admin from "./admin";
 
 export const routes = {
   client,
@@ -14,4 +15,5 @@ export const routes = {
   action,
   products,
   user,
+  admin
 };

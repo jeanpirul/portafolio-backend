@@ -1,5 +1,4 @@
 import express, { Request, Response } from "express";
-import { verifyToken } from "../config/tokenMiddleware";
 import * as productCtrl from "../controllers/product.controller";
 import * as JWTVerifyToken from "../config/tokenMiddleware";
 
@@ -20,7 +19,7 @@ router.get(
   async (req: Request, res: Response) => {
     //este endpoint permite listar todos productos disponibles.
     //   await actionController.readAction(req, res);
-    await productCtrl.getProduct;
+    await productCtrl.getProduct(req, res);
   }
 );
 
