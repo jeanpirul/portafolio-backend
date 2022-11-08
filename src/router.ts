@@ -9,4 +9,5 @@ router.use("/auth", routes.appRegister);
 router.use("/action", routes.action);
 router.use("/products", routes.products);
 router.use("/user", routes.user);
+router.use("/admin", routes.admin);
 router.use("/", routes.root);

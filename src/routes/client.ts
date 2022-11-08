@@ -5,7 +5,7 @@ import * as JWTVerifyToken from "../config/tokenMiddleware";
 const router = express.Router();
 
 router.get(
-  "/admin/",
+  "/admin/getClient/",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],
   async (req: Request, res: Response) => {
     //Este endpoint permite listar todos los clientes existentes en la base de datos

@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from "express";
 import { error } from "./responseApi";
 import * as jwt from "jsonwebtoken";
 import { SECRET_KEY } from "../environment";
-import { User } from "../entities_DB/user";
 import { Rol } from "../entities_DB/rol";
 
 //función creará la verificacion del token para que el usuario pueda ingresar con las credenciales existentes

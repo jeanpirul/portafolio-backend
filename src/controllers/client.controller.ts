@@ -1,11 +1,22 @@
 import { Request, Response } from "express";
+import { insertBitacora } from "./action.controller";
 import { error, success } from "../config/responseApi";
 import { Client } from "../entities_DB/client";
-import { insertBitacora } from "./action.controller";
+import { User } from "../entities_DB/user";
+import * as jwt from "jsonwebtoken";
+import { Rol } from "../entities_DB/rol";
 
 export const getClient = async (req: Request, res: Response) => {
   try {
-    const client = await Client.find();
+    const decodedToken: any = jwt.decode(
+      req.headers.authorization
+        ? req.headers.authorization.toString().replace("Bearer ", "")
+        : ""
+    );
+    const clientFound = await Rol.findBy({idRol: 2});
+    console.log("clientFound ", clientFound);
+
+    const client = await User.find();
     !client
       ? res.status(404).json({ message: "No users found" })
       : res.json({ listClient: client });

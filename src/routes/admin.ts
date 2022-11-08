@@ -1,12 +1,12 @@
-import express, { Request, Response } from "express";
+import { Request, Response, Router } from "express";
 import * as JWTVerifyToken from "../config/tokenMiddleware";
 import * as adminController from "../controllers/admin.controller";
 import * as actionController from "../controllers/action.controller";
 
-const router = express.Router();
+const router: Router = Router();
 
 router.patch(
-  "/admin/updateRole/",
+  "/updateRole/",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],
   async (req: Request, res: Response) => {
     //Este endpoint permite actualizar los datos de cada clienmte existente en la base de datos
