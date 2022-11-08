@@ -64,7 +64,7 @@ export const getProduct = async (req: Request, res: Response) => {
     //Si no existen datos los productos, recibiremos un error por consola, indicando que no existen.
     !findAllProducts
       ? res.status(404).json({ message: "Products not found." })
-      : res.json({ listClient: findAllProducts });
+      : res.json({ listProducts: findAllProducts });
   } catch (error) {
     throw error;
   }

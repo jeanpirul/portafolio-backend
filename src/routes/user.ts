@@ -10,7 +10,7 @@ router.post("/", async (req: Request, res: Response) => {
 });
 
 router.get(
-  "/admin/",
+  "/adminRole/",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],
   async (req: Request, res: Response) => {
     //Este endpoint permite listar todos los useres existentes en la base de datos
@@ -19,7 +19,7 @@ router.get(
 );
 
 router.get(
-  "/admin/:id",
+  "/adminRole/:id",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],
   async (req: Request, res: Response) => {
     //Este endpoint permite listar 1 userre existente en la base de datos por el ID
@@ -28,7 +28,7 @@ router.get(
 );
 
 router.patch(
-  "/",
+  "/clienteRole",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esCliente],
   async (req: Request, res: Response) => {
     //Este endpoint permite actualizar los datos de cada clienmte existente en la base de datos

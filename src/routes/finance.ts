@@ -5,7 +5,7 @@ import * as JWTVerifyToken from "../config/tokenMiddleware";
 const router = express.Router();
 
 router.post(
-  "/finance/",
+  "/financeRole/",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esFinanza],
   async (req: Request, res: Response) => {
     //este endpoint permite crear un nuevo financee
@@ -14,7 +14,7 @@ router.post(
 );
 
 router.get(
-  "/finance/",
+  "/financeRole/",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esFinanza],
   async (req: Request, res: Response) => {
     //Este endpoint permite listar todos los financees existentes en la base de datos
@@ -23,7 +23,7 @@ router.get(
 );
 
 router.get(
-  "/finance/:id",
+  "/financeRole/:id",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esFinanza],
   async (req: Request, res: Response) => {
     //Este endpoint permite listar 1 financere existente en la base de datos por el ID
@@ -32,7 +32,7 @@ router.get(
 );
 
 router.put(
-  "/finance/",
+  "/financeRole/",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esFinanza],
   async (req: Request, res: Response) => {
     //Este endpoint permite actualizar los datos de cada clienmte existente en la base de datos
@@ -41,7 +41,7 @@ router.put(
 );
 
 router.delete(
-  "/finance/:id",
+  "/financeRole/:id",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esFinanza],
   async (req: Request, res: Response) => {
     /* Este endpoint permite eliminar los datos de cada 
