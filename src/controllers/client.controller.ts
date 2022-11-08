@@ -13,13 +13,19 @@ export const getClient = async (req: Request, res: Response) => {
         ? req.headers.authorization.toString().replace("Bearer ", "")
         : ""
     );
-    const clientFound = await Rol.findBy({idRol: 2});
+    let clientRole = 2;
+    // const clientFound = await Rol.findBy({ idRol: 2 });
+    const clientFound = await Rol.query(
+      `select * from public.user where "fk_Rol" = $1;`,
+      [clientRole]
+    );
+
     console.log("clientFound ", clientFound);
 
-    const client = await User.find();
-    !client
+    // const client = await User.find();
+    !clientFound
       ? res.status(404).json({ message: "No users found" })
-      : res.json({ listClient: client });
+      : res.json({ listClient: clientFound });
   } catch (error) {
     console.log(error);
     //check if error is instance of Error
