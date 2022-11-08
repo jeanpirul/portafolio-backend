@@ -8,11 +8,11 @@ export class Action extends BaseEntity {
   @Column({ type: "varchar", length: 50, nullable: false })
   public nameTableAction: string;
 
-  @Column({ type: "varchar", length: 100, nullable: false })
-  public idTableAction: string;
+  @Column({ type: "varchar", length: 100, nullable: true })
+  public nameRole: string[] | string;
 
   @Column({ type: "varchar", length: 100, nullable: false })
-  public idClient: string;
+  public idUser: string;
 
   @Column({
     type: "timestamp",

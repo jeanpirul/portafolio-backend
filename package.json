@@ -4,9 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/app.ts",
     "test": "jest --verbose --coverage --forceExit --detectOpenHandles",
-    "test:cov": "jest --coverage"
+    "test:cov": "jest --coverage",
+    "build": "tsc",
+    "start": "npm run build && nodemon dist/index",
+    "dev": "nodemon src/index.ts"
   },
   "repository": {
     "type": "git",
