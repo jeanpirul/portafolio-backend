@@ -9,6 +9,10 @@ import { connectDB } from "../config/config";
 
 export const createUser = async (req: Request, res: Response) => {
   const { userName, email, phoneNumber, password } = req.body;
+
+  if (!userName || !email || !phoneNumber || !password)
+    return res.status(400).json(await error(res.statusCode));
+
   const queryRunner = connectDB.createQueryRunner();
   try {
     const userFound = await User.findOneBy({
