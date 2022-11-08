@@ -4,11 +4,6 @@ import * as JWTVerifyToken from "../config/tokenMiddleware";
 
 const router = express.Router();
 
-router.post("/", async (req: Request, res: Response) => {
-  //este endpoint permite crear un nuevo usere
-  await userController.createUser(req, res);
-});
-
 router.get(
   "/adminRole/",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],
