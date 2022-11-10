@@ -1,9 +1,9 @@
-import { Router } from "express";
+import express, { Request, Response } from "express";
 import * as actionController from "../controllers/action.controller";
 
-const router: Router = Router();
+const router = express.Router();
 
-router.post("/create", async (req, res) => {
+router.post("/create", async (req: Request, res: Response) => {
   //este endpoint permite crear una nueva acción
   await actionController.createAction(req, res);
 });

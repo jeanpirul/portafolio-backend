@@ -11,7 +11,7 @@ export const createUser = async (req: Request, res: Response) => {
   const { userName, email, phoneNumber, password } = req.body;
 
   if (!userName || !email || !phoneNumber || !password)
-    return res.status(400).json(await error(res.statusCode));
+    return res.status(404).json(await error(res.statusCode));
 
   const queryRunner = connectDB.createQueryRunner();
   try {
@@ -95,14 +95,17 @@ export const getUser = async (req: Request, res: Response) => {
 
 export const getUserById = async (req: Request, res: Response) => {
   const { idUser } = req.params;
+
+  if (!idUser) return res.status(400).json(await error(res.statusCode));
+
   try {
-    const user = await User.findOneBy({
+    const userFound = await User.findOneBy({
       idUser: idUser,
     });
 
-    !user
+    !userFound
       ? res.status(404).json({ message: "No user found" })
-      : res.json({ listUser: user });
+      : res.json({ listUser: userFound });
   } catch (error) {
     console.log(error);
     //check if error is instance of Error
@@ -117,11 +120,11 @@ export const updatePassword = async (req: Request, res: Response) => {
   const queryRunner = connectDB.createQueryRunner();
   try {
     console.log("Se ha solicitado una actualización de la entidad User.");
-    // const decodedToken: any = jwt.decode(
-    //   req.headers.authorization
-    //     ? req.headers.authorization.toString().replace("Bearer ", "")
-    //     : ""
-    // );
+    const decodedToken: any = jwt.decode(
+      req.headers.authorization
+        ? req.headers.authorization.toString().replace("Bearer ", "")
+        : ""
+    );
     const { password, email } = req.body;
     if (!email)
       return res.status(400).json({ message: "Parámetro Email no ingresado" });
@@ -146,7 +149,11 @@ export const updatePassword = async (req: Request, res: Response) => {
           nameRole: getRol?.nameRol,
           idUser: userExist.idUser,
           userName: userExist.email,
-          actionDetail: `Se actualizó la contraseña del Usuario: "${userExist.email}"`,
+          actionDetail: `El Usuario "${
+            decodedToken.email || userExist.email
+          }" cambió la contraseña del usuario "${
+            userExist.email
+          }" exitosamente`,
         });
         return result
           ? res

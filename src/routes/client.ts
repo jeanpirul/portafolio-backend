@@ -1,8 +1,8 @@
-import { Request, Response, Router } from "express";
+import express, { Request, Response } from "express";
 import * as clientController from "../controllers/client.controller";
 import * as JWTVerifyToken from "../config/tokenMiddleware";
 
-const router: Router = Router();
+const router = express.Router();
 
 router.get(
   "/adminRole/getClient/",

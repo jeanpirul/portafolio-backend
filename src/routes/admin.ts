@@ -1,9 +1,9 @@
-import { Request, Response, Router } from "express";
+import express, { Request, Response } from "express";
 import * as JWTVerifyToken from "../config/tokenMiddleware";
 import * as adminController from "../controllers/admin.controller";
 import * as actionController from "../controllers/action.controller";
 
-const router: Router = Router();
+const router = express.Router();
 
 router.patch(
   "/updateRole/",
