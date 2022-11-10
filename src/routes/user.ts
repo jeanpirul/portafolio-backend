@@ -3,6 +3,7 @@ import * as userController from "../controllers/user.controller";
 import * as JWTVerifyToken from "../config/tokenMiddleware";
 
 const router = express.Router();
+//http://localhost:4000/user
 
 router.get(
   "/adminRole/",

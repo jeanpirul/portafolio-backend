@@ -3,6 +3,7 @@ import * as clientController from "../controllers/client.controller";
 import * as JWTVerifyToken from "../config/tokenMiddleware";
 
 const router = express.Router();
+//http://localhost:4000/client
 
 router.get(
   "/adminRole/getClient/",

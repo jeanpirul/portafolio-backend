@@ -3,6 +3,7 @@ import { login } from "../controllers/login.controller";
 import * as userController from "../controllers/user.controller";
 
 const router = express.Router();
+//http://localhost:4000/auth
 
 router.post("/register/", async (req: Request, res: Response) => {
   //este endpoint permite crear un nuevo usere

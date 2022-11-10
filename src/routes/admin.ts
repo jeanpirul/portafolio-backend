@@ -4,6 +4,7 @@ import * as adminController from "../controllers/admin.controller";
 import * as actionController from "../controllers/action.controller";
 
 const router = express.Router();
+//http://localhost:4000/admin
 
 router.patch(
   "/updateRole/",
@@ -15,7 +16,7 @@ router.patch(
 );
 
 router.get(
-  "/admin/",
+  "/getActions/",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],
   async (req: Request, res: Response) => {
     //este endpoint permite listar todas las acciones con autentificacion de usuario.

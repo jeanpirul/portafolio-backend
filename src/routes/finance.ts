@@ -3,6 +3,7 @@ import * as financeController from "../controllers/finance.controller";
 import * as JWTVerifyToken from "../config/tokenMiddleware";
 
 const router = express.Router();
+//http://localhost:4000/finance
 
 router.post(
   "/financeRole/",
