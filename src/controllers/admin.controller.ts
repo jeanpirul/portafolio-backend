@@ -11,8 +11,11 @@ export const updateRole = async (req: Request, res: Response) => {
   try {
     console.log("Se ha solicitado una actualización del rol del User.");
     const { email, fk_Rol } = req.body;
-    if (!fk_Rol)
-      return res.status(400).json({ message: "Parámetro rol no ingresado" });
+    if (!email || !fk_Rol)
+      return res
+        .status(400)
+        .json({ message: `Parámetro ${email} y/o rol  no ingresado` });
+
     const decodedToken: any = jwt.decode(
       req.headers.authorization
         ? req.headers.authorization.toString().replace("Bearer ", "")
@@ -21,14 +24,14 @@ export const updateRole = async (req: Request, res: Response) => {
     const userExist: any = await User.findOneBy({
       email: email,
     });
-
+    
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
     if (!userExist) {
       return res.status(404).json({
         error: "Usuario no existe para actualizar.",
       });
     } else if (userExist) {
-      await queryRunner.connect();
-      await queryRunner.startTransaction();
 
       const result = await User.update(userExist, { fk_Rol: fk_Rol });
       const getRol = await Rol.findOneBy({ idRol: fk_Rol });

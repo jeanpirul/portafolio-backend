@@ -27,6 +27,15 @@ router.get(
   }
 );
 
+router.get(
+  "/adminRole/email/:email",
+  // [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],
+  async (req: Request, res: Response) => {
+    //Este endpoint permite listar 1 clientre existente en la base de datos por el ID
+    await clientController.getClientByEmail(req, res);
+  }
+);
+
 // ACTION: DELETE by ID
 // METHOD: DELETE
 router.delete(

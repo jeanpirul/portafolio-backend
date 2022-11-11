@@ -11,7 +11,12 @@ export const createProduct = async (req: Request, res: Response) => {
   try {
     await queryRunner.connect();
     await queryRunner.startTransaction();
+
     const { amount, nameProduct, availability, price } = req.body;
+    
+    if (!amount || !nameProduct || !availability || !price)
+      return res.status(400).json(await error(res.statusCode));
+
     const decodedToken: any = jwt.decode(
       req.headers.authorization
         ? req.headers.authorization.toString().replace("Bearer ", "")
