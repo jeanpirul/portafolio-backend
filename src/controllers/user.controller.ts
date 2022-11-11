@@ -189,15 +189,25 @@ export const deleteUser = async (req: Request, res: Response) => {
       idUser: idUser,
     });
 
+    const decodedToken: any = jwt.decode(
+      req.headers.authorization
+        ? req.headers.authorization.toString().replace("Bearer ", "")
+        : ""
+    );
+
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    
     if (userExist) {
       const result: any = await User.delete(idUser);
+
       if (result) {
         await insertBitacora({
           nameTableAction: "user",
-          nameRole: userExist.nameRole,
-          idUser: userExist.id,
-          userName: userExist.email,
-          actionDetail: `Se Eliminó el user con Email "${userExist.email}" `,
+          nameRole: decodedToken.nameRole,
+          idUser: decodedToken.idUser,
+          userName: decodedToken.userName,
+          actionDetail: `El Administrador "${decodedToken.userName}" elimino al usuario: "${userExist.userName}" exitosamente. `,
         });
         return result
           ? res
@@ -205,7 +215,8 @@ export const deleteUser = async (req: Request, res: Response) => {
               .json(await success({ data: result }, res.statusCode))
           : res.status(422).json(await error(res.statusCode));
       }
-    } // commit transaction now:
+    }
+    // commit transaction now:
     await queryRunner.commitTransaction();
   } catch (err) {
     // since we have errors let's rollback changes we made
