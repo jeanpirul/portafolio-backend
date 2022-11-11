@@ -5,8 +5,10 @@ import * as JWTVerifyToken from "../config/tokenMiddleware";
 const router = express.Router();
 //http://localhost:4000/products
 
+// ACTION: BodegaRole
+// METHOD: POST
 router.post(
-  "/bodegaRole/",
+  "localhost:4000/products/bodegaRole",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esBodega],
   async (req: Request, res: Response) => {
     //este endpoint permite crear un nuevo producto
@@ -14,8 +16,10 @@ router.post(
   }
 );
 
+// ACTION: BodegaRole
+// METHOD: GET
 router.get(
-  "/bodegaRole/",
+  "localhost:4000/products/bodegaRole",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esBodega],
   async (req: Request, res: Response) => {
     //este endpoint permite listar todos productos disponibles.
@@ -24,8 +28,10 @@ router.get(
   }
 );
 
+// ACTION: BodegaRole
+// METHOD: PATCh
 router.patch(
-  "/bodegaRole/:id",
+  "localhost:4000/products/bodegaRole/:id",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esBodega],
   async (req: Request, res: Response) => {
     //Este endpoint permite actualizar los datos de cada producto existente en la base de datos
@@ -33,8 +39,10 @@ router.patch(
   }
 );
 
+// ACTION: BodegaRole
+// METHOD: DELETE
 router.delete(
-  "/bodegaRole/:id",
+  "localhost:4000/products/bodegaRole/:id",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esBodega],
   async (req: Request, res: Response) => {
     /* Este endpoint permite eliminar los productos existentes en la base de datos segun el id */

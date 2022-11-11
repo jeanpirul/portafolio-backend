@@ -5,8 +5,10 @@ import * as JWTVerifyToken from "../config/tokenMiddleware";
 const router = express.Router();
 //http://localhost:4000/finance
 
+// ACTION: FinanceRole
+// METHOD: POST
 router.post(
-  "/financeRole/",
+  "localhost:4000/finance/financeRole",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esFinanza],
   async (req: Request, res: Response) => {
     //este endpoint permite crear un nuevo financee
@@ -14,8 +16,10 @@ router.post(
   }
 );
 
+// ACTION: FinanceRole
+// METHOD: GET
 router.get(
-  "/financeRole/",
+  "localhost:4000/finance/financeRole",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esFinanza],
   async (req: Request, res: Response) => {
     //Este endpoint permite listar todos los financees existentes en la base de datos
@@ -23,8 +27,10 @@ router.get(
   }
 );
 
+// ACTION: FinanceRole
+// METHOD: GET
 router.get(
-  "/financeRole/:id",
+  "localhost:4000/finance/financeRole/:id",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esFinanza],
   async (req: Request, res: Response) => {
     //Este endpoint permite listar 1 financere existente en la base de datos por el ID
@@ -32,8 +38,10 @@ router.get(
   }
 );
 
+// ACTION: FinanceRole
+// METHOD: PUT
 router.put(
-  "/financeRole/",
+  "localhost:4000/finance/financeRole/",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esFinanza],
   async (req: Request, res: Response) => {
     //Este endpoint permite actualizar los datos de cada clienmte existente en la base de datos
@@ -41,8 +49,10 @@ router.put(
   }
 );
 
+// ACTION: FinanceRole
+// METHOD: DELETE
 router.delete(
-  "/financeRole/:id",
+  "localhost:4000/finance/financeRole/:id",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esFinanza],
   async (req: Request, res: Response) => {
     /* Este endpoint permite eliminar los datos de cada 

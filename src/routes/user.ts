@@ -5,8 +5,10 @@ import * as JWTVerifyToken from "../config/tokenMiddleware";
 const router = express.Router();
 //http://localhost:4000/user
 
+// ACTION: adminRole
+// METHOD: GET
 router.get(
-  "/adminRole/",
+  "localhost:4000/user/adminRole",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],
   async (req: Request, res: Response) => {
     //Este endpoint permite listar todos los useres existentes en la base de datos
@@ -14,8 +16,10 @@ router.get(
   }
 );
 
+// ACTION: adminRole
+// METHOD: GET
 router.get(
-  "/adminRole/:id",
+  "localhost:4000/user/adminRole/:id",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],
   async (req: Request, res: Response) => {
     //Este endpoint permite listar 1 userre existente en la base de datos por el ID
@@ -23,8 +27,10 @@ router.get(
   }
 );
 
+// ACTION: adminRole
+// METHOD: PATCH
 router.patch(
-  "/clienteRole",
+  "localhost:4000/user/clienteRole",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esCliente],
   async (req: Request, res: Response) => {
     //Este endpoint permite actualizar los datos de cada clienmte existente en la base de datos
@@ -32,8 +38,10 @@ router.patch(
   }
 );
 
+// ACTION: adminRole
+// METHOD: DELETE
 router.delete(
-  "/adminRole/:id",
+  "localhost:4000/user/adminRole/:id",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],
   async (req: Request, res: Response) => {
     /* Este endpoint permite eliminar los datos de cada usere existente en la base de datos segun el id */

@@ -6,8 +6,10 @@ import * as actionController from "../controllers/action.controller";
 const router = express.Router();
 //http://localhost:4000/admin
 
+// ACTION: UpdateRole
+// METHOD: PATCH
 router.patch(
-  "/updateRole/",
+  "localhost:4000/admin/updateRole",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],
   async (req: Request, res: Response) => {
     //Este endpoint permite actualizar los datos de cada clienmte existente en la base de datos
@@ -15,8 +17,10 @@ router.patch(
   }
 );
 
+// ACTION: GetActions
+// METHOD: GET
 router.get(
-  "/getActions/",
+  "localhost:4000/admin/getActions",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],
   async (req: Request, res: Response) => {
     //este endpoint permite listar todas las acciones con autentificacion de usuario.
