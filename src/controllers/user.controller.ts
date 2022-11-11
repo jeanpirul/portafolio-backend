@@ -2,14 +2,16 @@ import { Request, Response } from "express";
 import { error, success } from "../config/responseApi";
 import { User } from "../entities_DB/user";
 import { insertBitacora } from "./action.controller";
-import * as jwt from "jsonwebtoken";
 import { SECRET_KEY } from "../environment";
 import { Rol } from "../entities_DB/rol";
 import { connectDB } from "../config/config";
+import * as jwt from "jsonwebtoken";
 
 export const createUser = async (req: Request, res: Response) => {
   const queryRunner = connectDB.createQueryRunner();
   try {
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
     const { userName, email, phoneNumber, password } = req.body;
 
     if (!userName || !email || !phoneNumber || !password)
@@ -18,14 +20,12 @@ export const createUser = async (req: Request, res: Response) => {
     const userFound = await User.findOneBy({
       email: email,
     });
-    
+
     if (userFound) {
       return res.status(400).json({
         error: "Email ya existe, no necesita registrarlo de nuevo.",
       });
     } else {
-      await queryRunner.connect();
-      await queryRunner.startTransaction();
       // Asignamos el rol por defecto de Cliente para un nuevo Usuario.
       let rolDefault = 2;
       let rol = rolDefault;
@@ -179,6 +179,8 @@ export const updatePassword = async (req: Request, res: Response) => {
 export const deleteUser = async (req: Request, res: Response) => {
   const queryRunner = connectDB.createQueryRunner();
   try {
+    await queryRunner.startTransaction();
+    await queryRunner.connect();
     console.log("Se ha solicitado la eliminación de una entidad User.");
     const { idUser } = req.params;
     if (!idUser) return res.status(404).json(await error(res.statusCode));

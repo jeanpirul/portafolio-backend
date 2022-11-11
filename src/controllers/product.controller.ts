@@ -13,7 +13,7 @@ export const createProduct = async (req: Request, res: Response) => {
     await queryRunner.startTransaction();
 
     const { amount, nameProduct, availability, price } = req.body;
-    
+
     if (!amount || !nameProduct || !availability || !price)
       return res.status(400).json(await error(res.statusCode));
 
@@ -76,19 +76,21 @@ export const getProduct = async (req: Request, res: Response) => {
 };
 
 export const updateProduct = async (req: Request, res: Response) => {
+  const queryRunner = connectDB.createQueryRunner();
   try {
-    const { idProduct, nameProduct, amount, availability, price, userName } =
-      req.body;
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    const { idProduct, nameProduct, amount, availability, price } = req.body;
 
     if (!idProduct)
-      return res.status(400).json({ message: "Finance not found" });
+      return res.status(400).json({ message: "Producto no encontrado" });
 
-    const financeExist: any = await Product.findOneBy({
+    const productFound: any = await Product.findOneBy({
       idProduct: idProduct,
     });
 
-    if (financeExist) {
-      const result = await Product.update(financeExist, {
+    if (productFound) {
+      const result = await Product.update(productFound, {
         idProduct: idProduct,
         amount: amount,
         availability: availability,
@@ -97,10 +99,10 @@ export const updateProduct = async (req: Request, res: Response) => {
       if (result) {
         await insertBitacora({
           nameTableAction: "product",
-          nameRole: financeExist.id,
-          idUser: financeExist.id,
-          userName: financeExist.userName,
-          actionDetail: `Se actualizaron parámetros de la finanza con id ${financeExist.id} a cargo del responsable de la caja: "${financeExist.userName}".`,
+          nameRole: productFound.id,
+          idUser: productFound.id,
+          userName: productFound.userName,
+          actionDetail: `Se actualizaron parámetros del producto con id ${productFound.id} a cargo del responsable de la caja: "${productFound.userName}".`,
         });
 
         return result
@@ -109,16 +111,65 @@ export const updateProduct = async (req: Request, res: Response) => {
               .json(await success({ data: result }, res.statusCode))
           : res.status(422).json(await error(res.statusCode));
       }
-    }
-  } catch (error) {
-    throw error;
+    } // commit transaction now:
+    await queryRunner.commitTransaction();
+  } catch (err) {
+    // since we have errors let's rollback changes we made
+    await queryRunner.rollbackTransaction();
+    //Si ocurre algún error, nos entregará un error detallado en la consola.
+    return res.status(500).json(await error(res.statusCode));
+  } finally {
+    // you need to release query runner which is manually created:
+    await queryRunner.release();
   }
 };
 
-export const deleteProduct = (req: Request, res: Response) => {
+export const deleteProduct = async (req: Request, res: Response) => {
+  const queryRunner = connectDB.createQueryRunner();
   try {
-    console.log("eliminar");
-  } catch (error) {
-    throw error;
+    await queryRunner.startTransaction();
+    await queryRunner.connect();
+
+    console.log("Se ha solicitado la eliminación de una entidad User.");
+    const { idProduct } = req.body;
+    if (!idProduct) return res.status(404).json(await error(res.statusCode));
+
+    const productExist: any = await Product.findOneBy({
+      idProduct: idProduct,
+    });
+
+    const decodedToken: any = jwt.decode(
+      req.headers.authorization
+        ? req.headers.authorization.toString().replace("Bearer ", "")
+        : ""
+    );
+
+    if (productExist) {
+      const result: any = await Product.delete(idProduct);
+      if (result) {
+        await insertBitacora({
+          nameTableAction: "producto",
+          nameRole: decodedToken.nameRole,
+          idUser: decodedToken.idUser,
+          userName: decodedToken.email,
+          actionDetail: `El Bodeguero "${decodedToken.email}" eliminó el producto "${productExist.nameProduct}" `,
+        });
+
+        return result
+          ? res
+              .status(200)
+              .json(await success({ data: result }, res.statusCode))
+          : res.status(422).json(await error(res.statusCode));
+      }
+    } // commit transaction now:
+    await queryRunner.commitTransaction();
+  } catch (err) {
+    // since we have errors let's rollback changes we made
+    await queryRunner.rollbackTransaction();
+    //Si ocurre algún error, nos entregará un error detallado en la consola.
+    return res.status(500).json(await error(res.statusCode));
+  } finally {
+    // you need to release query runner which is manually created:
+    await queryRunner.release();
   }
 };
