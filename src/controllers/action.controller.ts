@@ -3,7 +3,6 @@ import { InsertResult } from "typeorm";
 import { error, success } from "../config/responseApi";
 import { Action } from "../entities_DB/action";
 import { InsertBitacoraInterface } from "../models/insertBitacora";
-import * as jwt from "jsonwebtoken";
 
 export const createAction = async (
   req: Request,

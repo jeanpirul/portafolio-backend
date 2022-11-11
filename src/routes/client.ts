@@ -15,11 +15,20 @@ router.get(
 );
 
 router.get(
-  "/adminRole/:id",
+  "/adminRole/:idUser",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],
   async (req: Request, res: Response) => {
     //Este endpoint permite listar 1 clientre existente en la base de datos por el ID
     await clientController.getClientById(req, res);
+  }
+);
+
+router.get(
+  "/adminRole/email/:email",
+  // [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],
+  async (req: Request, res: Response) => {
+    //Este endpoint permite listar 1 clientre existente en la base de datos por el ID
+    await clientController.getClientByEmail(req, res);
   }
 );
 
