@@ -35,18 +35,27 @@ export const createFinance = async (req: Request, res: Response) => {
       purchaseDetail: purchaseDetail,
     });
 
-    await insertBitacora({
-      nameTableAction: "finance",
-      nameRole: result.id,
-      idUser: result.id,
-      userName: result.userName,
-      actionDetail: `Creación de nueva cuenta del usuario: "${result.userName}" responsable de la caja.`,
-    });
+    const decodedToken: any = jwt.decode(
+      req.headers.authorization
+        ? req.headers.authorization.toString().replace("Bearer ", "")
+        : ""
+    );
 
-    res.status(201).json({
-      message: "Finanza registrada exitosamente!",
-      result,
-    }); // commit transaction now:
+    if (result) {
+      await insertBitacora({
+        nameTableAction: "finance",
+        nameRole: decodedToken.idRol,
+        idUser: decodedToken.idUser,
+        userName: decodedToken.userName,
+        actionDetail: `El Cajero de nueva cuenta del usuario: "${result.userName}" responsable de la caja.`,
+      }); //
+
+      res.status(201).json({
+        message: "Finanza registrada exitosamente!",
+        result,
+      });
+    }
+    // commit transaction now:
     await queryRunner.commitTransaction();
   } catch (err) {
     // since we have errors let's rollback changes we made

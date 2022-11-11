@@ -49,38 +49,15 @@ export const getClientById = async (req: Request, res: Response) => {
   }
 };
 
-export const getClientByEmail = async (req: Request, res: Response) => {
-  const { email } = req.params;
-  try {
-    if (!email) return res.status(404).json(await error(res.statusCode));
-
-    const client = await User.findOneBy({
-      email: email,
-    });
-
-    !client
-      ? res
-          .status(404)
-          .json({ message: "Cliente no existe en la base de datos" })
-      : res.json({ listClient: client });
-  } catch (error) {
-    console.log(error);
-    //check if error is instance of Error
-    if (error instanceof Error) {
-      //send a json response with the error message
-      return res.status(500).json({ message: error.message });
-    }
-  }
-};
-
-export const deleteClient = async (req: Request, res: Response) => {
+export const deleteUserByEmail = async (req: Request, res: Response) => {
   const queryRunner = connectDB.createQueryRunner();
   try {
     console.log("Se ha solicitado la eliminación de una entidad Cliente.");
     await queryRunner.connect();
     await queryRunner.startTransaction();
-    const { id } = req.params;
-    if (!id) return res.status(404).json(await error(res.statusCode));
+
+    const { email } = req.params;
+    if (!email) return res.status(404).json(await error(res.statusCode));
 
     const decodedToken: any = jwt.decode(
       req.headers.authorization
@@ -89,15 +66,15 @@ export const deleteClient = async (req: Request, res: Response) => {
     );
 
     const clienteExist: any = await User.findOneBy({
-      idUser: id,
+      email: email,
     });
 
     const getRol = await Rol.findOneBy({ idRol: decodedToken.idRol });
     if (clienteExist) {
-      const result: any = await User.delete(id);
+      const result: any = await User.delete(email);
       if (result) {
         await insertBitacora({
-          nameTableAction: "client",
+          nameTableAction: "user",
           nameRole: getRol?.nameRol,
           idUser: decodedToken.idUser,
           userName: decodedToken.email,

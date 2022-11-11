@@ -23,22 +23,4 @@ router.get(
   }
 );
 
-router.get(
-  "/adminRole/email/:email",
-  // [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],
-  async (req: Request, res: Response) => {
-    //Este endpoint permite listar 1 clientre existente en la base de datos por el ID
-    await clientController.getClientByEmail(req, res);
-  }
-);
-
-router.delete(
-  "/adminRole/:id",
-  [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],
-  async (req: Request, res: Response) => {
-    /* Este endpoint permite eliminar los datos de cada cliente existente en la base de datos segun el id */
-    await clientController.deleteClient(req, res);
-  }
-);
-
 export default router;

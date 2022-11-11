@@ -16,6 +16,7 @@ export const login = async (req: Request, res: Response) => {
     const userFound = await User.findOneBy({
       email: email,
     });
+
     //realiza comparacion entre la contraseña ingresada y la contraseña guardada en base de datos.
     if (userFound) {
       const matchPassword = await User.comparePassword(
@@ -39,6 +40,7 @@ export const login = async (req: Request, res: Response) => {
           expiresIn: 86400,
         }
       );
+      
       const serialized = serialize("tokenUser", tokenUser, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",

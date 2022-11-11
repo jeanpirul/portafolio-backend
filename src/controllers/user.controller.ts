@@ -2,14 +2,16 @@ import { Request, Response } from "express";
 import { error, success } from "../config/responseApi";
 import { User } from "../entities_DB/user";
 import { insertBitacora } from "./action.controller";
-import * as jwt from "jsonwebtoken";
 import { SECRET_KEY } from "../environment";
 import { Rol } from "../entities_DB/rol";
 import { connectDB } from "../config/config";
+import * as jwt from "jsonwebtoken";
 
 export const createUser = async (req: Request, res: Response) => {
   const queryRunner = connectDB.createQueryRunner();
   try {
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
     const { userName, email, phoneNumber, password } = req.body;
 
     if (!userName || !email || !phoneNumber || !password)
@@ -18,14 +20,12 @@ export const createUser = async (req: Request, res: Response) => {
     const userFound = await User.findOneBy({
       email: email,
     });
-    
+
     if (userFound) {
       return res.status(400).json({
         error: "Email ya existe, no necesita registrarlo de nuevo.",
       });
     } else {
-      await queryRunner.connect();
-      await queryRunner.startTransaction();
       // Asignamos el rol por defecto de Cliente para un nuevo Usuario.
       let rolDefault = 2;
       let rol = rolDefault;
@@ -177,7 +177,10 @@ export const updatePassword = async (req: Request, res: Response) => {
 };
 
 export const deleteUser = async (req: Request, res: Response) => {
+  const queryRunner = connectDB.createQueryRunner();
   try {
+    await queryRunner.startTransaction();
+    await queryRunner.connect();
     console.log("Se ha solicitado la eliminación de una entidad User.");
     const { idUser } = req.params;
     if (!idUser) return res.status(404).json(await error(res.statusCode));
@@ -202,9 +205,15 @@ export const deleteUser = async (req: Request, res: Response) => {
               .json(await success({ data: result }, res.statusCode))
           : res.status(422).json(await error(res.statusCode));
       }
-    }
+    } // commit transaction now:
+    await queryRunner.commitTransaction();
   } catch (err) {
-    console.log(err);
+    // since we have errors let's rollback changes we made
+    await queryRunner.rollbackTransaction();
+    //Si ocurre algún error, nos entregará un error detallado en la consola.
     return res.status(500).json(await error(res.statusCode));
+  } finally {
+    // you need to release query runner which is manually created:
+    await queryRunner.release();
   }
 };
