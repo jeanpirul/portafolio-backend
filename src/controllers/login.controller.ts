@@ -1,17 +1,22 @@
 import { Request, Response } from "express";
 import { SECRET_KEY } from "../environment";
 import { error } from "../config/responseApi";
-import * as jwt from "jsonwebtoken";
 import { User } from "../entities_DB/user";
+import * as jwt from "jsonwebtoken";
 import("../config/config");
+import { serialize } from "cookie";
 
 export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
+    if (!email || !password)
+      return res.status(400).json(await error(res.statusCode));
+
     //Primero buscan cliente que exista con el email que ingresamos
     const userFound = await User.findOneBy({
       email: email,
     });
+
     //realiza comparacion entre la contraseña ingresada y la contraseña guardada en base de datos.
     if (userFound) {
       const matchPassword = await User.comparePassword(
@@ -35,6 +40,16 @@ export const login = async (req: Request, res: Response) => {
           expiresIn: 86400,
         }
       );
+      
+      const serialized = serialize("tokenUser", tokenUser, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 1000 * 60 * 60 * 24 * 30,
+        path: "/",
+      });
+
+      res.setHeader("Set-Cookie", serialized);
 
       res
         .status(200)

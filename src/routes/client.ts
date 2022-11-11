@@ -1,11 +1,15 @@
-import { Request, Response, Router } from "express";
+import express, { Request, Response } from "express";
 import * as clientController from "../controllers/client.controller";
 import * as JWTVerifyToken from "../config/tokenMiddleware";
 
-const router: Router = Router();
+const router = express.Router();
+//http://localhost:4000/client
 
+// ACTION: GetClient
+// METHOD: GET
+//http://localhost:4000/client/adminRole/getClients/
 router.get(
-  "/adminRole/getClient/",
+  "/adminRole/getClients",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],
   async (req: Request, res: Response) => {
     //Este endpoint permite listar todos los clientes existentes en la base de datos
@@ -13,21 +17,15 @@ router.get(
   }
 );
 
+// ACTION: Getid
+// METHOD: GET
+//http://localhost:4000/client/adminRole/getClientById/:idUser
 router.get(
-  "/adminRole/:id",
+  "/adminRole/getClientById/:idUser",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],
   async (req: Request, res: Response) => {
     //Este endpoint permite listar 1 clientre existente en la base de datos por el ID
     await clientController.getClientById(req, res);
-  }
-);
-
-router.delete(
-  "/adminRole/:id",
-  [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],
-  async (req: Request, res: Response) => {
-    /* Este endpoint permite eliminar los datos de cada cliente existente en la base de datos segun el id */
-    await clientController.deleteClient(req, res);
   }
 );
 

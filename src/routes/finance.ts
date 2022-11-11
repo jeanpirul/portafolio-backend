@@ -3,9 +3,13 @@ import * as financeController from "../controllers/finance.controller";
 import * as JWTVerifyToken from "../config/tokenMiddleware";
 
 const router = express.Router();
+//http://localhost:4000/finance
 
+// ACTION: FinanceRole
+// METHOD: POST
+//http://localhost:4000/finance/financeRole/createFinance
 router.post(
-  "/financeRole/",
+  "/financeRole/createFinance",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esFinanza],
   async (req: Request, res: Response) => {
     //este endpoint permite crear un nuevo financee
@@ -13,8 +17,11 @@ router.post(
   }
 );
 
+// ACTION: FinanceRole
+// METHOD: GET
+//http://localhost:4000/finance/financeRole/getFinance
 router.get(
-  "/financeRole/",
+  "/financeRole/getFinance",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esFinanza],
   async (req: Request, res: Response) => {
     //Este endpoint permite listar todos los financees existentes en la base de datos
@@ -22,8 +29,11 @@ router.get(
   }
 );
 
+// ACTION: FinanceRole
+// METHOD: GET
+//http://localhost:4000/finance/financeRole/getFinanceById/:id
 router.get(
-  "/financeRole/:id",
+  "/financeRole/getFinanceById/:id",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esFinanza],
   async (req: Request, res: Response) => {
     //Este endpoint permite listar 1 financere existente en la base de datos por el ID
@@ -31,8 +41,11 @@ router.get(
   }
 );
 
+// ACTION: FinanceRole
+// METHOD: PUT
+//http://localhost:4000/finance/financeRole/updateFinance
 router.put(
-  "/financeRole/",
+  "/financeRole/updateFinance/",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esFinanza],
   async (req: Request, res: Response) => {
     //Este endpoint permite actualizar los datos de cada clienmte existente en la base de datos
@@ -40,8 +53,11 @@ router.put(
   }
 );
 
+// ACTION: FinanceRole
+// METHOD: DELETE
+//http://localhost:4000/finance/financeRole/deleteFinance/:id
 router.delete(
-  "/financeRole/:id",
+  "/financeRole/deleteFinance/:id",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esFinanza],
   async (req: Request, res: Response) => {
     /* Este endpoint permite eliminar los datos de cada 
