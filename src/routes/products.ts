@@ -7,8 +7,9 @@ const router = express.Router();
 
 // ACTION: BodegaRole
 // METHOD: POST
+//http://localhost:4000/products/bodegaRole/createProduct
 router.post(
-  "localhost:4000/products/bodegaRole",
+  "/bodegaRole/createProduct",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esBodega],
   async (req: Request, res: Response) => {
     //este endpoint permite crear un nuevo producto
@@ -18,8 +19,9 @@ router.post(
 
 // ACTION: BodegaRole
 // METHOD: GET
+//http://localhost:4000/products/bodegaRole/getProduct
 router.get(
-  "localhost:4000/products/bodegaRole",
+  "/bodegaRole/getProduct",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esBodega],
   async (req: Request, res: Response) => {
     //este endpoint permite listar todos productos disponibles.
@@ -29,9 +31,10 @@ router.get(
 );
 
 // ACTION: BodegaRole
-// METHOD: PATCh
+// METHOD: PATCH
+//http://localhost:4000/products/bodegaRole/updateProduct/:id
 router.patch(
-  "localhost:4000/products/bodegaRole/:id",
+  "/bodegaRole/updateProduct/:id",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esBodega],
   async (req: Request, res: Response) => {
     //Este endpoint permite actualizar los datos de cada producto existente en la base de datos
@@ -41,8 +44,9 @@ router.patch(
 
 // ACTION: BodegaRole
 // METHOD: DELETE
+//http://localhost:4000/products/bodegaRole/deleteProduct/:id
 router.delete(
-  "localhost:4000/products/bodegaRole/:id",
+  "/bodegaRole/deleteProduct/:id",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esBodega],
   async (req: Request, res: Response) => {
     /* Este endpoint permite eliminar los productos existentes en la base de datos segun el id */

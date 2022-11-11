@@ -7,14 +7,16 @@ const router = express.Router();
 
 // ACTION: REGISTER
 // METHOD: POST
-router.post("localhost:4000/auth/register/", async (req: Request, res: Response) => {
+//http://localhost:4000/auth/register/createUser
+router.post("/register/createUser", async (req: Request, res: Response) => {
   //este endpoint permite crear un nuevo usere
   await userController.createUser(req, res);
 });
 
 // ACTION: LOGIN
 // METHOD: POST
-router.post("localhost:4000/auth/login/", async (req, res) => {
+//http://localhost:4000/auth/login
+router.post("/login", async (req, res) => {
   //este endpoint permite crear un nuevo usuario
   await login(req, res);
 });

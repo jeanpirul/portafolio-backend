@@ -6,7 +6,8 @@ const router = express.Router();
 
 // ACTION: CREATE
 // METHOD: POST
-router.post("localhost:4000/action/create", async (req: Request, res: Response) => {
+//http://localhost:4000/action/create/createAction
+router.post("/create", async (req: Request, res: Response) => {
   //este endpoint permite crear una nueva acción
   await actionController.createAction(req, res);
 });

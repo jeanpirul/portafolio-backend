@@ -4,13 +4,13 @@ const router = express.Router();
 
 // ACTION: CONNECT
 // METHOD: GET
-router.get("localhost:4000/root/", (req, res) => {
+router.get("/", (req, res) => {
   res.status(200).send("Se ha conectado correctamente.");
 });
 
 // ACTION: GET USER
 // METHOD: GET
-router.get("localhost:4000/root/user", (req, res) => {
+router.get("/root/user", (req, res) => {
   res.status(200).send([
     {
       id: "1",
