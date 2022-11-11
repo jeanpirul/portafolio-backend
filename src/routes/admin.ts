@@ -9,7 +9,7 @@ const router = express.Router();
 
 // ACTION: UpdateRole
 // METHOD: PATCH
-//http://localhost:4000/admin/adminRole/updateRole
+//http://localhost:4000/adminRole/updateRole
 router.patch(
   "/updateRole",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],
@@ -21,7 +21,7 @@ router.patch(
 
 // ACTION: GetActions
 // METHOD: GET
-//http://localhost:4000/admin/adminRole/readAction
+//http://localhost:4000/adminRole/readAction
 router.get(
   "/readAction",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],
@@ -33,7 +33,7 @@ router.get(
 
 // ACTION: GetUserByEmail
 // METHOD: GET
-//http://localhost:4000/admin/adminRole/getUserByEmail/:email
+//http://localhost:4000/adminRole/getUserByEmail/:email
 router.get(
   "/getUserByEmail/:email",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],
@@ -45,7 +45,7 @@ router.get(
 
 // ACTION: deleteUserByEmail
 // METHOD: delete
-//http://localhost:4000/client/adminRole/deleteUserByEmail/:email
+//http://localhost:4000/adminRole/deleteUserByEmail/:email
 router.delete(
   "/deleteUserByEmail/:email",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],

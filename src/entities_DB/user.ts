@@ -10,6 +10,7 @@ import {
 import bcrypt from "bcrypt";
 import { Rol } from "./rol";
 import { Product } from "./product";
+import { Finance } from "./finance";
 
 @Entity("user")
 export class User extends BaseEntity {
@@ -37,6 +38,9 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Product, (product) => product.user)
   product: Product;
+
+  @OneToMany(() => Finance, (finance) => finance.finance)
+  finance: Finance;
 
   static encryptPassword = async (password: string) => {
     const salt = await bcrypt.genSalt(10);

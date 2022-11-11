@@ -1,9 +1,16 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column } from "typeorm";
+import {
+  Entity,
+  BaseEntity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+} from "typeorm";
 
 @Entity("finance")
 export class Finance extends BaseEntity {
   @PrimaryGeneratedColumn()
-  public id: string; //Identificador del cliente
+  public idFinance: string; //Identificador del cliente
 
   @Column({ type: "int4" })
   public totalIncome: number; //ingresos totales referenciados a ventas del restaurant.
@@ -23,4 +30,8 @@ export class Finance extends BaseEntity {
 
   @Column({ type: "varchar", length: 100, nullable: false })
   public userName: string; //Nombre del responsable de la caja
+
+  @ManyToOne(() => Finance, (finance) => finance.idFinance)
+  @JoinColumn([{ name: "fk_Finance", referencedColumnName: "idFinance" }])
+  finance: Finance[];
 }
