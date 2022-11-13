@@ -69,9 +69,11 @@ export const deleteUserByEmail = async (req: Request, res: Response) => {
       email: email,
     });
 
+    let idUsuario = clienteExist.idUser;
     const getRol = await Rol.findOneBy({ idRol: decodedToken.idRol });
+    
     if (clienteExist) {
-      const result: any = await User.delete(email);
+      const result: any = await User.delete(idUsuario);
       if (result) {
         await insertBitacora({
           nameTableAction: "user",
