@@ -27,18 +27,19 @@ export const getClient = async (req: Request, res: Response) => {
   }
 };
 
-export const getClientById = async (req: Request, res: Response) => {
+export const getClientByEmail = async (req: Request, res: Response) => {
   const { idUser } = req.params;
   try {
-    if (!idUser) return res.status(404).json(await error(res.statusCode));
+    const { email } = req.params;
+    if (!email) return res.status(404).json(await error(res.statusCode));
 
-    const client = await User.findOneBy({
-      idUser: idUser,
+    const clientFound: any = await User.findOneBy({
+      email: email,
     });
 
-    !client
-      ? res.status(404).json({ message: "No client found" })
-      : res.json({ listClient: client });
+    !clientFound
+      ? res.status(404).json({ message: "Cliente-Usuario no encontrado" })
+      : res.json({ listClient: clientFound });
   } catch (error) {
     console.log(error);
     //check if error is instance of Error
