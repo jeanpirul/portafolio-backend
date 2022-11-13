@@ -28,7 +28,6 @@ export const getClient = async (req: Request, res: Response) => {
 };
 
 export const getClientByEmail = async (req: Request, res: Response) => {
-  const { idUser } = req.params;
   try {
     const { email } = req.params;
     if (!email) return res.status(404).json(await error(res.statusCode));
@@ -72,7 +71,7 @@ export const deleteUserByEmail = async (req: Request, res: Response) => {
 
     let idUsuario = clienteExist.idUser;
     const getRol = await Rol.findOneBy({ idRol: decodedToken.idRol });
-    
+
     if (clienteExist) {
       const result: any = await User.delete(idUsuario);
       if (result) {
