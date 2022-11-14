@@ -12,9 +12,9 @@ export const createProduct = async (req: Request, res: Response) => {
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
-    const { amount, nameProduct, availability, price } = req.body;
+    const { nombreProducto, cantidad, precio, disponibilidad } = req.body;
 
-    if (!amount || !nameProduct || !availability || !price)
+    if (!nombreProducto || !cantidad || !precio || !disponibilidad)
       return res.status(400).json(await error(res.statusCode));
 
     const decodedToken: any = jwt.decode(
@@ -25,10 +25,10 @@ export const createProduct = async (req: Request, res: Response) => {
 
     //Datos a guardar en Base de datos
     const result = await Product.save({
-      nameProduct: nameProduct,
-      amount: amount,
-      availability: availability,
-      price: price,
+      nombreProducto: nombreProducto,
+      cantidad: cantidad,
+      precio: precio,
+      disponibilidad: disponibilidad,
       fk_User: decodedToken.idUser,
     });
 
@@ -40,7 +40,7 @@ export const createProduct = async (req: Request, res: Response) => {
         nameRole: getRol?.nameRol,
         idUser: decodedToken.idUser,
         userName: decodedToken.email,
-        actionDetail: `Creación de nuevo producto : "${result.nameProduct}" por el Encargado: "${decodedToken.userName}"`,
+        actionDetail: `El ${getRol?.nameRol} "${decodedToken.userName}" realizó la creación del producto "${result.nombreProducto}".`,
       });
 
       //Retorno de respuesta exitosa o caso error.
@@ -80,7 +80,15 @@ export const updateProduct = async (req: Request, res: Response) => {
   try {
     await queryRunner.connect();
     await queryRunner.startTransaction();
-    const { idProduct, nameProduct, amount, availability, price } = req.body;
+
+    const decodedToken: any = jwt.decode(
+      req.headers.authorization
+        ? req.headers.authorization.toString().replace("Bearer ", "")
+        : ""
+    );
+
+    const { idProduct, nombreProducto, cantidad, precio, disponibilidad } =
+      req.body;
 
     if (!idProduct)
       return res.status(400).json({ message: "Producto no encontrado" });
@@ -89,20 +97,22 @@ export const updateProduct = async (req: Request, res: Response) => {
       idProduct: idProduct,
     });
 
+    const getRol = await Rol.findOneBy({ idRol: decodedToken.idRol });
     if (productFound) {
       const result = await Product.update(productFound, {
         idProduct: idProduct,
-        amount: amount,
-        availability: availability,
-        price: price,
+        cantidad: cantidad,
+        precio: precio,
+        disponibilidad: disponibilidad,
       });
+
       if (result) {
         await insertBitacora({
           nameTableAction: "product",
-          nameRole: productFound.id,
-          idUser: productFound.id,
-          userName: productFound.userName,
-          actionDetail: `Se actualizaron parámetros del producto con id ${productFound.id} a cargo del responsable de la caja: "${productFound.userName}".`,
+          nameRole: getRol?.nameRol,
+          idUser: decodedToken.idUser,
+          userName: decodedToken.userName,
+          actionDetail: `El responsable de la caja: "${decodedToken.userName}" actualizaró parámetros del producto con ${productFound.nombreProducto} a cargo.`,
         });
 
         return result
@@ -130,12 +140,13 @@ export const deleteProduct = async (req: Request, res: Response) => {
     await queryRunner.startTransaction();
     await queryRunner.connect();
 
-    console.log("Se ha solicitado la eliminación de una entidad User.");
-    const { idProduct } = req.body;
-    if (!idProduct) return res.status(404).json(await error(res.statusCode));
+    console.log("Se ha solicitado la eliminación de un producto.");
+    const { nombreProducto } = req.body;
+    if (!nombreProducto)
+      return res.status(404).json(await error(res.statusCode));
 
     const productExist: any = await Product.findOneBy({
-      idProduct: idProduct,
+      nombreProducto: nombreProducto,
     });
 
     const decodedToken: any = jwt.decode(
@@ -144,15 +155,18 @@ export const deleteProduct = async (req: Request, res: Response) => {
         : ""
     );
 
+    const getRol = await Rol.findOneBy({ idRol: decodedToken.idRol });
+    let idProduct = productExist.idProduct;
+
     if (productExist) {
       const result: any = await Product.delete(idProduct);
       if (result) {
         await insertBitacora({
           nameTableAction: "producto",
-          nameRole: decodedToken.nameRole,
+          nameRole: getRol?.nameRol,
           idUser: decodedToken.idUser,
           userName: decodedToken.email,
-          actionDetail: `El Bodeguero "${decodedToken.email}" eliminó el producto "${productExist.nameProduct}" `,
+          actionDetail: `El ${getRol?.nameRol} "${decodedToken.email}" eliminó el producto "${productExist.nombreProducto}" `,
         });
 
         return result

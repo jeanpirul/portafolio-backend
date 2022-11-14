@@ -13,17 +13,17 @@ export class Product extends BaseEntity {
   @PrimaryGeneratedColumn({ type: "int4" })
   public idProduct: number;
 
-  @Column({ type: "int4" })
-  public amount: number;
-
   @Column({ type: "varchar", length: 50, nullable: false })
-  public nameProduct: string;
+  public nombreProducto: string;
 
   @Column({ type: "int4" })
-  public availability: number;
+  public cantidad: number;
 
   @Column({ type: "int4" })
-  public price: number;
+  public precio: number;
+
+  @Column({ type: "int4" })
+  public disponibilidad: boolean;
 
   @Column({ type: "int4", nullable: true })
   public fk_User: number;
