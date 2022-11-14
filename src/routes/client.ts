@@ -13,19 +13,19 @@ router.get(
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],
   async (req: Request, res: Response) => {
     //Este endpoint permite listar todos los clientes existentes en la base de datos
-    await clientController.getClient(req, res);
+    await clientController.getClients(req, res);
   }
 );
 
 // ACTION: Getid
 // METHOD: GET
-//http://localhost:4000/client/adminRole/getClientById/:idUser
+//http://localhost:4000/client/adminRole/getClientByEmail/:idUser
 router.get(
-  "/adminRole/getClientById/:idUser",
+  "/adminRole/getClientByEmail/:idUser",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],
   async (req: Request, res: Response) => {
     //Este endpoint permite listar 1 clientre existente en la base de datos por el ID
-    await clientController.getClientById(req, res);
+    await clientController.getClientByEmail(req, res);
   }
 );
 

@@ -6,7 +6,7 @@ import { User } from "../entities_DB/user";
 import { connectDB } from "../config/config";
 import * as jwt from "jsonwebtoken";
 
-export const getClient = async (req: Request, res: Response) => {
+export const getClients = async (req: Request, res: Response) => {
   try {
     let clientRole = 2;
     const clientFound = await Rol.query(
