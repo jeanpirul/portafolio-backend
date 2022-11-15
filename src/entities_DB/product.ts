@@ -22,7 +22,7 @@ export class Product extends BaseEntity {
   @Column({ type: "int4", nullable: true })
   public precio: number;
 
-  @Column({ type: "int4", nullable: true })
+  @Column({ type: "bool", nullable: true })
   public disponibilidad: boolean;
 
   @Column({ type: "int4", nullable: true })

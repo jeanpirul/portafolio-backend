@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import * as productCtrl from "../controllers/product.controller";
+import * as productCtrl from "../controllers/bodega.controller";
 import * as JWTVerifyToken from "../config/tokenMiddleware";
 
 const router = express.Router();
@@ -7,7 +7,7 @@ const router = express.Router();
 
 // ACTION: BodegaRole
 // METHOD: POST
-//http://localhost:4000/products/bodegaRole/createProduct
+//http://localhost:4000/bodega/bodegaRole/createProduct
 router.post(
   "/bodegaRole/createProduct",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esBodega],
@@ -19,7 +19,7 @@ router.post(
 
 // ACTION: BodegaRole
 // METHOD: GET
-//http://localhost:4000/products/bodegaRole/getProduct
+//http://localhost:4000/bodega/bodegaRole/getProduct
 router.get(
   "/bodegaRole/getProduct",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esBodega],
