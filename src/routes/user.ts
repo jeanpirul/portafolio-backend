@@ -19,7 +19,7 @@ router.get(
 
 // ACTION: adminRole
 // METHOD: GET
-//http://localhost:4000/user/adminRole/getUserById
+//http://localhost:4000/user/adminRole/getUserById/
 router.get(
   "/adminRole/getUserById/:id",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],
@@ -31,9 +31,9 @@ router.get(
 
 // ACTION: adminRole
 // METHOD: PATCH
-//http://localhost:4000/user/adminRole/updatePassword
+//http://localhost:4000/user/clientRole/updatePassword
 router.patch(
-  "/clienteRole/updatePassword",
+  "/clientRole/updatePassword",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esCliente],
   async (req: Request, res: Response) => {
     //Este endpoint permite actualizar los datos de cada clienmte existente en la base de datos
@@ -43,7 +43,7 @@ router.patch(
 
 // ACTION: adminRole
 // METHOD: DELETE
-//http://localhost:4000/user/adminRole/deleteUser
+//http://localhost:4000/user/adminRole/deleteUser/
 router.delete(
   "adminRole/deleteUser/:id",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],

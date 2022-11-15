@@ -6,7 +6,7 @@ import { User } from "../entities_DB/user";
 import { connectDB } from "../config/config";
 import * as jwt from "jsonwebtoken";
 
-export const getClient = async (req: Request, res: Response) => {
+export const getClients = async (req: Request, res: Response) => {
   try {
     let clientRole = 2;
     const clientFound = await Rol.query(
@@ -27,18 +27,18 @@ export const getClient = async (req: Request, res: Response) => {
   }
 };
 
-export const getClientById = async (req: Request, res: Response) => {
-  const { idUser } = req.params;
+export const getClientByEmail = async (req: Request, res: Response) => {
   try {
-    if (!idUser) return res.status(404).json(await error(res.statusCode));
+    const { email } = req.params;
+    if (!email) return res.status(404).json(await error(res.statusCode));
 
-    const client = await User.findOneBy({
-      idUser: idUser,
+    const clientFound: any = await User.findOneBy({
+      email: email,
     });
 
-    !client
-      ? res.status(404).json({ message: "No client found" })
-      : res.json({ listClient: client });
+    !clientFound
+      ? res.status(404).json({ message: "Cliente-Usuario no encontrado" })
+      : res.json({ listClient: clientFound });
   } catch (error) {
     console.log(error);
     //check if error is instance of Error
@@ -69,9 +69,11 @@ export const deleteUserByEmail = async (req: Request, res: Response) => {
       email: email,
     });
 
+    let idUsuario = clienteExist.idUser;
     const getRol = await Rol.findOneBy({ idRol: decodedToken.idRol });
+
     if (clienteExist) {
-      const result: any = await User.delete(email);
+      const result: any = await User.delete(idUsuario);
       if (result) {
         await insertBitacora({
           nameTableAction: "user",

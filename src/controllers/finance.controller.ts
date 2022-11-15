@@ -92,12 +92,12 @@ export const getFinance = async (req: Request, res: Response) => {
 };
 
 export const getFinanceById = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  if (!id) return res.status(400).json(await error(res.statusCode));
+  const { idFinance } = req.params;
+  if (!idFinance) return res.status(400).json(await error(res.statusCode));
 
   try {
     const finance = await Finance.findOneBy({
-      id: id,
+      idFinance: idFinance,
     });
     !finance
       ? res.status(404).json({ message: "Finance not found" })
@@ -118,9 +118,9 @@ export const updateFinance = async (req: Request, res: Response) => {
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
-    const { id, userName, totalIncome, totalExpenses, purchaseDetail } =
+    const { idFinance, userName, totalIncome, totalExpenses, purchaseDetail } =
       req.body;
-    if (!id) return res.status(400).json({ message: "Finance not found" });
+    if (!idFinance) return res.status(400).json({ message: "Finance not found" });
 
     const decodedToken: any = jwt.decode(
       req.headers.authorization
@@ -129,12 +129,12 @@ export const updateFinance = async (req: Request, res: Response) => {
     );
 
     const financeExist: any = await Finance.findOneBy({
-      id: id,
+      idFinance: idFinance,
     });
 
     if (financeExist) {
       const result = await Finance.update(financeExist, {
-        id: id,
+        idFinance: idFinance,
         totalIncome: totalIncome,
         totalExpenses: totalExpenses,
         purchaseDetail: purchaseDetail,
@@ -173,22 +173,22 @@ export const deleteFinance = async (req: Request, res: Response) => {
   try {
     await queryRunner.connect();
     await queryRunner.startTransaction();
-    const { id } = req.params;
-    if (!id) return res.status(404).json(await error(res.statusCode));
+    const { idFinance } = req.body;
+    if (!idFinance) return res.status(404).json(await error(res.statusCode));
 
     const financeExist = await Finance.findOneBy({
-      id: id,
+      idFinance: idFinance,
     });
 
     if (financeExist) {
-      const result = await Finance.delete(id);
+      const result = await Finance.delete(idFinance);
       if (result) {
         await insertBitacora({
           nameTableAction: "finance",
-          nameRole: financeExist.id,
-          idUser: financeExist.id,
-          userName: financeExist.id,
-          actionDetail: `Se Eliminó la finanza con Id: "${financeExist.id}"`,
+          nameRole: financeExist.idFinance,
+          idUser: financeExist.idFinance,
+          userName: financeExist.idFinance,
+          actionDetail: `Se Eliminó la finanza con Id: "${financeExist.idFinance}"`,
         });
 
         return result
