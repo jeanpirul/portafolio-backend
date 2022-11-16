@@ -7,6 +7,8 @@ import root from "./root";
 import user from "./user";
 import admin from "./admin";
 import actionBodega from "./actionBodega";
+import actionFinanza from "./actionFinanza";
+
 
 export const routes = {
   client,
@@ -17,5 +19,6 @@ export const routes = {
   bodega,
   user,
   admin,
-  actionBodega
+  actionBodega,
+  actionFinanza
 };
