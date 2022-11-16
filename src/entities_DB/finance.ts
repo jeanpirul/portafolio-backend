@@ -3,9 +3,10 @@ import {
   BaseEntity,
   PrimaryGeneratedColumn,
   Column,
-  ManyToOne,
   JoinColumn,
+  OneToMany,
 } from "typeorm";
+import { User } from "./user";
 
 @Entity("finance")
 export class Finance extends BaseEntity {
@@ -18,20 +19,20 @@ export class Finance extends BaseEntity {
   @Column({ type: "int4" })
   public totalExpenses: number; // Egresos totales del restaurant.
 
-  @Column({ type: "varchar", length: 150, nullable: false })
+  @Column({ type: "varchar", length: 150, nullable: true })
   public purchaseDetail: string; //Detalle de compras del restaurant.
 
   @Column({
     type: "timestamp",
-    nullable: false,
+    nullable: true,
     default: () => "CURRENT_TIMESTAMP",
   })
   public purchaseDate?: Date; //Fecha de compras del restaurant.
 
-  @Column({ type: "varchar", length: 100, nullable: false })
-  public userName: string; //Nombre del responsable de la caja
+  @Column({ type: "int4", nullable: true })
+  public fk_User: number;
 
-  @ManyToOne(() => Finance, (finance) => finance.idFinance)
-  @JoinColumn([{ name: "fk_Finance", referencedColumnName: "idFinance" }])
-  finance: Finance[];
+  @OneToMany(() => User, (user) => user.idUser)
+  @JoinColumn([{ name: "fk_User", referencedColumnName: "idUser" }])
+  user: User[];
 }

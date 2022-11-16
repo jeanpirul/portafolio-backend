@@ -3,6 +3,7 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -17,19 +18,19 @@ export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   public idUser: string;
 
-  @Column({ type: "varchar", length: 100, nullable: false })
+  @Column({ type: "varchar", length: 100, nullable: true })
   public userName: string;
 
-  @Column({ type: "varchar", length: 100, nullable: false })
+  @Column({ type: "varchar", length: 100, nullable: true })
   public email: string;
 
-  @Column({ type: "varchar", length: 100, nullable: false })
+  @Column({ type: "varchar", length: 100, nullable: true })
   public phoneNumber: string;
 
-  @Column({ type: "varchar", length: 100, nullable: false })
+  @Column({ type: "varchar", length: 100, nullable: true })
   public password: string;
 
-  @Column({ type: "int4", nullable: false })
+  @Column({ type: "int4", nullable: true })
   public fk_Rol: number;
 
   @ManyToOne(() => Rol, (rol) => rol.idRol)
@@ -39,7 +40,7 @@ export class User extends BaseEntity {
   @OneToMany(() => Product, (product) => product.user)
   product: Product;
 
-  @OneToMany(() => Finance, (finance) => finance.finance)
+  @ManyToOne(() => Finance, (finance) => finance.user)
   finance: Finance;
 
   static encryptPassword = async (password: string) => {
