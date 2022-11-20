@@ -79,8 +79,8 @@ export const getFinance = async (req: Request, res: Response) => {
       ? res.status(404).json({ message: 'Detail Finance not found' })
       : res.json({ listFinance: finance });
 
-    const doc = new PDFDocument({ bufferPages: true });
-    const filename = `Factura-${Date.now()}.pdf`;
+    // const doc = new PDFDocument({ bufferPages: true });
+    // const filename = `Factura-${Date.now()}.pdf`;
     // const stream = res.setHeader('Content-Type', 'application/pdf; charset=utf-8');
 
     // const stream = res.writeHead(200, {
@@ -96,14 +96,14 @@ export const getFinance = async (req: Request, res: Response) => {
     // doc.on('end', () => {
     //   stream.end();
     // });
-    const fileURL = new URL(process.argv[1]);
-    const namePath = fileURL.pathname.split("\\").slice(1,4);
-    console.log('namePath ', namePath);
+    // const fileURL = new URL(process.argv[1]);
+    // const namePath = fileURL.pathname.split("\\").slice(1,4);
+    // console.log('namePath ', namePath);
 
-    doc.pipe(fs.createWriteStream(filename));
+    // doc.pipe(fs.createWriteStream(filename));
 
-    doc.text('prueba pdf', 30, 30);
-    doc.end();
+    // doc.text('prueba pdf', 30, 30);
+    // doc.end();
   } catch (err) {
     //check if error is instance of Error
     console.log(error);
