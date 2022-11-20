@@ -11,4 +11,6 @@ router.use("/bodega", routes.bodega);
 router.use("/user", routes.user);
 router.use("/adminRole", routes.admin);
 router.use("/actionBodega", routes.actionBodega);
+router.use("/actionFinanza", routes.actionFinanza);
+router.use("/actionCocina", routes.actionCocina);
 router.use("/", routes.root);

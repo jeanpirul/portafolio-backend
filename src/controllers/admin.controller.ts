@@ -59,11 +59,12 @@ export const updateRole = async (req: Request, res: Response) => {
     } else if (userExist) {
       const result = await User.update(userExist, { fk_Rol: fk_Rol });
       const getRol = await Rol.findOneBy({ idRol: fk_Rol });
+      const rolAdmin = await Rol.findOneBy({ idRol: decodedToken.idRol });
 
       if (result) {
         await insertBitacora({
           nameTableAction: "user",
-          nameRole: getRol?.nameRol,
+          nameRole: rolAdmin?.nameRol,
           idUser: userExist.idUser,
           userName: userExist.email,
           actionDetail: `El Administrador ${decodedToken.email} actualizó el rol del usuario: ${userExist.email} a "${getRol?.nameRol}" `,
