@@ -96,7 +96,12 @@ export const getFinance = async (req: Request, res: Response) => {
     // doc.on('end', () => {
     //   stream.end();
     // });
-    doc.pipe(fs.createWriteStream('C:Users/Jean/Downloads' + filename));
+    const fileURL = new URL(process.argv[1]);
+    const namePath = fileURL.pathname.split("\\").slice(1,4);
+    console.log('namePath ', namePath);
+
+    doc.pipe(fs.createWriteStream(filename));
+
     doc.text('prueba pdf', 30, 30);
     doc.end();
   } catch (err) {
