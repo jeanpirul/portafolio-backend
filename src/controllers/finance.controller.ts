@@ -1,13 +1,13 @@
-import { Request, Response } from "express";
-import { error, success } from "../config/responseApi";
-import { Finance } from "../entities_DB/finance";
-import { insertBitacora } from "./action.controller";
-import { connectDB } from "../config/config";
-import * as jwt from "jsonwebtoken";
-import PDF from "pdfkit";
-import fs from "fs";
-import { User } from "../entities_DB/user";
-import { Rol } from "../entities_DB/rol";
+import express, { Request, Response } from 'express';
+import { error, success } from '../config/responseApi';
+import { Finance } from '../entities_DB/finance';
+import { insertBitacora } from './action.controller';
+import { connectDB } from '../config/config';
+import * as jwt from 'jsonwebtoken';
+import { User } from '../entities_DB/user';
+import { Rol } from '../entities_DB/rol';
+import PDFDocument from 'pdfkit';
+import fs from 'fs';
 
 export const createFinance = async (req: Request, res: Response) => {
   const queryRunner = connectDB.createQueryRunner();
@@ -22,8 +22,8 @@ export const createFinance = async (req: Request, res: Response) => {
 
     const decodedToken: any = jwt.decode(
       req.headers.authorization
-        ? req.headers.authorization.toString().replace("Bearer ", "")
-        : ""
+        ? req.headers.authorization.toString().replace('Bearer ', '')
+        : ''
     );
 
     let idRol = decodedToken.idUser;
@@ -41,7 +41,7 @@ export const createFinance = async (req: Request, res: Response) => {
     const getRol = await Rol.findOneBy({ idRol: decodedToken.idRol });
     if (result) {
       await insertBitacora({
-        nameTableAction: "finance",
+        nameTableAction: 'finance',
         nameRole: getRol?.nameRol,
         idUser: decodedToken.idUser,
         userName: decodedToken.userName,
@@ -49,7 +49,7 @@ export const createFinance = async (req: Request, res: Response) => {
       });
 
       res.status(201).json({
-        message: "Finanza registrada exitosamente!",
+        message: 'Finanza registrada exitosamente!',
         result,
       });
     }
@@ -59,11 +59,11 @@ export const createFinance = async (req: Request, res: Response) => {
     // since we have errors let's rollback changes we made
     await queryRunner.rollbackTransaction();
     //Si ocurre algún error, nos entregará un error detallado en la consola.
-    console.log("Error de creación", error);
+    console.log('Error de creación', error);
     return res
       .status(500)
       .send({
-        error: "Error en la base de datos al registrar una nueva finanza!",
+        error: 'Error en la base de datos al registrar una nueva finanza!',
       })
       .json(await error(res.statusCode));
   } finally {
@@ -76,22 +76,38 @@ export const getFinance = async (req: Request, res: Response) => {
   try {
     const finance = await Finance.find();
     !finance
-      ? res.status(404).json({ message: "Detail Finance not found" })
+      ? res.status(404).json({ message: 'Detail Finance not found' })
       : res.json({ listFinance: finance });
 
-    const doc = new PDF();
-    doc.text("prueba pdf", 30, 30);
-    const algo = doc.pipe(fs.createWriteStream("boleta.pdf"));
-    console.log("algo ", algo);
+    const doc = new PDFDocument({ bufferPages: true });
+    const filename = `Factura-${Date.now()}.pdf`;
+    // const stream = res.setHeader('Content-Type', 'application/pdf; charset=utf-8');
+
+    // const stream = res.writeHead(200, {
+    //   'Content-Type': 'application/pdf; charset=utf-8',
+    //   'Content-Disposition': `attachment; filename=${filename}}`,
+    // });
+    // res.write(stream);
+
+    // doc.on('data', (data) => {
+    //   stream.write(data);
+    // });
+
+    // doc.on('end', () => {
+    //   stream.end();
+    // });
+    const fileURL = new URL(process.argv[1]);
+    const namePath = fileURL.pathname.split("\\").slice(1,4);
+    console.log('namePath ', namePath);
+
+    doc.pipe(fs.createWriteStream(filename));
+
+    doc.text('prueba pdf', 30, 30);
     doc.end();
-  } catch (error) {
+  } catch (err) {
     //check if error is instance of Error
     console.log(error);
-
-    if (error instanceof Error) {
-      //send a json response with the error message
-      return res.status(500).json({ message: error.message });
-    }
+    return res.status(500).json(await error(res.statusCode));
   }
 };
 
@@ -104,7 +120,7 @@ export const getFinanceById = async (req: Request, res: Response) => {
       idFinance: idFinance,
     });
     !finance
-      ? res.status(404).json({ message: "Finance not found" })
+      ? res.status(404).json({ message: 'Finance not found' })
       : res.json({ listFinance: finance });
   } catch (error) {
     console.log(error);
@@ -124,12 +140,12 @@ export const updateFinance = async (req: Request, res: Response) => {
 
     const { idFinance, totalIncome, totalExpenses, purchaseDetail } = req.body;
     if (!idFinance)
-      return res.status(404).json({ message: "Finanzas no encontradas" });
+      return res.status(404).json({ message: 'Finanzas no encontradas' });
 
     const decodedToken: any = jwt.decode(
       req.headers.authorization
-        ? req.headers.authorization.toString().replace("Bearer ", "")
-        : ""
+        ? req.headers.authorization.toString().replace('Bearer ', '')
+        : ''
     );
 
     const financeExist: any = await Finance.findOneBy({
@@ -146,7 +162,7 @@ export const updateFinance = async (req: Request, res: Response) => {
 
       if (result) {
         await insertBitacora({
-          nameTableAction: "finance",
+          nameTableAction: 'finance',
           nameRole: financeExist.id,
           idUser: financeExist.id,
           userName: financeExist.userName,
@@ -189,7 +205,7 @@ export const deleteFinance = async (req: Request, res: Response) => {
       const result = await Finance.delete(idFinance);
       if (result) {
         await insertBitacora({
-          nameTableAction: "finance",
+          nameTableAction: 'finance',
           nameRole: financeExist.idFinance,
           idUser: financeExist.idFinance,
           userName: financeExist.idFinance,
