@@ -9,6 +9,7 @@ import admin from "./admin";
 import actionBodega from "./actionBodega";
 import actionFinanza from "./actionFinanza";
 import actionCocina from "./actionCocina";
+import actionCliente from "./actionCliente";
 
 export const routes = {
   client,
@@ -21,5 +22,6 @@ export const routes = {
   admin,
   actionBodega,
   actionFinanza,
-  actionCocina
+  actionCocina,
+  actionCliente
 };
