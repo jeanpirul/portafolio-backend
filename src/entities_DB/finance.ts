@@ -4,35 +4,35 @@ import {
   PrimaryGeneratedColumn,
   Column,
   JoinColumn,
-  OneToMany,
-} from "typeorm";
-import { User } from "./user";
+  ManyToOne,
+} from 'typeorm';
+import { User } from './user';
 
-@Entity("finance")
+@Entity('finance')
 export class Finance extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  public idFinance: string; //Identificador del cliente
+  @PrimaryGeneratedColumn({ type: 'int4' })
+  public idFinance: number; //Identificador del cliente
 
-  @Column({ type: "int4" })
+  @Column({ type: 'int4', nullable: true })
   public totalIncome: number; //ingresos totales referenciados a ventas del restaurant.
 
-  @Column({ type: "int4" })
+  @Column({ type: 'int4', nullable: true })
   public totalExpenses: number; // Egresos totales del restaurant.
 
-  @Column({ type: "varchar", length: 150, nullable: true })
+  @Column({ type: 'varchar', length: 150, nullable: true })
   public purchaseDetail: string; //Detalle de compras del restaurant.
 
   @Column({
-    type: "timestamp",
+    type: 'timestamp',
     nullable: true,
-    default: () => "CURRENT_TIMESTAMP",
+    default: () => 'CURRENT_TIMESTAMP',
   })
   public purchaseDate?: Date; //Fecha de compras del restaurant.
 
-  @Column({ type: "int4", nullable: true })
+  @Column({ type: 'int4', nullable: true })
   public fk_User: number;
 
-  @OneToMany(() => User, (user) => user.idUser)
-  @JoinColumn([{ name: "fk_User", referencedColumnName: "idUser" }])
+  @ManyToOne(() => User, (user) => user.idUser)
+  @JoinColumn([{ name: 'fk_User', referencedColumnName: 'idUser' }])
   user: User[];
 }

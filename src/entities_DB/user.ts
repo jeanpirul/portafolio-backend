@@ -40,7 +40,7 @@ export class User extends BaseEntity {
   @OneToMany(() => Product, (product) => product.user)
   product: Product;
 
-  @ManyToOne(() => Finance, (finance) => finance.user)
+  @OneToMany(() => Finance, (finance) => finance.user)
   finance: Finance;
 
   static encryptPassword = async (password: string) => {
