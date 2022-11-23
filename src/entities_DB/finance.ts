@@ -10,8 +10,8 @@ import { User } from './user';
 
 @Entity('finance')
 export class Finance extends BaseEntity {
-  @PrimaryGeneratedColumn({ type: 'int4' })
-  public idFinance: number; //Identificador del cliente
+  @PrimaryGeneratedColumn()
+  public idFinance: string; //Identificador del cliente
 
   @Column({ type: 'int4', nullable: true })
   public totalIncome: number; //ingresos totales referenciados a ventas del restaurant.

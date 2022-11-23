@@ -31,7 +31,7 @@ router.get(
 
 // ACTION: FinanceRole
 // METHOD: GET
-//http://localhost:4000/finance/financeRole/getFinanceById/:id
+//http://localhost:4000/finance/financeRole/getFinanceById/:idFinance
 router.get(
   "/financeRole/getFinanceById/:idFinance",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esFinanza],
@@ -44,7 +44,7 @@ router.get(
 // ACTION: FinanceRole
 // METHOD: PUT
 //http://localhost:4000/finance/financeRole/updateFinance
-router.patch(
+router.put(
   "/financeRole/updateFinance",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esFinanza],
   async (req: Request, res: Response) => {

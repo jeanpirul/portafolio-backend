@@ -128,11 +128,10 @@ export const getFinanceById = async (req: Request, res: Response) => {
     const { idFinance } = req.params;
     if (!idFinance) return res.status(400).json(await error(res.statusCode));
 
-    const finance: any = await Finance.findOneBy({
-      idFinance: Number(idFinance),
-    });
-    const financeExist: any = await Finance.findOne({ where: {idFinance: number} });
-    console.log('financeExist ', financeExist);
+    const finance = await Finance.query(
+      `select * from public.finance where "idFinance" = $1;`,
+      [idFinance]
+    );
 
     !finance
       ? res.status(404).json({ message: 'Finance not found' })
@@ -163,13 +162,14 @@ export const updateFinance = async (req: Request, res: Response) => {
         : ''
     );
 
-    const financeExist: any = await Finance.findOne(idFinance);
+    const financeExist = await Finance.query(
+      `select * from public.finance where "idFinance" = $1;`,
+      [idFinance]
+    );
 
-    console.log(financeExist);
-    console.log('financeExist.idFinance ', financeExist.idFinance);
-
-    if (financeExist) {
-      const result = await Finance.update(financeExist, {
+    if (financeExist[0]) {
+      const result = await Finance.update(financeExist[0].idFinance, {
+        idFinance: idFinance,
         totalIncome: totalIncome,
         totalExpenses: totalExpenses,
         purchaseDetail: purchaseDetail,
@@ -182,9 +182,7 @@ export const updateFinance = async (req: Request, res: Response) => {
           nameRole: getRol?.nameRol,
           idUser: decodedToken.idUser,
           userName: decodedToken.userName,
-          actionDetail: `El Responsable ${decodedToken.userName}
-           con Rol ${getRol?.nameRol} 
-           actualizo la finanza con id ${financeExist.idFinance}.`,
+          actionDetail: `El Responsable ${decodedToken.userName} con Rol ${getRol?.nameRol} actualizo la finanza con id ${financeExist[0].idFinance}.`,
         });
 
         let totalVentas = totalIncome - totalExpenses;
@@ -195,7 +193,7 @@ export const updateFinance = async (req: Request, res: Response) => {
           totalIngresos: totalIncome,
           totalEgresos: totalExpenses,
           totalGanancia: totalVentas,
-          detalleActionFinanza: `El Responsable ${decodedToken.userName} con Rol ${getRol?.nameRol} actualizo la entrada con id ${financeExist.id}.`,
+          detalleActionFinanza: `El Responsable ${decodedToken.userName} con Rol ${getRol?.nameRol} actualizo la entrada con id ${financeExist[0].idFinance}.`,
         });
 
         return result
@@ -229,7 +227,7 @@ export const deleteFinance = async (req: Request, res: Response) => {
     if (!idFinance) return res.status(404).json(await error(res.statusCode));
 
     const financeExist: any = await Finance.findOneBy({
-      idFinance: Number(idFinance),
+      idFinance: idFinance,
     });
 
     const decodedToken: any = jwt.decode(
