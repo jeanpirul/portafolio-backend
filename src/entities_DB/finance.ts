@@ -4,7 +4,7 @@ import {
   PrimaryGeneratedColumn,
   Column,
   JoinColumn,
-  OneToMany,
+  ManyToOne,
 } from "typeorm";
 import { User } from "./user";
 
@@ -32,7 +32,7 @@ export class Finance extends BaseEntity {
   @Column({ type: "int4", nullable: true })
   public fk_User: number;
 
-  @OneToMany(() => User, (user) => user.idUser)
+  @ManyToOne(() => User, (user) => user.idUser)
   @JoinColumn([{ name: "fk_User", referencedColumnName: "idUser" }])
   user: User[];
 }

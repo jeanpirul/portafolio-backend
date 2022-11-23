@@ -1,15 +1,27 @@
-import express, { Request, Response } from "express";
-import * as clientController from "../controllers/client.controller";
-import * as JWTVerifyToken from "../config/tokenMiddleware";
+import express, { Request, Response } from 'express';
+import * as clientController from '../controllers/client.controller';
+import * as JWTVerifyToken from '../config/tokenMiddleware';
 
 const router = express.Router();
 //http://localhost:4000/client
 
 // ACTION: GetClient
 // METHOD: GET
+//http://localhost:4000/client/clientRole/crearPedido/
+router.get(
+  '/clientRole/crearPedido/',
+  // [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],
+  async (req: Request, res: Response) => {
+    //Este endpoint permite generar nuevos pedidos por parte del cliente
+    await clientController.crearPedido(req, res);
+  }
+);
+
+// ACTION: GetClient
+// METHOD: GET
 //http://localhost:4000/client/adminRole/getClients/
 router.get(
-  "/adminRole/getClients",
+  '/adminRole/getClients',
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],
   async (req: Request, res: Response) => {
     //Este endpoint permite listar todos los clientes existentes en la base de datos
@@ -21,7 +33,7 @@ router.get(
 // METHOD: GET
 //http://localhost:4000/client/adminRole/getClientByEmail/:idUser
 router.get(
-  "/adminRole/getClientByEmail/:idUser",
+  '/adminRole/getClientByEmail/:idUser',
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],
   async (req: Request, res: Response) => {
     //Este endpoint permite listar 1 clientre existente en la base de datos por el ID

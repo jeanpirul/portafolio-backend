@@ -1,10 +1,48 @@
-import { Request, Response } from "express";
-import { insertBitacora } from "./action.controller";
-import { error, success } from "../config/responseApi";
-import { Rol } from "../entities_DB/rol";
-import { User } from "../entities_DB/user";
-import { connectDB } from "../config/config";
-import * as jwt from "jsonwebtoken";
+import { Request, Response } from 'express';
+import { insertBitacora } from './action.controller';
+import { error, success } from '../config/responseApi';
+import { connectDB } from '../config/config';
+import { Product } from '../entities_DB/product';
+import { User } from '../entities_DB/user';
+import { Rol } from '../entities_DB/rol';
+import * as jwt from 'jsonwebtoken';
+
+export const crearPedido = async (req: Request, res: Response) => {
+  // const queryRunner = connectDB.createQueryRunner();
+  try {
+    console.log('Se ha solicitado la creación de un nuevo pedido.');
+    // await queryRunner.connect();
+    // await queryRunner.startTransaction();
+    // const { nombreProducto } = req.body;
+    let nombreProducto = 'Palta';
+    let productos = [];
+
+    const getProducts: any = await Product.findOneBy({
+      nombreProducto: nombreProducto,
+    });
+    console.log('getProducts ', getProducts);
+
+    let quitarCantidadProducto = getProducts?.cantidad -1;
+
+    console.log('quitarCantidadProducto ', quitarCantidadProducto);
+
+    // const get = await Product.find();
+    // console.log('getProducts ', getProducts);
+
+    !getProducts
+      ? res.status(404).json({ message: 'No users found' })
+      : res.json({ listProduct: getProducts });
+  } catch (err) {
+    // since we have errors let's rollback changes we made
+    // await queryRunner.rollbackTransaction();
+    //Si ocurre algún error, nos entregará un error detallado en la consola.
+    return res.status(500).json(await error(res.statusCode));
+  }
+  //   finally {
+  //     // you need to release query runner which is manually created:
+  //     await queryRunner.release();
+  //   }
+};
 
 export const getClients = async (req: Request, res: Response) => {
   try {
@@ -15,7 +53,7 @@ export const getClients = async (req: Request, res: Response) => {
     );
 
     !clientFound
-      ? res.status(404).json({ message: "No users found" })
+      ? res.status(404).json({ message: 'No users found' })
       : res.json({ listClient: clientFound });
   } catch (error) {
     console.log(error);
@@ -37,7 +75,7 @@ export const getClientByEmail = async (req: Request, res: Response) => {
     });
 
     !clientFound
-      ? res.status(404).json({ message: "Cliente-Usuario no encontrado" })
+      ? res.status(404).json({ message: 'Cliente-Usuario no encontrado' })
       : res.json({ listClient: clientFound });
   } catch (error) {
     console.log(error);
@@ -52,7 +90,7 @@ export const getClientByEmail = async (req: Request, res: Response) => {
 export const deleteUserByEmail = async (req: Request, res: Response) => {
   const queryRunner = connectDB.createQueryRunner();
   try {
-    console.log("Se ha solicitado la eliminación de una entidad Cliente.");
+    console.log('Se ha solicitado la eliminación de una entidad Cliente.');
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
@@ -61,8 +99,8 @@ export const deleteUserByEmail = async (req: Request, res: Response) => {
 
     const decodedToken: any = jwt.decode(
       req.headers.authorization
-        ? req.headers.authorization.toString().replace("Bearer ", "")
-        : ""
+        ? req.headers.authorization.toString().replace('Bearer ', '')
+        : ''
     );
 
     const clienteExist: any = await User.findOneBy({
@@ -76,7 +114,7 @@ export const deleteUserByEmail = async (req: Request, res: Response) => {
       const result: any = await User.delete(idUsuario);
       if (result) {
         await insertBitacora({
-          nameTableAction: "user",
+          nameTableAction: 'user',
           nameRole: getRol?.nameRol,
           idUser: decodedToken.idUser,
           userName: decodedToken.email,
