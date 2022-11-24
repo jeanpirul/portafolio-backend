@@ -226,39 +226,40 @@ export const deleteFinance = async (req: Request, res: Response) => {
     const { idFinance } = req.params;
     if (!idFinance) return res.status(404).json(await error(res.statusCode));
 
-    const financeExist: any = await Finance.findOneBy({
-      idFinance: idFinance,
-    });
-
     const decodedToken: any = jwt.decode(
       req.headers.authorization
         ? req.headers.authorization.toString().replace('Bearer ', '')
         : ''
     );
 
+    const financeExist = await Finance.query(
+      `select * from public.finance where "idFinance" = $1;`,
+      [idFinance]
+    );
+
     const getRol = await Rol.findOneBy({ idRol: decodedToken.idRol });
 
-    let idFinanza = financeExist.idFinance;
-
-    if (financeExist) {
-      const result: any = await Finance.delete(idFinanza);
+    if (financeExist[0]) {
+      const result = await Finance.delete(financeExist[0].idFinance);
       if (result) {
         await insertBitacora({
           nameTableAction: 'finance',
           nameRole: getRol?.nameRol,
           idUser: decodedToken.idUser,
           userName: decodedToken.email,
-          actionDetail: `El Responsable ${decodedToken.userName} con Rol ${getRol?.nameRol} elimino la entrada con id ${financeExist.id}.`,
+          actionDetail: `El Responsable ${decodedToken.userName} con Rol ${getRol?.nameRol} elimino la entrada con id ${financeExist[0].idFinance}.`,
         });
 
-        // await insertActionFinanza({
-        //   nombreResponsable: decodedToken.userName,
-        //   nombreRol: getRol?.nameRol,
-        //   totalIngresos: financeExist.totalIncome,
-        //   totalEgresos: financeExist.totalExpenses,
-        //   totalGanancia: financeExist.totalGanancia,
-        //   detalleActionFinanza: `El Responsable ${decodedToken.userName} con Rol ${getRol?.nameRol} elimino la entrada con id ${financeExist.id}.`,
-        // });
+        let total = financeExist[0].totalIncome - financeExist[0].totalExpenses;
+
+        await insertActionFinanza({
+          nombreResponsable: decodedToken.userName,
+          nombreRol: getRol?.nameRol,
+          totalIngresos: financeExist[0].totalIncome,
+          totalEgresos: financeExist[0].totalExpenses,
+          totalGanancia: total,
+          detalleActionFinanza: `El Responsable ${decodedToken.userName} con Rol ${getRol?.nameRol} elimino la entrada con id ${financeExist[0].idFinance}.`,
+        });
 
         return result
           ? res
