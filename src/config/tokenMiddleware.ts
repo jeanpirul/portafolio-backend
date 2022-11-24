@@ -78,7 +78,7 @@ export const esCliente = async (
         arr[i]?.nameRol === "Cliente" ||
         arr[i]?.nameRol === "Bodega" ||
         arr[i]?.nameRol === "Cocina" ||
-        arr[i]?.nameRol === "Finanza"
+        arr[i]?.nameRol === "Finanzas"
       ) {
         next();
         return;
@@ -139,7 +139,7 @@ export const esFinanza = async (
     for (let i = 0; i < arr.length; i++) {
       if (
         arr[i]?.nameRol === "Administrador" ||
-        arr[i]?.nameRol === "Finanza"
+        arr[i]?.nameRol === "Finanzas"
       ) {
         next();
         return;

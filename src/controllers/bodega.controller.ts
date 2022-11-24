@@ -124,7 +124,7 @@ export const updateProduct = async (req: Request, res: Response) => {
           nameRole: getRol?.nameRol,
           idUser: decodedToken.idUser,
           userName: decodedToken.userName,
-          actionDetail: `El responsable de la caja: "${decodedToken.userName}" actualizaró parámetros del producto con ${productFound.nombreProducto} a cargo.`,
+          actionDetail: `El responsable de la caja: "${decodedToken.userName}" actualizo parámetros del producto con ${productFound.nombreProducto} a cargo.`,
         });
 
         let totalPago = productFound.cantidad * productFound.precio;
@@ -136,7 +136,7 @@ export const updateProduct = async (req: Request, res: Response) => {
           cantidad: productFound.cantidad,
           precio: productFound.precio,
           totalPago: totalPago,
-          detalleActionBodega: `El responsable de la caja: "${decodedToken.userName}" actualizaró parámetros del producto con ${productFound.nombreProducto} a cargo.`,
+          detalleActionBodega: `El responsable de la caja: "${decodedToken.userName}" actualizo parámetros del producto con ${productFound.nombreProducto} a cargo.`,
         });
 
         return result

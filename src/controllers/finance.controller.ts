@@ -8,6 +8,7 @@ import { User } from '../entities_DB/user';
 import { Rol } from '../entities_DB/rol';
 import PDFDocument from 'pdfkit';
 import fs from 'fs';
+import { insertActionFinanza } from './actionFinanza.controller';
 
 export const createFinance = async (req: Request, res: Response) => {
   const queryRunner = connectDB.createQueryRunner();
@@ -45,7 +46,18 @@ export const createFinance = async (req: Request, res: Response) => {
         nameRole: getRol?.nameRol,
         idUser: decodedToken.idUser,
         userName: decodedToken.userName,
-        actionDetail: `El Cajero de nueva cuenta del usuario: "${userFound?.userName}" responsable de la caja.`,
+        actionDetail: `El Responsable ${decodedToken.userName} con Rol ${getRol?.nameRol} registro una nueva finanza.`,
+      });
+
+      let totalVentas = totalIncome - totalExpenses;
+
+      await insertActionFinanza({
+        nombreResponsable: decodedToken.userName,
+        nombreRol: getRol?.nameRol,
+        totalIngresos: totalIncome,
+        totalEgresos: totalExpenses,
+        totalGanancia: totalVentas,
+        detalleActionFinanza: `El Responsable ${decodedToken.userName} con Rol ${getRol?.nameRol} registro una nueva finanza.`,
       });
 
       res.status(201).json({
@@ -112,13 +124,15 @@ export const getFinance = async (req: Request, res: Response) => {
 };
 
 export const getFinanceById = async (req: Request, res: Response) => {
-  const { idFinance } = req.params;
-  if (!idFinance) return res.status(400).json(await error(res.statusCode));
-
   try {
-    const finance = await Finance.findOneBy({
-      idFinance: idFinance,
-    });
+    const { idFinance } = req.params;
+    if (!idFinance) return res.status(400).json(await error(res.statusCode));
+
+    const finance = await Finance.query(
+      `select * from public.finance where "idFinance" = $1;`,
+      [idFinance]
+    );
+
     !finance
       ? res.status(404).json({ message: 'Finance not found' })
       : res.json({ listFinance: finance });
@@ -148,12 +162,13 @@ export const updateFinance = async (req: Request, res: Response) => {
         : ''
     );
 
-    const financeExist: any = await Finance.findOneBy({
-      idFinance: idFinance,
-    });
+    const financeExist = await Finance.query(
+      `select * from public.finance where "idFinance" = $1;`,
+      [idFinance]
+    );
 
-    if (financeExist) {
-      const result = await Finance.update(financeExist, {
+    if (financeExist[0]) {
+      const result = await Finance.update(financeExist[0].idFinance, {
         idFinance: idFinance,
         totalIncome: totalIncome,
         totalExpenses: totalExpenses,
@@ -161,12 +176,24 @@ export const updateFinance = async (req: Request, res: Response) => {
       });
 
       if (result) {
+        const getRol = await Rol.findOneBy({ idRol: decodedToken.idRol });
         await insertBitacora({
           nameTableAction: 'finance',
-          nameRole: financeExist.id,
-          idUser: financeExist.id,
-          userName: financeExist.userName,
-          actionDetail: `Se actualizaron parámetros de la finanza con id ${financeExist.id} a cargo del responsable de la caja: "${financeExist.userName}".`,
+          nameRole: getRol?.nameRol,
+          idUser: decodedToken.idUser,
+          userName: decodedToken.userName,
+          actionDetail: `El Responsable ${decodedToken.userName} con Rol ${getRol?.nameRol} actualizo la finanza con id ${financeExist[0].idFinance}.`,
+        });
+
+        let totalVentas = totalIncome - totalExpenses;
+
+        await insertActionFinanza({
+          nombreResponsable: decodedToken.userName,
+          nombreRol: getRol?.nameRol,
+          totalIngresos: totalIncome,
+          totalEgresos: totalExpenses,
+          totalGanancia: totalVentas,
+          detalleActionFinanza: `El Responsable ${decodedToken.userName} con Rol ${getRol?.nameRol} actualizo la entrada con id ${financeExist[0].idFinance}.`,
         });
 
         return result
@@ -192,24 +219,46 @@ export const updateFinance = async (req: Request, res: Response) => {
 export const deleteFinance = async (req: Request, res: Response) => {
   const queryRunner = connectDB.createQueryRunner();
   try {
-    await queryRunner.connect();
     await queryRunner.startTransaction();
-    const { idFinance } = req.body;
+    await queryRunner.connect();
+
+    console.log('Se ha solicitado la eliminación de una entrada de finanzas.');
+    const { idFinance } = req.params;
     if (!idFinance) return res.status(404).json(await error(res.statusCode));
 
-    const financeExist = await Finance.findOneBy({
-      idFinance: idFinance,
-    });
+    const decodedToken: any = jwt.decode(
+      req.headers.authorization
+        ? req.headers.authorization.toString().replace('Bearer ', '')
+        : ''
+    );
 
-    if (financeExist) {
-      const result = await Finance.delete(idFinance);
+    const financeExist = await Finance.query(
+      `select * from public.finance where "idFinance" = $1;`,
+      [idFinance]
+    );
+
+    const getRol = await Rol.findOneBy({ idRol: decodedToken.idRol });
+
+    if (financeExist[0]) {
+      const result = await Finance.delete(financeExist[0].idFinance);
       if (result) {
         await insertBitacora({
           nameTableAction: 'finance',
-          nameRole: financeExist.idFinance,
-          idUser: financeExist.idFinance,
-          userName: financeExist.idFinance,
-          actionDetail: `Se Eliminó la finanza con Id: "${financeExist.idFinance}"`,
+          nameRole: getRol?.nameRol,
+          idUser: decodedToken.idUser,
+          userName: decodedToken.email,
+          actionDetail: `El Responsable ${decodedToken.userName} con Rol ${getRol?.nameRol} elimino la entrada con id ${financeExist[0].idFinance}.`,
+        });
+
+        let total = financeExist[0].totalIncome - financeExist[0].totalExpenses;
+
+        await insertActionFinanza({
+          nombreResponsable: decodedToken.userName,
+          nombreRol: getRol?.nameRol,
+          totalIngresos: financeExist[0].totalIncome,
+          totalEgresos: financeExist[0].totalExpenses,
+          totalGanancia: total,
+          detalleActionFinanza: `El Responsable ${decodedToken.userName} con Rol ${getRol?.nameRol} elimino la entrada con id ${financeExist[0].idFinance}.`,
         });
 
         return result
