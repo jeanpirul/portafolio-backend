@@ -7,6 +7,7 @@ import { connectDB } from '../config/config';
 import { insertActionBodega } from './actionBodega.controller';
 import { Product } from '../entities_DB/product';
 import { Plato } from '../entities_DB/platos';
+import { PlatoProduct } from '../entities_DB/platosProduct';
 
 export const crearPedido = async (req: Request, res: Response) => {
   try {
@@ -20,7 +21,7 @@ export const crearPedido = async (req: Request, res: Response) => {
       `select * from public.plato where "nombrePlato" = $1`,
       [nombrePlato]
     );
-    
+
     if (platoEncontrado[0]) {
       console.log('platoEncontrado ', platoEncontrado);
     } else {
@@ -39,18 +40,19 @@ export const nuevoPlato = async (req: Request, res: Response) => {
       nombrePlato: nombrePlato,
       precioPlato: precioPlato,
     });
+    const newProduct = await Product.save(productos);
 
-    console.log('newPlate ', newPlate);
-    if (newPlate) {
-      const newProduct = await Product.save(productos);
-      console.log('newProduct ', newProduct);
-    }
-
-    if (newPlate) {
-      res.status(201).json({
-        message: 'nuevo plato registrado exitosamente!',
+    for (const product of newProduct) {
+      let plato = newPlate.idPlato;
+      const insertPlatoProduct = await PlatoProduct.save({
+        fk_Plato: plato,
+        fk_Product: product,
       });
     }
+
+    res.status(201).json({
+      message: 'nuevo plato registrado exitosamente!',
+    });
   } catch (error) {
     throw error;
   }

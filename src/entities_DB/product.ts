@@ -3,12 +3,11 @@ import {
   Column,
   Entity,
   JoinColumn,
-  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Plato } from './platos';
+import { PlatoProduct } from './platosProduct';
 import { User } from './user';
 
 @Entity('product')
@@ -32,6 +31,6 @@ export class Product extends BaseEntity {
   @JoinColumn([{ name: 'fk_User', referencedColumnName: 'idUser' }])
   user: User[];
 
-  @OneToMany(() => Plato, (plato) => plato.product)
-  plato: Plato;
+  @OneToMany(() => PlatoProduct, (platoProduct) => platoProduct.product)
+  platoProduct: PlatoProduct;
 }

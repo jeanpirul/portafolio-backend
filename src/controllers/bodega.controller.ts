@@ -101,7 +101,7 @@ export const updateProduct = async (req: Request, res: Response) => {
         : ''
     );
 
-    const { idProduct, cantidad, precio, disponibilidad } = req.body;
+    const { idProduct, cantidad, precio } = req.body;
 
     if (!idProduct)
       return res.status(400).json({ message: 'Producto no encontrado' });
