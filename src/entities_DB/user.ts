@@ -7,11 +7,12 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-} from "typeorm";
-import bcrypt from "bcrypt";
-import { Rol } from "./rol";
-import { Product } from "./product";
-import { Finance } from "./finance";
+} from 'typeorm';
+import bcrypt from 'bcrypt';
+import { Rol } from './rol';
+import { Product } from './product';
+import { Finance } from './finance';
+import { Pedido } from './pedido';
 
 @Entity('user')
 export class User extends BaseEntity {
@@ -42,6 +43,9 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Finance, (finance) => finance.user)
   finance: Finance;
+
+  @OneToMany(() => Pedido, (pedido) => pedido.user)
+  pedido: Pedido;
 
   static encryptPassword = async (password: string) => {
     const salt = await bcrypt.genSalt(10);

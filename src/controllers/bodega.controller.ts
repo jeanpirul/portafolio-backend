@@ -13,9 +13,9 @@ export const createProduct = async (req: Request, res: Response) => {
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
-    const { nombreProducto, cantidad, precio, disponibilidad } = req.body;
+    const { nombreProducto, cantidad, precio } = req.body;
 
-    if (!nombreProducto || !cantidad || !precio || !disponibilidad)
+    if (!nombreProducto || !cantidad || !precio)
       return res.status(404).json(await error(res.statusCode));
 
     const decodedToken: any = jwt.decode(
@@ -30,7 +30,6 @@ export const createProduct = async (req: Request, res: Response) => {
       nombreProducto: nombreProducto,
       cantidad: cantidad,
       precio: precio,
-      disponibilidad: disponibilidad,
       fk_User: idRol,
     });
 
@@ -90,23 +89,6 @@ export const getProduct = async (req: Request, res: Response) => {
   }
 };
 
-export const updateCantidad = async (req: Request, res: Response) => {
-  const { idProduct, cantidad } = req.body;
-
-  const productFound = await Product.query(
-    `select * from public.product where "idProduct" = $1;`,
-    [idProduct]
-  );
-
-  if (productFound[0]) {
-    const result = await Product.update(productFound[0].idProduct, {
-      cantidad: cantidad - 1,
-    });
-
-    console.log('result ', result);
-  }
-};
-
 export const updateProduct = async (req: Request, res: Response) => {
   const queryRunner = connectDB.createQueryRunner();
   try {
@@ -134,7 +116,6 @@ export const updateProduct = async (req: Request, res: Response) => {
         idProduct: idProduct,
         cantidad: cantidad,
         precio: precio,
-        disponibilidad: disponibilidad,
       });
 
       if (result) {

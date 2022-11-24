@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import * as clientController from '../controllers/client.controller';
+import * as pedidoController from '../controllers/pedido.controller';
 import * as JWTVerifyToken from '../config/tokenMiddleware';
 
 const router = express.Router();
@@ -8,12 +9,37 @@ const router = express.Router();
 // ACTION: GetClient
 // METHOD: GET
 //http://localhost:4000/client/clientRole/crearPedido/
-router.get(
+router.post(
   '/clientRole/crearPedido/',
   // [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],
   async (req: Request, res: Response) => {
     //Este endpoint permite generar nuevos pedidos por parte del cliente
-    await clientController.crearPedido(req, res);
+    await pedidoController.crearPedido(req, res);
+  }
+);
+
+
+// ACTION: nueov plato
+// METHOD: POST
+//http://localhost:4000/client/cocinaRole/nuevoPlato/
+router.post(
+  '/cocinaRole/nuevoPlato/',
+  // [JWTVerifyToken.verifyToken, JWTVerifyToken.esCocinero],
+  async (req: Request, res: Response) => {
+    //Este endpoint permite generar nuevos pedidos por parte del cliente
+    await pedidoController.nuevoPlato(req, res);
+  }
+);
+
+// ACTION: GetClient
+// METHOD: GET
+//http://localhost:4000/client/clientRole/updateCantidad/
+router.patch(
+  '/clientRole/updateCantidad/',
+  // [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],
+  async (req: Request, res: Response) => {
+    //Este endpoint permite actualizar la cantidad de productos.
+    await pedidoController.updateCantidad(req, res);
   }
 );
 

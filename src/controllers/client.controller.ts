@@ -7,43 +7,6 @@ import { User } from '../entities_DB/user';
 import { Rol } from '../entities_DB/rol';
 import * as jwt from 'jsonwebtoken';
 
-export const crearPedido = async (req: Request, res: Response) => {
-  // const queryRunner = connectDB.createQueryRunner();
-  try {
-    console.log('Se ha solicitado la creación de un nuevo pedido.');
-    // await queryRunner.connect();
-    // await queryRunner.startTransaction();
-    // const { nombreProducto } = req.body;
-    let nombreProducto = 'Palta';
-    let productos = [];
-
-    const getProducts: any = await Product.findOneBy({
-      nombreProducto: nombreProducto,
-    });
-    console.log('getProducts ', getProducts);
-
-    let quitarCantidadProducto = getProducts?.cantidad -1;
-
-    console.log('quitarCantidadProducto ', quitarCantidadProducto);
-
-    // const get = await Product.find();
-    // console.log('getProducts ', getProducts);
-
-    !getProducts
-      ? res.status(404).json({ message: 'No users found' })
-      : res.json({ listProduct: getProducts });
-  } catch (err) {
-    // since we have errors let's rollback changes we made
-    // await queryRunner.rollbackTransaction();
-    //Si ocurre algún error, nos entregará un error detallado en la consola.
-    return res.status(500).json(await error(res.statusCode));
-  }
-  //   finally {
-  //     // you need to release query runner which is manually created:
-  //     await queryRunner.release();
-  //   }
-};
-
 export const getClients = async (req: Request, res: Response) => {
   try {
     let clientRole = 2;
