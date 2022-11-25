@@ -31,9 +31,9 @@ router.get(
 
 // ACTION: FinanceRole
 // METHOD: GET
-//http://localhost:4000/finance/financeRole/getFinanceById/:id
+//http://localhost:4000/finance/financeRole/getFinanceById/:idFinance
 router.get(
-  "/financeRole/getFinanceById/:id",
+  "/financeRole/getFinanceById/:idFinance",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esFinanza],
   async (req: Request, res: Response) => {
     //Este endpoint permite listar 1 financere existente en la base de datos por el ID
@@ -45,10 +45,10 @@ router.get(
 // METHOD: PUT
 //http://localhost:4000/finance/financeRole/updateFinance
 router.put(
-  "/financeRole/updateFinance/",
+  "/financeRole/updateFinance",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esFinanza],
   async (req: Request, res: Response) => {
-    //Este endpoint permite actualizar los datos de cada clienmte existente en la base de datos
+    //Este endpoint permite actualizar los datos de cada finanza existente en la base de datos
     await financeController.updateFinance(req, res);
   }
 );
@@ -57,7 +57,7 @@ router.put(
 // METHOD: DELETE
 //http://localhost:4000/finance/financeRole/deleteFinance/:id
 router.delete(
-  "/financeRole/deleteFinance/:id",
+  "/financeRole/deleteFinance/:idFinance",
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esFinanza],
   async (req: Request, res: Response) => {
     /* Este endpoint permite eliminar los datos de cada 
