@@ -1,6 +1,6 @@
-import express, { Request, Response } from "express";
-import * as actionCocinaCTRL from "../controllers/actionCocina.controller";
-import * as JWTVerifyToken from "../config/tokenMiddleware";
+import express, { Request, Response } from 'express';
+import * as actionCocinaCTRL from '../controllers/actionCocina.controller';
+import * as JWTVerifyToken from '../config/tokenMiddleware';
 
 const router = express.Router();
 
@@ -8,7 +8,7 @@ const router = express.Router();
 // METHOD: POST
 //http://localhost:4000/actionCocina/create/createActionCocina
 router.post(
-  "/create/createActionCocina",
+  '/create/createActionCocina',
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esCocina],
   async (req: Request, res: Response) => {
     //este endpoint permite crear una nueva acción
