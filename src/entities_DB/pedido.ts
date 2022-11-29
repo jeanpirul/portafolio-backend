@@ -28,6 +28,12 @@ export class Pedido extends BaseEntity {
   @Column({ type: 'varchar', nullable: true })
   public tipoPago: string;
 
+  @Column({ type: 'varchar', nullable: true })
+  public mesa: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  public cantidadPersonas: number;
+
   @Column({
     type: 'timestamp',
     nullable: true,
