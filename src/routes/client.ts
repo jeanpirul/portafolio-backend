@@ -24,7 +24,7 @@ router.post(
 //http://localhost:4000/client/cocinaRole/nuevoPlato/
 router.post(
   '/cocinaRole/nuevoPlato/',
-  [JWTVerifyToken.verifyToken, JWTVerifyToken.esCocina],
+  [JWTVerifyToken.verifyToken, JWTVerifyToken.esBodega],
   async (req: Request, res: Response) => {
     //Este endpoint permite generar nuevos pedidos por parte del cliente
     await pedidoController.nuevoPlato(req, res);

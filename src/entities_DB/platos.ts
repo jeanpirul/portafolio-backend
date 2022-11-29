@@ -1,6 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, JoinColumn, ManyToMany, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  BaseEntity,
+  OneToMany,
+} from 'typeorm';
 import { PlatoProduct } from './platosProduct';
-import { Product } from './product';
 
 @Entity('plato')
 export class Plato extends BaseEntity {

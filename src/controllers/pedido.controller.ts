@@ -4,8 +4,10 @@ import * as jwt from 'jsonwebtoken';
 import { Product } from '../entities_DB/product';
 import { Plato } from '../entities_DB/platos';
 import { PlatoProduct } from '../entities_DB/platosProduct';
-import { InsertResult } from 'typeorm';
 import { connectDB } from '../config/config';
+import { insertProducto } from './action.controller';
+import { Rol } from '../entities_DB/rol';
+import { insertActionBodega } from './actionBodega.controller';
 
 export const crearPedido = async (req: Request, res: Response) => {
   try {
@@ -46,13 +48,30 @@ export const nuevoPlato = async (req: Request, res: Response) => {
       precioPlato: precioPlato,
     });
 
-    const newProduct = await Product.save(productos);
+    for (let prod of productos) {
+      const newProduct = await insertProducto({
+        nombreProducto: prod.nombreProducto,
+        cantidad: prod.cantidad,
+        precio: prod.precio,
+        fk_User: decodedToken.idUser,
+      });
 
-    for (const product of newProduct) {
       let plato = newPlate.idPlato;
       const insertPlatoProduct = await PlatoProduct.save({
         fk_Plato: plato,
-        fk_Product: product,
+        fk_Product: newProduct.raw[0].idProduct,
+      });
+
+      const getRol = await Rol.findOneBy({ idRol: decodedToken.idRol });
+      let totalPagar = prod.cantidad * prod.precio;
+      await insertActionBodega({
+        nombreResponsable: decodedToken.userName,
+        nombreRol: getRol?.nameRol,
+        nombreProducto: prod.nombreProducto,
+        cantidad: prod.cantidad,
+        precio: prod.precio,
+        totalPago: totalPagar,
+        detalleActionBodega: `El Usuario ${decodedToken.userName} con rol ${getRol?.nameRol} creó una solicitud de nuevos productos para el Bodeguero por un monto de: ${totalPagar}`,
       });
     }
 

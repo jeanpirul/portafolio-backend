@@ -5,3 +5,10 @@ export interface InsertBitacoraInterface {
   userName: string;
   actionDetail: string;
 }
+
+export interface InsertProducto {
+  nombreProducto: string;
+  cantidad: number;
+  precio: number;
+  fk_User: number;
+}
