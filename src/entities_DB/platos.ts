@@ -18,6 +18,9 @@ export class Plato extends BaseEntity {
   @Column({ type: 'int4', nullable: true })
   public precioPlato: string;
 
+  @Column({ type: 'varchar', nullable: true })
+  public imagen: string;
+
   @OneToMany(() => PlatoProduct, (platoProduct) => platoProduct.product)
   platoProduct: PlatoProduct;
 }
