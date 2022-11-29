@@ -1,11 +1,24 @@
 import { Request, Response } from 'express';
-import { Product } from '../entities_DB/product';
 import { insertBitacora } from './action.controller';
-import * as jwt from 'jsonwebtoken';
 import { error, success } from '../config/responseApi';
-import { Rol } from '../entities_DB/rol';
-import { connectDB } from '../config/config';
 import { insertActionBodega } from './actionBodega.controller';
+import { connectDB } from '../config/config';
+import { Product } from '../entities_DB/product';
+import { Rol } from '../entities_DB/rol';
+import * as jwt from 'jsonwebtoken';
+import { InsertProducto } from '../models/producto.interface';
+import { InsertResult } from 'typeorm';
+
+export const insertProducto = async (
+  producto: InsertProducto
+): Promise<InsertResult> => {
+  try {
+    const resultado = await Product.insert(producto);
+    return resultado;
+  } catch (err) {
+    throw err;
+  }
+};
 
 export const createProduct = async (req: Request, res: Response) => {
   const queryRunner = connectDB.createQueryRunner();
@@ -13,9 +26,9 @@ export const createProduct = async (req: Request, res: Response) => {
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
-    const { nombreProducto, cantidad, precio, disponibilidad } = req.body;
+    const { nombreProducto, cantidad, precio } = req.body;
 
-    if (!nombreProducto || !cantidad || !precio || !disponibilidad)
+    if (!nombreProducto || !cantidad || !precio)
       return res.status(404).json(await error(res.statusCode));
 
     const decodedToken: any = jwt.decode(
@@ -30,7 +43,6 @@ export const createProduct = async (req: Request, res: Response) => {
       nombreProducto: nombreProducto,
       cantidad: cantidad,
       precio: precio,
-      disponibilidad: disponibilidad,
       fk_User: idRol,
     });
 
@@ -80,6 +92,7 @@ export const getProduct = async (req: Request, res: Response) => {
   try {
     const findAllProducts = await Product.find();
 
+    console.log('findAllProducts ', findAllProducts);
     //Si no existen datos los productos, recibiremos un error por consola, indicando que no existen.
     !findAllProducts
       ? res.status(404).json({ message: 'Products not found.' })
@@ -101,8 +114,7 @@ export const updateProduct = async (req: Request, res: Response) => {
         : ''
     );
 
-    const { idProduct, nombreProducto, cantidad, precio, disponibilidad } =
-      req.body;
+    const { idProduct, cantidad, precio } = req.body;
 
     if (!idProduct)
       return res.status(400).json({ message: 'Producto no encontrado' });
@@ -117,7 +129,6 @@ export const updateProduct = async (req: Request, res: Response) => {
         idProduct: idProduct,
         cantidad: cantidad,
         precio: precio,
-        disponibilidad: disponibilidad,
       });
 
       if (result) {

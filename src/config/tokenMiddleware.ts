@@ -1,8 +1,8 @@
-import { Request, Response, NextFunction } from "express";
-import { error } from "./responseApi";
-import * as jwt from "jsonwebtoken";
-import { SECRET_KEY } from "../environment";
-import { Rol } from "../entities_DB/rol";
+import { Request, Response, NextFunction } from 'express';
+import { error } from './responseApi';
+import * as jwt from 'jsonwebtoken';
+import { SECRET_KEY } from '../environment';
+import { Rol } from '../entities_DB/rol';
 
 //función creará la verificacion del token para que el usuario pueda ingresar con las credenciales existentes
 export const verifyToken = async (
@@ -11,19 +11,19 @@ export const verifyToken = async (
   next: NextFunction
 ) => {
   try {
-    const authHeader = <string>req.headers["authorization"];
-    const bearerToken = authHeader.split(" ")[1];
+    const authHeader = <string>req.headers['authorization'];
+    const bearerToken = authHeader.split(' ')[1];
 
     if (!bearerToken) {
-      res.status(401).json({ error: "Token no provehído." });
+      res.status(401).json({ error: 'Token no provehído.' });
     } else {
       const decoded: any = jwt.verify(bearerToken, SECRET_KEY);
       next();
     }
   } catch (err) {
-    res.status(403).json({
+    res.status(401).json({
       //Database connection error
-      error: "Error de permisos, falta suministrar un token de acceso!",
+      error: 'Error de permisos, falta suministrar un token de acceso!',
     });
   }
 };
@@ -37,22 +37,26 @@ export const esAdmin = async (
   try {
     const decodedToken: any = jwt.decode(
       req.headers.authorization
-        ? req.headers.authorization.toString().replace("Bearer ", "")
-        : ""
+        ? req.headers.authorization.toString().replace('Bearer ', '')
+        : ''
     );
     const roleExtist = await Rol.findOneBy({ idRol: decodedToken.idRol });
     let arr = [roleExtist];
 
     for (let i = 0; i < arr.length; i++) {
-      if (arr[i]?.nameRol === "Administrador") {
+      if (arr[i]?.nameRol === 'Administrador') {
         next();
         return;
+      } else {
+        res
+          .status(401)
+          .send({ message: 'Se necesitan permisos de Administrador!.' });
       }
     }
   } catch (err) {
     res
       .status(404)
-      .send("Se necesitan permisos de acuerdo al Rol de Administrador!.")
+      .send('Se necesitan permisos de acuerdo al Rol de Administrador!.')
       .json(await error(res.statusCode));
   }
 };
@@ -66,19 +70,19 @@ export const esCliente = async (
   try {
     const decodedToken: any = jwt.decode(
       req.headers.authorization
-        ? req.headers.authorization.toString().replace("Bearer ", "")
-        : ""
+        ? req.headers.authorization.toString().replace('Bearer ', '')
+        : ''
     );
     const roleExtist = await Rol.findOneBy({ idRol: decodedToken.idRol });
     let arr = [roleExtist];
 
     for (let i = 0; i < arr.length; i++) {
       if (
-        arr[i]?.nameRol === "Administrador" ||
-        arr[i]?.nameRol === "Cliente" ||
-        arr[i]?.nameRol === "Bodega" ||
-        arr[i]?.nameRol === "Cocina" ||
-        arr[i]?.nameRol === "Finanzas"
+        arr[i]?.nameRol === 'Administrador' ||
+        arr[i]?.nameRol === 'Cliente' ||
+        arr[i]?.nameRol === 'Bodega' ||
+        arr[i]?.nameRol === 'Cocina' ||
+        arr[i]?.nameRol === 'Finanzas'
       ) {
         next();
         return;
@@ -87,7 +91,7 @@ export const esCliente = async (
   } catch (err) {
     res
       .status(404)
-      .send("Se necesitan permisos de acuerdo al Rol de Cliente!.")
+      .send('Se necesitan permisos de acuerdo al Rol de Cliente!.')
       .json(await error(res.statusCode));
   }
 };
@@ -101,22 +105,24 @@ export const esBodega = async (
   try {
     const decodedToken: any = jwt.decode(
       req.headers.authorization
-        ? req.headers.authorization.toString().replace("Bearer ", "")
-        : ""
+        ? req.headers.authorization.toString().replace('Bearer ', '')
+        : ''
     );
     const roleExtist = await Rol.findOneBy({ idRol: decodedToken.idRol });
     let arr = [roleExtist];
 
     for (let i = 0; i < arr.length; i++) {
-      if (arr[i]?.nameRol === "Administrador" || arr[i]?.nameRol === "Bodega") {
+      if (arr[i]?.nameRol === 'Administrador' || arr[i]?.nameRol === 'Bodega') {
         next();
         return;
+      } else {
+        res.status(401).send({ message: 'Se necesitan permisos de Bodega!.' });
       }
     }
   } catch (err) {
     res
-      .status(404)
-      .send("Se necesitan permisos de acuerdo al Rol de Bodega!.")
+      .status(401)
+      .send('Se necesitan permisos de acuerdo al Rol de Bodega!.')
       .json(await error(res.statusCode));
   }
 };
@@ -130,25 +136,29 @@ export const esFinanza = async (
   try {
     const decodedToken: any = jwt.decode(
       req.headers.authorization
-        ? req.headers.authorization.toString().replace("Bearer ", "")
-        : ""
+        ? req.headers.authorization.toString().replace('Bearer ', '')
+        : ''
     );
     const roleExtist = await Rol.findOneBy({ idRol: decodedToken.idRol });
     let arr = [roleExtist];
 
     for (let i = 0; i < arr.length; i++) {
       if (
-        arr[i]?.nameRol === "Administrador" ||
-        arr[i]?.nameRol === "Finanzas"
+        arr[i]?.nameRol === 'Administrador' ||
+        arr[i]?.nameRol === 'Finanzas'
       ) {
         next();
         return;
+      } else {
+        res
+          .status(401)
+          .send({ message: 'Se necesitan permisos de Finanzas!.' });
       }
     }
   } catch (err) {
     res
       .status(404)
-      .send("Se necesitan permisos de acuerdo al Rol de Finanza!.")
+      .send('Se necesitan permisos de acuerdo al Rol de Finanza!.')
       .json(await error(res.statusCode));
   }
 };
@@ -162,22 +172,24 @@ export const esCocina = async (
   try {
     const decodedToken: any = jwt.decode(
       req.headers.authorization
-        ? req.headers.authorization.toString().replace("Bearer ", "")
-        : ""
+        ? req.headers.authorization.toString().replace('Bearer ', '')
+        : ''
     );
     const roleExtist = await Rol.findOneBy({ idRol: decodedToken.idRol });
     let arr = [roleExtist];
 
     for (let i = 0; i < arr.length; i++) {
-      if (arr[i]?.nameRol === "Administrador" || arr[i]?.nameRol === "Cocina") {
+      if (arr[i]?.nameRol === 'Administrador' || arr[i]?.nameRol === 'Cocina') {
         next();
         return;
+      } else {
+        res.status(401).send({ message: 'Se necesitan permisos de Cocina!.' });
       }
     }
   } catch (err) {
     res
       .status(404)
-      .send("Se necesitan permisos de acuerdo al Rol de Cocina!.")
+      .send('Se necesitan permisos de acuerdo al Rol de Cocina!.')
       .json(await error(res.statusCode));
   }
 };

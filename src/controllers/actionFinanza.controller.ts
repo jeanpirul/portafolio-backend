@@ -1,15 +1,15 @@
-import { Request, Response } from "express";
-import { InsertResult } from "typeorm";
-import { error, success } from "../config/responseApi";
-import { ActionFinanza } from "../entities_DB/actionFinanza";
-import { IActionFinanza } from "../models/insertActionFinanza";
+import { Request, Response } from 'express';
+import { InsertResult } from 'typeorm';
+import { error, success } from '../config/responseApi';
+import { ActionFinanza } from '../entities_DB/actionFinanza';
+import { IActionFinanza } from '../models/insertActionFinanza';
 
 export const createActionFinanza = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
   try {
-    console.log("Se ha solicitado una creación de la entidad actionFinanza");
+    console.log('Se ha solicitado una creación de la entidad actionFinanza');
 
     const {
       nombreResponsable,
@@ -47,7 +47,7 @@ export const readActionFinanza = async (
 ): Promise<Response> => {
   try {
     const result: any = await ActionFinanza.find({
-      order: { fecha: "DESC" },
+      order: { fecha: 'DESC' },
     });
     return result
       ? res.status(200).json(await success({ data: result }, res.statusCode))

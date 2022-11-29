@@ -4,19 +4,17 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { PlatoProduct } from './platosProduct';
 import { User } from './user';
 
-@Entity('product')
-export class Product extends BaseEntity {
+@Entity('pedido')
+export class Pedido extends BaseEntity {
   @PrimaryGeneratedColumn({ type: 'int4' })
-  public idProduct: number;
+  public idPedido: number;
 
   @Column({ type: 'varchar', length: 50, nullable: true })
-  public nombreProducto: string;
+  public nombrePedido: string;
 
   @Column({ type: 'int4', nullable: true })
   public cantidad: number;
@@ -25,12 +23,22 @@ export class Product extends BaseEntity {
   public precio: number;
 
   @Column({ type: 'int4', nullable: true })
+  public total: number;
+
+  @Column({ type: 'varchar', nullable: true })
+  public tipoPago: string;
+
+  @Column({
+    type: 'timestamp',
+    nullable: true,
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  public fecha?: Date;
+
+  @Column({ type: 'int4', nullable: true })
   public fk_User: number;
 
   @ManyToOne(() => User, (user) => user.idUser)
   @JoinColumn([{ name: 'fk_User', referencedColumnName: 'idUser' }])
   user: User[];
-
-  @OneToMany(() => PlatoProduct, (platoProduct) => platoProduct.product)
-  platoProduct: PlatoProduct;
 }

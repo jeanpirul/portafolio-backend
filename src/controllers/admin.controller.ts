@@ -1,10 +1,10 @@
-import { Request, Response } from "express";
-import { error, success } from "../config/responseApi";
-import { insertBitacora } from "./action.controller";
-import { connectDB } from "../config/config";
-import { User } from "../entities_DB/user";
-import { Rol } from "../entities_DB/rol";
-import * as jwt from "jsonwebtoken";
+import { Request, Response } from 'express';
+import { error, success } from '../config/responseApi';
+import { insertBitacora } from './action.controller';
+import { connectDB } from '../config/config';
+import { User } from '../entities_DB/user';
+import { Rol } from '../entities_DB/rol';
+import * as jwt from 'jsonwebtoken';
 
 export const getUserByEmail = async (req: Request, res: Response) => {
   const { email } = req.params;
@@ -18,7 +18,7 @@ export const getUserByEmail = async (req: Request, res: Response) => {
     !userFound
       ? res
           .status(404)
-          .json({ message: "Usuario no existe en la base de datos" })
+          .json({ message: 'Usuario no existe en la base de datos' })
       : res.json({ listClient: userFound });
   } catch (error) {
     console.log(error);
@@ -33,7 +33,7 @@ export const getUserByEmail = async (req: Request, res: Response) => {
 export const updateRole = async (req: Request, res: Response) => {
   const queryRunner = connectDB.createQueryRunner();
   try {
-    console.log("Se ha solicitado una actualización del rol del User.");
+    console.log('Se ha solicitado una actualización del rol del User.');
     const { email, fk_Rol } = req.body;
 
     if (!email || !fk_Rol)
@@ -43,8 +43,8 @@ export const updateRole = async (req: Request, res: Response) => {
 
     const decodedToken: any = jwt.decode(
       req.headers.authorization
-        ? req.headers.authorization.toString().replace("Bearer ", "")
-        : ""
+        ? req.headers.authorization.toString().replace('Bearer ', '')
+        : ''
     );
     const userExist: any = await User.findOneBy({
       email: email,
@@ -54,7 +54,7 @@ export const updateRole = async (req: Request, res: Response) => {
     await queryRunner.startTransaction();
     if (!userExist) {
       return res.status(404).json({
-        error: "Usuario no existe para actualizar.",
+        error: 'Usuario no existe para actualizar.',
       });
     } else if (userExist) {
       const result = await User.update(userExist, { fk_Rol: fk_Rol });
@@ -63,7 +63,7 @@ export const updateRole = async (req: Request, res: Response) => {
 
       if (result) {
         await insertBitacora({
-          nameTableAction: "user",
+          nameTableAction: 'user',
           nameRole: rolAdmin?.nameRol,
           idUser: userExist.idUser,
           userName: userExist.email,
@@ -89,4 +89,3 @@ export const updateRole = async (req: Request, res: Response) => {
     await queryRunner.release();
   }
 };
-

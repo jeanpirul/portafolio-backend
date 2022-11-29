@@ -1,10 +1,10 @@
-import { Request, Response } from "express";
-import { insertBitacora } from "./action.controller";
-import { error, success } from "../config/responseApi";
-import { Rol } from "../entities_DB/rol";
-import { User } from "../entities_DB/user";
-import { connectDB } from "../config/config";
-import * as jwt from "jsonwebtoken";
+import { Request, Response } from 'express';
+import { insertBitacora } from './action.controller';
+import { error, success } from '../config/responseApi';
+import { connectDB } from '../config/config';
+import { User } from '../entities_DB/user';
+import { Rol } from '../entities_DB/rol';
+import * as jwt from 'jsonwebtoken';
 
 export const getClients = async (req: Request, res: Response) => {
   try {
@@ -15,7 +15,7 @@ export const getClients = async (req: Request, res: Response) => {
     );
 
     !clientFound
-      ? res.status(404).json({ message: "No users found" })
+      ? res.status(404).json({ message: 'No users found' })
       : res.json({ listClient: clientFound });
   } catch (error) {
     console.log(error);
@@ -37,7 +37,7 @@ export const getClientByEmail = async (req: Request, res: Response) => {
     });
 
     !clientFound
-      ? res.status(404).json({ message: "Cliente-Usuario no encontrado" })
+      ? res.status(404).json({ message: 'Cliente-Usuario no encontrado' })
       : res.json({ listClient: clientFound });
   } catch (error) {
     console.log(error);
@@ -52,7 +52,7 @@ export const getClientByEmail = async (req: Request, res: Response) => {
 export const deleteUserByEmail = async (req: Request, res: Response) => {
   const queryRunner = connectDB.createQueryRunner();
   try {
-    console.log("Se ha solicitado la eliminación de una entidad Cliente.");
+    console.log('Se ha solicitado la eliminación de una entidad Cliente.');
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
@@ -61,8 +61,8 @@ export const deleteUserByEmail = async (req: Request, res: Response) => {
 
     const decodedToken: any = jwt.decode(
       req.headers.authorization
-        ? req.headers.authorization.toString().replace("Bearer ", "")
-        : ""
+        ? req.headers.authorization.toString().replace('Bearer ', '')
+        : ''
     );
 
     const clienteExist: any = await User.findOneBy({
@@ -76,7 +76,7 @@ export const deleteUserByEmail = async (req: Request, res: Response) => {
       const result: any = await User.delete(idUsuario);
       if (result) {
         await insertBitacora({
-          nameTableAction: "user",
+          nameTableAction: 'user',
           nameRole: getRol?.nameRol,
           idUser: decodedToken.idUser,
           userName: decodedToken.email,

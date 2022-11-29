@@ -1,11 +1,11 @@
-import { Request, Response } from "express";
-import { error, success } from "../config/responseApi";
-import { User } from "../entities_DB/user";
-import { insertBitacora } from "./action.controller";
-import { SECRET_KEY } from "../environment";
-import { Rol } from "../entities_DB/rol";
-import { connectDB } from "../config/config";
-import * as jwt from "jsonwebtoken";
+import { Request, Response } from 'express';
+import { error, success } from '../config/responseApi';
+import { insertBitacora } from './action.controller';
+import { SECRET_KEY } from '../environment';
+import { connectDB } from '../config/config';
+import { Rol } from '../entities_DB/rol';
+import { User } from '../entities_DB/user';
+import * as jwt from 'jsonwebtoken';
 
 export const createUser = async (req: Request, res: Response) => {
   const queryRunner = connectDB.createQueryRunner();
@@ -23,7 +23,7 @@ export const createUser = async (req: Request, res: Response) => {
 
     if (userFound) {
       return res.status(400).json({
-        error: "Email ya existe, no necesita registrarlo de nuevo.",
+        error: 'Email ya existe, no necesita registrarlo de nuevo.',
       });
     } else {
       // Asignamos el rol por defecto de Cliente para un nuevo Usuario.
@@ -42,12 +42,12 @@ export const createUser = async (req: Request, res: Response) => {
       const tokenUser = jwt.sign({ id: result.idUser }, SECRET_KEY, {
         expiresIn: 86400,
       });
-      console.log("token user ", tokenUser);
+      console.log('token user ', tokenUser);
 
       const getRol = await Rol.findOneBy({ idRol: rol });
 
       await insertBitacora({
-        nameTableAction: "user",
+        nameTableAction: 'user',
         nameRole: getRol?.nameRol,
         idUser: result.idUser,
         userName: result.email,
@@ -55,7 +55,7 @@ export const createUser = async (req: Request, res: Response) => {
       });
 
       res.status(201).json({
-        message: "Usuario registrado exitosamente!",
+        message: 'Usuario registrado exitosamente!',
         result,
       });
     }
@@ -63,13 +63,13 @@ export const createUser = async (req: Request, res: Response) => {
     await queryRunner.commitTransaction();
   } catch (error) {
     //check if error is a instance of Error
-    console.log("Error de creación", error);
+    console.log('Error de creación', error);
     // since we have errors let's rollback changes we made
     await queryRunner.rollbackTransaction();
     //send a json response with the error message
     res.status(500).json({
       //Database connection error
-      error: "Error en la base de datos al registrar un nuevo user!",
+      error: 'Error en la base de datos al registrar un nuevo user!',
     });
   } finally {
     // you need to release query runner which is manually created:
@@ -81,7 +81,7 @@ export const getUser = async (req: Request, res: Response) => {
   try {
     const user = await User.find();
     !user
-      ? res.status(404).json({ message: "No users found" })
+      ? res.status(404).json({ message: 'No users found' })
       : res.json({ listUser: user });
   } catch (error) {
     console.log(error);
@@ -105,7 +105,7 @@ export const getUserById = async (req: Request, res: Response) => {
     });
 
     !userFound
-      ? res.status(404).json({ message: "No user found" })
+      ? res.status(404).json({ message: 'No user found' })
       : res.json({ listUser: userFound });
   } catch (error) {
     console.log(error);
@@ -120,15 +120,15 @@ export const getUserById = async (req: Request, res: Response) => {
 export const updatePassword = async (req: Request, res: Response) => {
   const queryRunner = connectDB.createQueryRunner();
   try {
-    console.log("Se ha solicitado una actualización de la entidad User.");
+    console.log('Se ha solicitado una actualización de la entidad User.');
     const decodedToken: any = jwt.decode(
       req.headers.authorization
-        ? req.headers.authorization.toString().replace("Bearer ", "")
-        : ""
+        ? req.headers.authorization.toString().replace('Bearer ', '')
+        : ''
     );
     const { password, email } = req.body;
     if (!email)
-      return res.status(400).json({ message: "Parámetro Email no ingresado" });
+      return res.status(400).json({ message: 'Parámetro Email no ingresado' });
 
     const userExist: any = await User.findOneBy({
       email: email,
@@ -146,7 +146,7 @@ export const updatePassword = async (req: Request, res: Response) => {
       const getRol = await Rol.findOneBy({ idRol: rol });
       if (result) {
         await insertBitacora({
-          nameTableAction: "user",
+          nameTableAction: 'user',
           nameRole: getRol?.nameRol,
           idUser: userExist.idUser,
           userName: userExist.email,
@@ -181,7 +181,7 @@ export const deleteUser = async (req: Request, res: Response) => {
   try {
     await queryRunner.startTransaction();
     await queryRunner.connect();
-    console.log("Se ha solicitado la eliminación de una entidad User.");
+    console.log('Se ha solicitado la eliminación de una entidad User.');
     const { idUser } = req.params;
     if (!idUser) return res.status(404).json(await error(res.statusCode));
 
@@ -191,19 +191,19 @@ export const deleteUser = async (req: Request, res: Response) => {
 
     const decodedToken: any = jwt.decode(
       req.headers.authorization
-        ? req.headers.authorization.toString().replace("Bearer ", "")
-        : ""
+        ? req.headers.authorization.toString().replace('Bearer ', '')
+        : ''
     );
 
     await queryRunner.connect();
     await queryRunner.startTransaction();
-    
+
     if (userExist) {
       const result: any = await User.delete(idUser);
 
       if (result) {
         await insertBitacora({
-          nameTableAction: "user",
+          nameTableAction: 'user',
           nameRole: decodedToken.nameRole,
           idUser: decodedToken.idUser,
           userName: decodedToken.userName,

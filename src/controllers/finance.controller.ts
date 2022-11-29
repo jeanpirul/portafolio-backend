@@ -6,7 +6,6 @@ import { connectDB } from '../config/config';
 import * as jwt from 'jsonwebtoken';
 import { User } from '../entities_DB/user';
 import { Rol } from '../entities_DB/rol';
-import PDFDocument from 'pdfkit';
 import fs from 'fs';
 import { insertActionFinanza } from './actionFinanza.controller';
 
@@ -90,32 +89,6 @@ export const getFinance = async (req: Request, res: Response) => {
     !finance
       ? res.status(404).json({ message: 'Detail Finance not found' })
       : res.json({ listFinance: finance });
-
-    // const doc = new PDFDocument({ bufferPages: true });
-    // const filename = `Factura-${Date.now()}.pdf`;
-    // const stream = res.setHeader('Content-Type', 'application/pdf; charset=utf-8');
-
-    // const stream = res.writeHead(200, {
-    //   'Content-Type': 'application/pdf; charset=utf-8',
-    //   'Content-Disposition': `attachment; filename=${filename}}`,
-    // });
-    // res.write(stream);
-
-    // doc.on('data', (data) => {
-    //   stream.write(data);
-    // });
-
-    // doc.on('end', () => {
-    //   stream.end();
-    // });
-    // const fileURL = new URL(process.argv[1]);
-    // const namePath = fileURL.pathname.split("\\").slice(1,4);
-    // console.log('namePath ', namePath);
-
-    // doc.pipe(fs.createWriteStream(filename));
-
-    // doc.text('prueba pdf', 30, 30);
-    // doc.end();
   } catch (err) {
     //check if error is instance of Error
     console.log(error);
