@@ -31,6 +31,19 @@ router.get(
 );
 
 // ACTION: BodegaRole
+// METHOD: GET
+//http://localhost:4000/bodega/bodegaRole/getProductById/
+router.get(
+  '/bodegaRole/getProductById/:idProduct',
+  [JWTVerifyToken.verifyToken, JWTVerifyToken.esBodega],
+  async (req: Request, res: Response) => {
+    //este endpoint permite listar todos productos disponibles segun el id.
+    //   await actionController.readAction(req, res);
+    await productCtrl.getProductById(req, res);
+  }
+);
+
+// ACTION: BodegaRole
 // METHOD: PATCH
 //http://localhost:4000/products/bodegaRole/updateProduct/:id
 router.patch(
