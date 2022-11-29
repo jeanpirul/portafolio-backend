@@ -32,8 +32,6 @@
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.19",
-    "pdfkit": "^0.13.0",
-    "pdfkit-construct": "^1.2.3",
     "pg": "^8.8.0",
     "typeorm": "^0.3.9"
   },

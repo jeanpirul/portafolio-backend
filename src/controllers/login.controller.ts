@@ -1,10 +1,10 @@
-import { Request, Response } from "express";
-import { SECRET_KEY } from "../environment";
-import { error } from "../config/responseApi";
-import { User } from "../entities_DB/user";
-import * as jwt from "jsonwebtoken";
-import("../config/config");
-import { serialize } from "cookie";
+import { Request, Response } from 'express';
+import { SECRET_KEY } from '../environment';
+import { error } from '../config/responseApi';
+import { User } from '../entities_DB/user';
+import * as jwt from 'jsonwebtoken';
+import('../config/config');
+import { serialize } from 'cookie';
 
 export const login = async (req: Request, res: Response) => {
   try {
@@ -25,7 +25,7 @@ export const login = async (req: Request, res: Response) => {
       );
 
       if (!matchPassword)
-        return res.status(401).json({ message: "Contraseña inválida." });
+        return res.status(401).json({ message: 'Contraseña inválida.' });
 
       //Devolverá un objeto json con la respuesta el token que utilizaremos para las acciones necesarias segun el rol
       const tokenUser = jwt.sign(
@@ -40,30 +40,30 @@ export const login = async (req: Request, res: Response) => {
           expiresIn: 86400,
         }
       );
-      
-      const serialized = serialize("tokenUser", tokenUser, {
+
+      const serialized = serialize('tokenUser', tokenUser, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
         maxAge: 1000 * 60 * 60 * 24 * 30,
-        path: "/",
+        path: '/',
       });
 
-      res.setHeader("Set-Cookie", serialized);
+      res.setHeader('Set-Cookie', serialized);
 
       res
         .status(200)
-        .json({ message: "Token Generado correctamente!", tokenUser });
+        .json({ message: 'Token Generado correctamente!', tokenUser });
     } else {
       //indicará un error de parametros.
       res.status(400).json({
-        message: "Usuario no existe, por favor registrarse en la Aplicación.",
+        message: 'Usuario no existe, por favor registrarse en la Aplicación.',
       });
     }
   } catch (err) {
     res
       .status(404)
-      .send("Usuario no existe, por favor registrarse en la Aplicación.")
+      .send('Usuario no existe, por favor registrarse en la Aplicación.')
       .json(await error(res.statusCode));
   }
 };

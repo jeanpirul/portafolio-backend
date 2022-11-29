@@ -5,9 +5,10 @@ import { Product } from '../entities_DB/product';
 import { Plato } from '../entities_DB/platos';
 import { PlatoProduct } from '../entities_DB/platosProduct';
 import { connectDB } from '../config/config';
-import { insertProducto } from './action.controller';
 import { Rol } from '../entities_DB/rol';
 import { insertActionBodega } from './actionBodega.controller';
+import { insertProducto } from './bodega.controller';
+import { insertBitacora } from './action.controller';
 
 export const crearPedido = async (req: Request, res: Response) => {
   try {
@@ -35,7 +36,10 @@ export const nuevoPlato = async (req: Request, res: Response) => {
   try {
     await queryRunner.connect();
     await queryRunner.startTransaction();
+
     const { nombrePlato, precioPlato, productos } = req.body;
+    if (!nombrePlato || !precioPlato || !productos)
+      return res.status(400).json(await error(res.statusCode));
 
     const decodedToken: any = jwt.decode(
       req.headers.authorization
@@ -64,6 +68,15 @@ export const nuevoPlato = async (req: Request, res: Response) => {
 
       const getRol = await Rol.findOneBy({ idRol: decodedToken.idRol });
       let totalPagar = prod.cantidad * prod.precio;
+
+      await insertBitacora({
+        nameTableAction: 'product',
+        nameRole: getRol?.nameRol,
+        idUser: decodedToken.idUser,
+        userName: decodedToken.userName,
+        actionDetail: `El ${getRol?.nameRol} creó una solicitud de nuevos productos para el Bodeguero por un monto de: ${totalPagar}.`,
+      });
+
       await insertActionBodega({
         nombreResponsable: decodedToken.userName,
         nombreRol: getRol?.nameRol,

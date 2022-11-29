@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
 import { error, success } from '../config/responseApi';
-import { User } from '../entities_DB/user';
 import { insertBitacora } from './action.controller';
 import { SECRET_KEY } from '../environment';
-import { Rol } from '../entities_DB/rol';
 import { connectDB } from '../config/config';
+import { Rol } from '../entities_DB/rol';
+import { User } from '../entities_DB/user';
 import * as jwt from 'jsonwebtoken';
 
 export const createUser = async (req: Request, res: Response) => {

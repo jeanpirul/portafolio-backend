@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { insertBitacora } from './action.controller';
 import { error, success } from '../config/responseApi';
 import { connectDB } from '../config/config';
-import { Product } from '../entities_DB/product';
 import { User } from '../entities_DB/user';
 import { Rol } from '../entities_DB/rol';
 import * as jwt from 'jsonwebtoken';

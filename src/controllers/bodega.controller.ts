@@ -1,11 +1,24 @@
 import { Request, Response } from 'express';
-import { Product } from '../entities_DB/product';
 import { insertBitacora } from './action.controller';
-import * as jwt from 'jsonwebtoken';
 import { error, success } from '../config/responseApi';
-import { Rol } from '../entities_DB/rol';
-import { connectDB } from '../config/config';
 import { insertActionBodega } from './actionBodega.controller';
+import { connectDB } from '../config/config';
+import { Product } from '../entities_DB/product';
+import { Rol } from '../entities_DB/rol';
+import * as jwt from 'jsonwebtoken';
+import { InsertProducto } from '../models/producto.interface';
+import { InsertResult } from 'typeorm';
+
+export const insertProducto = async (
+  producto: InsertProducto
+): Promise<InsertResult> => {
+  try {
+    const resultado = await Product.insert(producto);
+    return resultado;
+  } catch (err) {
+    throw err;
+  }
+};
 
 export const createProduct = async (req: Request, res: Response) => {
   const queryRunner = connectDB.createQueryRunner();
