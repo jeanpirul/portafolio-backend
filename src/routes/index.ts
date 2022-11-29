@@ -10,6 +10,7 @@ import actionBodega from "./actionBodega";
 import actionFinanza from "./actionFinanza";
 import actionCocina from "./actionCocina";
 import actionCliente from "./actionCliente";
+import actionPedido from "./actionPedido";
 
 export const routes = {
   client,
@@ -23,5 +24,6 @@ export const routes = {
   actionBodega,
   actionFinanza,
   actionCocina,
-  actionCliente
+  actionCliente,
+  actionPedido
 };
