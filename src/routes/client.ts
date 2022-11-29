@@ -18,8 +18,7 @@ router.post(
   }
 );
 
-
-// ACTION: nueov plato
+// ACTION: Listar todos los platos
 // METHOD: POST
 //http://localhost:4000/client/cocinaRole/nuevoPlato/
 router.post(
@@ -30,6 +29,22 @@ router.post(
     await pedidoController.nuevoPlato(req, res);
   }
 );
+
+// ACTION: nueov plato
+// METHOD: GET
+//http://localhost:4000/client/getPlatos
+router.get('/getPlatos', async (req: Request, res: Response) => {
+  //Este endpoint permite generar nuevos pedidos por parte del cliente
+  await pedidoController.getPlatos(req, res);
+});
+
+// ACTION: Listar platos by id plato
+// METHOD: GET
+//http://localhost:4000/client/getPlatosById/idPlato
+router.get('/getPlatosById/:idPlato', async (req: Request, res: Response) => {
+  //Este endpoint permite generar nuevos pedidos por parte del cliente
+  await pedidoController.getPlatoById(req, res);
+});
 
 // ACTION: GetClient
 // METHOD: GET

@@ -104,6 +104,42 @@ export const nuevoPlato = async (req: Request, res: Response) => {
   }
 };
 
+export const getPlatos = async (req: Request, res: Response) => {
+  try {
+    const findAllPlatos = await Plato.find();
+
+    //Si no existen datos los productos, recibiremos un error por consola, indicando que no existen.
+    !findAllPlatos
+      ? res.status(404).json({ message: 'Platos not found.' })
+      : res.json({ listPlatoss: findAllPlatos });
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getPlatoById = async (req: Request, res: Response) => {
+  try {
+    const { idPlato } = req.params;
+    if (!idPlato) return res.status(400).json(await error(res.statusCode));
+
+    const plato = await Plato.query(
+      `select * from public.plato where "idPlato" = $1;`,
+      [Number(idPlato)]
+    );
+
+    !plato
+      ? res.status(404).json({ message: 'Plato not found' })
+      : res.json({ listPlato: plato });
+  } catch (error) {
+    console.log(error);
+    //check if error is instance of Error
+    if (error instanceof Error) {
+      //send a json response with the error message
+      return res.status(500).json({ message: error.message });
+    }
+  }
+};
+
 export const updateCantidad = async (req: Request, res: Response) => {
   const { idProduct, cantidad } = req.body;
 
