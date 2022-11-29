@@ -3,7 +3,6 @@ import { InsertResult } from "typeorm";
 import { error, success } from "../config/responseApi";
 import { ActionCliente } from "../entities_DB/actionCliente";
 
-
 export const createActionCliente = async (
   req: Request,
   res: Response

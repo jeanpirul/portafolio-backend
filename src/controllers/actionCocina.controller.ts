@@ -1,15 +1,15 @@
-import { Request, Response } from "express";
-import { InsertResult } from "typeorm";
-import { error, success } from "../config/responseApi";
-import { ActionCocina } from "../entities_DB/actionCocina";
-import { IActionCocina } from "../models/insertActionCocina";
+import { Request, Response } from 'express';
+import { InsertResult } from 'typeorm';
+import { error, success } from '../config/responseApi';
+import { ActionCocina } from '../entities_DB/actionCocina';
+import { IActionCocina } from '../models/insertActionCocina';
 
 export const createActionCocina = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
   try {
-    console.log("Se ha solicitado una creación de la entidad actionCocina");
+    console.log('Se ha solicitado una creación de la entidad actionCocina');
 
     const {
       nombreResponsable,
@@ -18,7 +18,7 @@ export const createActionCocina = async (
       estadoPedido,
       listoEntrega,
       pedidoEntregado,
-      detalleActionCocina
+      detalleActionCocina,
     } = req.body;
 
     if (
@@ -49,7 +49,7 @@ export const readActionCocina = async (
 ): Promise<Response> => {
   try {
     const result: any = await ActionCocina.find({
-      order: { fecha: "DESC" },
+      order: { fecha: 'DESC' },
     });
     return result
       ? res.status(200).json(await success({ data: result }, res.statusCode))
