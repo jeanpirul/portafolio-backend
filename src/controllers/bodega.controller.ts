@@ -92,13 +92,35 @@ export const getProduct = async (req: Request, res: Response) => {
   try {
     const findAllProducts = await Product.find();
 
-    console.log('findAllProducts ', findAllProducts);
     //Si no existen datos los productos, recibiremos un error por consola, indicando que no existen.
     !findAllProducts
       ? res.status(404).json({ message: 'Products not found.' })
       : res.json({ listProducts: findAllProducts });
   } catch (error) {
     throw error;
+  }
+};
+
+export const getProductById = async (req: Request, res: Response) => {
+  try {
+    const { idProduct } = req.params;
+    if (!idProduct) return res.status(400).json(await error(res.statusCode));
+
+    const product = await Product.query(
+      `select * from public.product where "idProduct" = $1;`,
+      [Number(idProduct)]
+    );
+
+    !product
+      ? res.status(404).json({ message: 'Product not found' })
+      : res.json({ listProduct: product });
+  } catch (error) {
+    console.log(error);
+    //check if error is instance of Error
+    if (error instanceof Error) {
+      //send a json response with the error message
+      return res.status(500).json({ message: error.message });
+    }
   }
 };
 
