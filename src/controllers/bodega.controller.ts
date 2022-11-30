@@ -52,7 +52,7 @@ export const createProduct = async (req: Request, res: Response) => {
       await insertBitacora({
         nameTableAction: 'product',
         nameRole: getRol?.nameRol,
-        idUser: decodedToken.idUser,
+        fk_User: decodedToken.idUser,
         userName: decodedToken.email,
         actionDetail: `El usuario "${decodedToken.userName}" con rol ${getRol?.nameRol} realizó la creación del producto "${result.nombreProducto}".`,
       });
@@ -60,6 +60,7 @@ export const createProduct = async (req: Request, res: Response) => {
       let totalPago = result.cantidad * result.precio;
 
       await insertActionBodega({
+        fk_User: decodedToken.idUser,
         nombreResponsable: decodedToken.userName,
         nombreRol: getRol?.nameRol,
         nombreProducto: result.nombreProducto,
@@ -157,7 +158,7 @@ export const updateProduct = async (req: Request, res: Response) => {
         await insertBitacora({
           nameTableAction: 'product',
           nameRole: getRol?.nameRol,
-          idUser: decodedToken.idUser,
+          fk_User: decodedToken.idUser,
           userName: decodedToken.userName,
           actionDetail: `El responsable de la caja: "${decodedToken.userName}" actualizo parámetros del producto con ${productFound.nombreProducto} a cargo.`,
         });
@@ -165,6 +166,7 @@ export const updateProduct = async (req: Request, res: Response) => {
         let totalPago = productFound.cantidad * productFound.precio;
 
         await insertActionBodega({
+          fk_User: decodedToken.idUser,
           nombreResponsable: decodedToken.userName,
           nombreRol: getRol?.nameRol,
           nombreProducto: productFound.nombreProducto,
@@ -224,12 +226,13 @@ export const deleteProduct = async (req: Request, res: Response) => {
         await insertBitacora({
           nameTableAction: 'producto',
           nameRole: getRol?.nameRol,
-          idUser: decodedToken.idUser,
+          fk_User: decodedToken.idUser,
           userName: decodedToken.email,
           actionDetail: `El ${getRol?.nameRol} "${decodedToken.email}" eliminó el producto "${productExist.nombreProducto}" `,
         });
 
         await insertActionBodega({
+          fk_User: decodedToken.idUser,
           nombreResponsable: decodedToken.userName,
           nombreRol: getRol?.nameRol,
           nombreProducto: productExist.nombreProducto,

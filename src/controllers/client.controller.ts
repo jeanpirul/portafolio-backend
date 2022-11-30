@@ -78,7 +78,7 @@ export const deleteUserByEmail = async (req: Request, res: Response) => {
         await insertBitacora({
           nameTableAction: 'user',
           nameRole: getRol?.nameRol,
-          idUser: decodedToken.idUser,
+          fk_User: decodedToken.idUser,
           userName: decodedToken.email,
           actionDetail: `El administrador "${decodedToken.userName}" eliminó el cliente con Email: "${clienteExist.email}"`,
         });

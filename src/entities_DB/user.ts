@@ -13,6 +13,12 @@ import { Rol } from './rol';
 import { Product } from './product';
 import { Finance } from './finance';
 import { Pedido } from './pedido';
+import { Action } from './action';
+import { ActionBodega } from './actionBodega';
+import { ActionCliente } from './actionCliente';
+import { ActionCocina } from './actionCocina';
+import { ActionFinanza } from './actionFinanza';
+import { ActionPedido } from './actionPedido';
 
 @Entity('user')
 export class User extends BaseEntity {
@@ -46,6 +52,24 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Pedido, (pedido) => pedido.user)
   pedido: Pedido;
+
+  @OneToMany(() => Action, (action) => action.user)
+  action: Action;
+
+  @OneToMany(() => ActionBodega, (actionBodega) => actionBodega.user)
+  actionBodega: ActionBodega;
+
+  @OneToMany(() => ActionCliente, (actionCliente) => actionCliente.user)
+  actionCliente: ActionCliente;
+
+  @OneToMany(() => ActionCocina, (actionCocina) => actionCocina.user)
+  actionCocina: ActionCocina;
+
+  @OneToMany(() => ActionFinanza, (actionFinanza) => actionFinanza.user)
+  actionFinanza: ActionFinanza;
+
+  @OneToMany(() => ActionPedido, (actionPedido) => actionPedido.user)
+  actionPedido: ActionPedido;
 
   static encryptPassword = async (password: string) => {
     const salt = await bcrypt.genSalt(10);

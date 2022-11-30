@@ -43,7 +43,7 @@ export const createFinance = async (req: Request, res: Response) => {
       await insertBitacora({
         nameTableAction: 'finance',
         nameRole: getRol?.nameRol,
-        idUser: decodedToken.idUser,
+        fk_User: decodedToken.idUser,
         userName: decodedToken.userName,
         actionDetail: `El Responsable ${decodedToken.userName} con Rol ${getRol?.nameRol} registro una nueva finanza.`,
       });
@@ -51,6 +51,7 @@ export const createFinance = async (req: Request, res: Response) => {
       let totalVentas = totalIncome - totalExpenses;
 
       await insertActionFinanza({
+        fk_User: decodedToken.idUser,
         nombreResponsable: decodedToken.userName,
         nombreRol: getRol?.nameRol,
         totalIngresos: totalIncome,
@@ -153,7 +154,7 @@ export const updateFinance = async (req: Request, res: Response) => {
         await insertBitacora({
           nameTableAction: 'finance',
           nameRole: getRol?.nameRol,
-          idUser: decodedToken.idUser,
+          fk_User: decodedToken.idUser,
           userName: decodedToken.userName,
           actionDetail: `El Responsable ${decodedToken.userName} con Rol ${getRol?.nameRol} actualizo la finanza con id ${financeExist[0].idFinance}.`,
         });
@@ -161,6 +162,7 @@ export const updateFinance = async (req: Request, res: Response) => {
         let totalVentas = totalIncome - totalExpenses;
 
         await insertActionFinanza({
+          fk_User: decodedToken.idUser,
           nombreResponsable: decodedToken.userName,
           nombreRol: getRol?.nameRol,
           totalIngresos: totalIncome,
@@ -218,7 +220,7 @@ export const deleteFinance = async (req: Request, res: Response) => {
         await insertBitacora({
           nameTableAction: 'finance',
           nameRole: getRol?.nameRol,
-          idUser: decodedToken.idUser,
+          fk_User: decodedToken.idUser,
           userName: decodedToken.email,
           actionDetail: `El Responsable ${decodedToken.userName} con Rol ${getRol?.nameRol} elimino la entrada con id ${financeExist[0].idFinance}.`,
         });
@@ -226,6 +228,7 @@ export const deleteFinance = async (req: Request, res: Response) => {
         let total = financeExist[0].totalIncome - financeExist[0].totalExpenses;
 
         await insertActionFinanza({
+          fk_User: decodedToken.idUser,
           nombreResponsable: decodedToken.userName,
           nombreRol: getRol?.nameRol,
           totalIngresos: financeExist[0].totalIncome,

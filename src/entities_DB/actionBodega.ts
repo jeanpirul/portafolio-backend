@@ -1,4 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  BaseEntity,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
+import { User } from './user';
 
 @Entity('actionBodega')
 export class ActionBodega extends BaseEntity {
@@ -7,6 +15,9 @@ export class ActionBodega extends BaseEntity {
 
   @Column({ type: 'varchar', length: 80, nullable: true })
   public nombreResponsable: string;
+
+  @Column({ type: 'int4', nullable: true })
+  public fk_User: string;
 
   @Column({ type: 'varchar', length: 100, nullable: true })
   public nombreRol: string;
@@ -32,4 +43,8 @@ export class ActionBodega extends BaseEntity {
 
   @Column({ type: 'varchar', length: 200, nullable: true })
   public detalleActionBodega: string;
+
+  @ManyToOne(() => User, (user) => user.idUser)
+  @JoinColumn([{ name: 'fk_User', referencedColumnName: 'idUser' }])
+  user: User[];
 }
