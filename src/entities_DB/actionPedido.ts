@@ -1,17 +1,15 @@
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import { User } from './user';
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from 'typeorm';
 
-@Entity('pedido')
-export class Pedido extends BaseEntity {
+@Entity('actionPedido')
+export class ActionPedido extends BaseEntity {
   @PrimaryGeneratedColumn({ type: 'int4' })
-  public idPedido: number;
+  public idActionPedido: number;
+
+  @Column({ type: 'varchar', length: 80, nullable: true })
+  public nombreResponsable: string;
+
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  public nombreRol: string;
 
   @Column({ type: 'varchar', length: 50, nullable: true })
   public nombrePedido: string;
@@ -41,10 +39,6 @@ export class Pedido extends BaseEntity {
   })
   public fecha?: Date;
 
-  @Column({ type: 'int4', nullable: true })
-  public fk_User: number;
-
-  @ManyToOne(() => User, (user) => user.idUser)
-  @JoinColumn([{ name: 'fk_User', referencedColumnName: 'idUser' }])
-  user: User[];
+  @Column({ type: 'varchar', length: 200, nullable: true })
+  public detalleActionPedido: string;
 }

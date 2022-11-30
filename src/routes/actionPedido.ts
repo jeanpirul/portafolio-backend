@@ -1,18 +1,18 @@
 import express, { Request, Response } from 'express';
-import * as actionFinanzaCTRL from '../controllers/actionFinanza.controller';
+import * as actionPedidoCTRL from '../controllers/actionPedido.controller';
 import * as JWTVerifyToken from '../config/tokenMiddleware';
 
 const router = express.Router();
 
 // ACTION: CREATE
 // METHOD: POST
-//http://localhost:4000/actionFinanza/create/createActionFinanza
+//http://localhost:4000/actionPedido/create/createActionPedido
 router.post(
-  '/create/createActionFinanza',
-  [JWTVerifyToken.verifyToken, JWTVerifyToken.esFinanza],
+  '/create/createActionPedido',
+  [JWTVerifyToken.verifyToken, JWTVerifyToken.esCliente],
   async (req: Request, res: Response) => {
     //este endpoint permite crear una nueva acción
-    await actionFinanzaCTRL.createActionFinanza(req, res);
+    await actionPedidoCTRL.createActionPedido(req, res);
   }
 );
 

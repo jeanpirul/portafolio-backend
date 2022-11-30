@@ -39,12 +39,19 @@ export const createUser = async (req: Request, res: Response) => {
         fk_Rol: rol,
       });
 
-      const tokenUser = jwt.sign({ id: result.idUser }, SECRET_KEY, {
-        expiresIn: 86400,
-      });
-      console.log('token user ', tokenUser);
-
       const getRol = await Rol.findOneBy({ idRol: rol });
+      const tokenUser = jwt.sign(
+        {
+          id: result.idUser,
+          idRol: getRol?.idRol,
+          email: result.email,
+          userName: result.userName,
+        },
+        SECRET_KEY,
+        {
+          expiresIn: 86400,
+        }
+      );
 
       await insertBitacora({
         nameTableAction: 'user',

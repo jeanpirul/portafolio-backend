@@ -1,36 +1,44 @@
 import { Request, Response } from 'express';
 import { InsertResult } from 'typeorm';
 import { error, success } from '../config/responseApi';
-import { ActionCliente } from '../entities_DB/actionCliente';
-import { IActionCliente } from '../models/insertActionCliente';
+import { ActionPedido } from '../entities_DB/actionPedido';
+import { IActionPedido } from '../models/insertActionPedido';
 
-export const createActionCliente = async (
+export const createActionPedido = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
   try {
-    console.log('Se ha solicitado una creación de la entidad actionCliente');
+    console.log('Se ha solicitado una creación de la entidad actionPedido');
 
     const {
       nombreResponsable,
       nombreRol,
       nombrePedido,
-      estadoPedido,
-      pedidoEntregado,
-      detalleActionCliente,
+      cantidad,
+      precio,
+      total,
+      tipoPago,
+      mesa,
+      cantidadPersonas,
+      detalleActionPedido,
     } = req.body;
 
     if (
       !nombreResponsable ||
       !nombreRol ||
       !nombrePedido ||
-      !estadoPedido ||
-      !pedidoEntregado ||
-      !detalleActionCliente
+      !cantidad ||
+      !precio ||
+      !total ||
+      !tipoPago ||
+      !mesa ||
+      !cantidadPersonas ||
+      !detalleActionPedido
     )
       return res.status(400).json(await error(res.statusCode));
 
-    const result = await ActionCliente.save(req.body);
+    const result = await ActionPedido.save(req.body);
 
     return result
       ? res.status(201).json(await success({ data: result }, res.statusCode))
@@ -41,12 +49,12 @@ export const createActionCliente = async (
   }
 };
 
-export const readActionCliente = async (
+export const readActionPedido = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
   try {
-    const result: any = await ActionCliente.find({
+    const result: any = await ActionPedido.find({
       order: { fecha: 'DESC' },
     });
     return result
@@ -57,11 +65,11 @@ export const readActionCliente = async (
   }
 };
 
-export const insertActionCliente = async (
-  action: IActionCliente
+export const insertActionPedido = async (
+  actionPedido: IActionPedido
 ): Promise<InsertResult> => {
   try {
-    const resultado = await ActionCliente.insert(action);
+    const resultado = await ActionPedido.insert(actionPedido);
     return resultado;
   } catch (err) {
     throw err;
