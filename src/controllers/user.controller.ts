@@ -56,7 +56,7 @@ export const createUser = async (req: Request, res: Response) => {
       await insertBitacora({
         nameTableAction: 'user',
         nameRole: getRol?.nameRol,
-        idUser: result.idUser,
+        fk_User: result.idUser,
         userName: result.email,
         actionDetail: `Creación de nuevo user con email: "${result.email}"`,
       });
@@ -155,7 +155,7 @@ export const updatePassword = async (req: Request, res: Response) => {
         await insertBitacora({
           nameTableAction: 'user',
           nameRole: getRol?.nameRol,
-          idUser: userExist.idUser,
+          fk_User: userExist.idUser,
           userName: userExist.email,
           actionDetail: `El Usuario "${
             decodedToken.email || userExist.email
@@ -212,7 +212,7 @@ export const deleteUser = async (req: Request, res: Response) => {
         await insertBitacora({
           nameTableAction: 'user',
           nameRole: decodedToken.nameRole,
-          idUser: decodedToken.idUser,
+          fk_User: decodedToken.idUser,
           userName: decodedToken.userName,
           actionDetail: `El Administrador "${decodedToken.userName}" elimino al usuario: "${userExist.userName}" exitosamente. `,
         });

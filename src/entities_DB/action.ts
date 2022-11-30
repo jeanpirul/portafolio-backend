@@ -1,4 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  BaseEntity,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
+import { User } from './user';
 
 @Entity('action')
 export class Action extends BaseEntity {
@@ -8,11 +16,11 @@ export class Action extends BaseEntity {
   @Column({ type: 'varchar', length: 50, nullable: false })
   public nameTableAction: string;
 
+  @Column({ type: 'varchar', nullable: true })
+  public fk_User: string;
+
   @Column({ type: 'varchar', length: 100, nullable: true })
   public nameRole: string[] | string;
-
-  @Column({ type: 'varchar', length: 100, nullable: false })
-  public idUser: string;
 
   @Column({
     type: 'timestamp',
@@ -26,4 +34,8 @@ export class Action extends BaseEntity {
 
   @Column({ type: 'varchar', length: 100, nullable: false })
   public actionDetail: string;
+
+  @ManyToOne(() => User, (user) => user.idUser)
+  @JoinColumn([{ name: 'fk_User', referencedColumnName: 'idUser' }])
+  user: User[];
 }

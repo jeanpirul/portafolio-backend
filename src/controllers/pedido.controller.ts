@@ -60,12 +60,13 @@ export const crearPedido = async (req: Request, res: Response) => {
         await insertBitacora({
           nameTableAction: 'pedido',
           nameRole: getRol?.nameRol,
-          idUser: decodedToken.idUser,
+          fk_User: decodedToken.idUser,
           userName: decodedToken.email,
           actionDetail: `El ${getRol?.nameRol} "${decodedToken.userName}" realizó un pedido de "${plato}" pagando un total de $ ${totalPaga}.`,
         });
 
         await insertActionCliente({
+          fk_User: decodedToken.idUser,
           nombreResponsable: decodedToken.userName,
           nombreRol: getRol?.nameRol,
           nombrePedido: plato,
@@ -75,6 +76,7 @@ export const crearPedido = async (req: Request, res: Response) => {
         });
 
         await insertActionCocina({
+          fk_User: decodedToken.idUser,
           nombreResponsable: decodedToken.userName,
           nombreRol: getRol?.nameRol,
           nombrePedido: plato,
@@ -106,6 +108,7 @@ export const crearPedido = async (req: Request, res: Response) => {
         let totalEgresosFinanza = productoEncontrado.length * totalEgresos;
         let totalGananciaFinanza = totalPaga - totalEgresosFinanza;
         await insertActionFinanza({
+          fk_User: decodedToken.idUser,
           nombreResponsable: decodedToken.userName,
           nombreRol: getRol?.nameRol,
           totalIngresos: totalPaga,
@@ -115,6 +118,7 @@ export const crearPedido = async (req: Request, res: Response) => {
         });
 
         await insertActionPedido({
+          fk_User: decodedToken.idUser,
           nombreResponsable: decodedToken.userName,
           nombreRol: getRol?.nameRol,
           nombrePedido: plato,
@@ -189,12 +193,13 @@ export const nuevoPlato = async (req: Request, res: Response) => {
       await insertBitacora({
         nameTableAction: 'product',
         nameRole: getRol?.nameRol,
-        idUser: decodedToken.idUser,
+        fk_User: decodedToken.idUser,
         userName: decodedToken.userName,
         actionDetail: `El ${getRol?.nameRol} creó una solicitud de nuevos productos para el Bodeguero por un monto de: ${totalPagar}.`,
       });
 
       await insertActionBodega({
+        fk_User: decodedToken.idUser,
         nombreResponsable: decodedToken.userName,
         nombreRol: getRol?.nameRol,
         nombreProducto: prod.nombreProducto,

@@ -1,4 +1,5 @@
 export interface IActionBodega {
+  fk_User: string;
   nombreResponsable: string;
   nombreRol?: string;
   nombreProducto: string;

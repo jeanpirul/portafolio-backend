@@ -1,9 +1,20 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  BaseEntity,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
+import { User } from './user';
 
 @Entity('actionCliente')
 export class ActionCliente extends BaseEntity {
   @PrimaryGeneratedColumn({ type: 'int4' })
   public idActionCliente: number;
+
+  @Column({ type: 'int4', nullable: true })
+  public fk_User: number;
 
   @Column({ type: 'varchar', length: 80, nullable: true })
   public nombreResponsable: string;
@@ -29,4 +40,8 @@ export class ActionCliente extends BaseEntity {
 
   @Column({ type: 'varchar', length: 200, nullable: true })
   public detalleActionCliente: string;
+
+  @ManyToOne(() => User, (user) => user.idUser)
+  @JoinColumn([{ name: 'fk_User', referencedColumnName: 'idUser' }])
+  user: User[];
 }
