@@ -12,29 +12,29 @@ export const createActionPedido = async (
     console.log('Se ha solicitado una creación de la entidad actionPedido');
 
     const {
-        nombreResponsable,
-        nombreRol,
-        nombrePedido,
-        cantidad,
-        precio,
-        total,
-        tipoPago,
-        mesa,
-        cantidadPersonas,
-        detalleActionPedido,
+      nombreResponsable,
+      nombreRol,
+      nombrePedido,
+      cantidad,
+      precio,
+      total,
+      tipoPago,
+      mesa,
+      cantidadPersonas,
+      detalleActionPedido,
     } = req.body;
 
     if (
-        !nombreResponsable ||
-        !nombreRol ||
-        !nombrePedido ||
-        !cantidad ||
-        !precio ||
-        !total ||
-        !tipoPago ||
-        !mesa ||
-        !cantidadPersonas ||
-        !detalleActionPedido
+      !nombreResponsable ||
+      !nombreRol ||
+      !nombrePedido ||
+      !cantidad ||
+      !precio ||
+      !total ||
+      !tipoPago ||
+      !mesa ||
+      !cantidadPersonas ||
+      !detalleActionPedido
     )
       return res.status(400).json(await error(res.statusCode));
 
@@ -66,10 +66,10 @@ export const readActionPedido = async (
 };
 
 export const insertActionPedido = async (
-  action: IActionPedido
+  actionPedido: IActionPedido
 ): Promise<InsertResult> => {
   try {
-    const resultado = await ActionPedido.insert(action);
+    const resultado = await ActionPedido.insert(actionPedido);
     return resultado;
   } catch (err) {
     throw err;

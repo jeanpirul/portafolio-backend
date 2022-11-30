@@ -1,8 +1,8 @@
-import express, { Request, Response } from "express";
-import * as JWTVerifyToken from "../config/tokenMiddleware";
-import * as adminController from "../controllers/admin.controller";
-import * as actionController from "../controllers/action.controller";
-import * as clientController from "../controllers/client.controller";
+import express, { Request, Response } from 'express';
+import * as JWTVerifyToken from '../config/tokenMiddleware';
+import * as adminController from '../controllers/admin.controller';
+import * as actionController from '../controllers/action.controller';
+import * as clientController from '../controllers/client.controller';
 
 const router = express.Router();
 //http://localhost:4000/adminRole
@@ -11,7 +11,7 @@ const router = express.Router();
 // METHOD: PATCH
 //http://localhost:4000/adminRole/updateRole
 router.patch(
-  "/updateRole",
+  '/updateRole',
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],
   async (req: Request, res: Response) => {
     //Este endpoint permite actualizar los datos de cada clienmte existente en la base de datos
@@ -23,7 +23,7 @@ router.patch(
 // METHOD: GET
 //http://localhost:4000/adminRole/readAction
 router.get(
-  "/readAction",
+  '/readAction',
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],
   async (req: Request, res: Response) => {
     //este endpoint permite listar todas las acciones con autentificacion de usuario.
@@ -35,7 +35,7 @@ router.get(
 // METHOD: GET
 //http://localhost:4000/adminRole/getUserByEmail/:email
 router.get(
-  "/getUserByEmail/:email",
+  '/getUserByEmail/:email',
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],
   async (req: Request, res: Response) => {
     //Este endpoint permite listar 1 clientre existente en la base de datos por el ID
@@ -47,7 +47,7 @@ router.get(
 // METHOD: delete
 //http://localhost:4000/adminRole/deleteUserByEmail/:email
 router.delete(
-  "/deleteUserByEmail/:email",
+  '/deleteUserByEmail/:email',
   [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],
   async (req: Request, res: Response) => {
     /* Este endpoint permite eliminar los datos de cada cliente existente en la base de datos segun el id */

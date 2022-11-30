@@ -11,7 +11,7 @@ const router = express.Router();
 //http://localhost:4000/client/clientRole/crearPedido/
 router.post(
   '/clientRole/crearPedido/',
-  // [JWTVerifyToken.verifyToken, JWTVerifyToken.esAdmin],
+  [JWTVerifyToken.verifyToken, JWTVerifyToken.esCliente],
   async (req: Request, res: Response) => {
     //Este endpoint permite generar nuevos pedidos por parte del cliente
     await pedidoController.crearPedido(req, res);
@@ -30,21 +30,29 @@ router.post(
   }
 );
 
-// ACTION: nueov plato
+// ACTION: nuevo plato
 // METHOD: GET
 //http://localhost:4000/client/getPlatos
-router.get('/getPlatos', async (req: Request, res: Response) => {
-  //Este endpoint permite generar nuevos pedidos por parte del cliente
-  await pedidoController.getPlatos(req, res);
-});
+router.get(
+  '/getPlatos',
+  [JWTVerifyToken.verifyToken, JWTVerifyToken.esCliente],
+  async (req: Request, res: Response) => {
+    //Este endpoint permite generar nuevos pedidos por parte del cliente
+    await pedidoController.getPlatos(req, res);
+  }
+);
 
 // ACTION: Listar platos by id plato
 // METHOD: GET
 //http://localhost:4000/client/getPlatosById/idPlato
-router.get('/getPlatosById/:idPlato', async (req: Request, res: Response) => {
-  //Este endpoint permite generar nuevos pedidos por parte del cliente
-  await pedidoController.getPlatoById(req, res);
-});
+router.get(
+  '/getPlatosById/:idPlato',
+  [JWTVerifyToken.verifyToken, JWTVerifyToken.esCliente],
+  async (req: Request, res: Response) => {
+    //Este endpoint permite generar nuevos pedidos por parte del cliente
+    await pedidoController.getPlatoById(req, res);
+  }
+);
 
 // ACTION: GetClient
 // METHOD: GET

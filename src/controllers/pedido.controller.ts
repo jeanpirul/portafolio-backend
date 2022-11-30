@@ -9,12 +9,29 @@ import { Rol } from '../entities_DB/rol';
 import { insertActionBodega } from './actionBodega.controller';
 import { insertProducto } from './bodega.controller';
 import { insertBitacora } from './action.controller';
+import { Pedido } from '../entities_DB/pedido';
+import { insertActionCliente } from './actionCliente.controller';
+import { insertActionCocina } from './actionCocina.controller';
+import { insertActionFinanza } from './actionFinanza.controller';
+import { insertActionPedido } from './actionPedido.controller';
 
 export const crearPedido = async (req: Request, res: Response) => {
+  const queryRunner = connectDB.createQueryRunner();
   try {
-    const { nombrePlato, cantidad, precio, total, tipoPago } = req.body;
-    if (!nombrePlato || !cantidad || !precio || !total || !tipoPago)
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    const { nombrePlato, cantidad, tipoPago, mesa, cantidadPersonas } =
+      req.body;
+
+    if (!nombrePlato || !cantidad || !tipoPago || !mesa || !cantidadPersonas)
       return res.status(404).json(await error(res.statusCode));
+
+    const decodedToken: any = jwt.decode(
+      req.headers.authorization
+        ? req.headers.authorization.toString().replace('Bearer ', '')
+        : ''
+    );
 
     const platoEncontrado = await Plato.query(
       `select * from public.plato where "nombrePlato" = $1`,
@@ -22,12 +39,112 @@ export const crearPedido = async (req: Request, res: Response) => {
     );
 
     if (platoEncontrado[0]) {
-      console.log('platoEncontrado ', platoEncontrado);
+      let plato = platoEncontrado[0].nombrePlato;
+      let precio = platoEncontrado[0].precioPlato;
+      let fk_Plato = platoEncontrado[0].idPlato;
+      let totalPaga = cantidad * precio * cantidadPersonas;
+      const getRol = await Rol.findOneBy({ idRol: decodedToken.idRol });
+
+      const newPedido = await Pedido.save({
+        nombrePedido: plato,
+        cantidad: cantidad,
+        precio: precio,
+        total: totalPaga,
+        tipoPago: tipoPago,
+        mesa: mesa,
+        cantidadPersonas: cantidadPersonas,
+        fk_User: decodedToken.idUser,
+      });
+
+      if (newPedido) {
+        await insertBitacora({
+          nameTableAction: 'pedido',
+          nameRole: getRol?.nameRol,
+          idUser: decodedToken.idUser,
+          userName: decodedToken.email,
+          actionDetail: `El ${getRol?.nameRol} "${decodedToken.userName}" realizó un pedido de "${plato}" pagando un total de $ ${totalPaga}.`,
+        });
+
+        await insertActionCliente({
+          nombreResponsable: decodedToken.userName,
+          nombreRol: getRol?.nameRol,
+          nombrePedido: plato,
+          estadoPedido: 'Listo',
+          pedidoEntregado: true,
+          detalleActionCliente: `El ${getRol?.nameRol} "${decodedToken.userName}" realizó un pedido de "${plato}"`,
+        });
+
+        await insertActionCocina({
+          nombreResponsable: decodedToken.userName,
+          nombreRol: getRol?.nameRol,
+          nombrePedido: plato,
+          estadoPedido: 'Listo',
+          listoEntrega: true,
+          pedidoEntregado: true,
+          detalleActionCocina: `El ${getRol?.nameRol} "${decodedToken.userName}" realizó un pedido de "${plato}".`,
+        });
+
+        const productoEncontrado = await PlatoProduct.query(
+          `select * from "platoProduct" pp where "fk_Plato" = $1`,
+          [fk_Plato]
+        );
+
+        let totalGanancia = [];
+        for (const ganancia of productoEncontrado) {
+          let idProducto = ganancia.fk_Product;
+          const valorProducto = await PlatoProduct.query(
+            `select precio from product where "idProduct"  = $1`,
+            [idProducto]
+          );
+          let addNewValue = valorProducto[0].precio;
+          totalGanancia.push(addNewValue);
+        }
+
+        let totalEgresos = 0;
+        for (const sumaValores of totalGanancia) totalEgresos += sumaValores;
+
+        let totalEgresosFinanza = productoEncontrado.length * totalEgresos;
+        let totalGananciaFinanza = totalPaga - totalEgresosFinanza;
+        await insertActionFinanza({
+          nombreResponsable: decodedToken.userName,
+          nombreRol: getRol?.nameRol,
+          totalIngresos: totalPaga,
+          totalEgresos: totalEgresosFinanza,
+          totalGanancia: totalGananciaFinanza,
+          detalleActionFinanza: `El ${getRol?.nameRol} "${decodedToken.userName}" realizó un pedido de "${plato}", pagando un total de: ${totalPaga}`,
+        });
+
+        await insertActionPedido({
+          nombreResponsable: decodedToken.userName,
+          nombreRol: getRol?.nameRol,
+          nombrePedido: plato,
+          cantidad: cantidad,
+          precio: precio,
+          total: totalPaga,
+          tipoPago: tipoPago,
+          mesa: mesa,
+          cantidadPersonas: cantidadPersonas,
+          detalleActionPedido: `El ${getRol?.nameRol} "${decodedToken.userName}" realizó un pedido de "${plato}", pagando un total de: ${totalPaga}`,
+        });
+      }
+      res.status(201).json({
+        message: 'El pedido se realizó exitosamente!',
+      });
     } else {
-      console.log('NO EXISTE EL PLATO KULIAO');
+      res.status(400).json({
+        message: 'No se pudo realizar el registro de un nuevo Pedido!',
+      });
     }
-  } catch (error) {
-    throw error;
+    // commit transaction now:
+    await queryRunner.commitTransaction();
+  } catch (err) {
+    // since we have errors let's rollback changes we made
+    await queryRunner.rollbackTransaction();
+    //Si ocurre algún error, nos entregará un error detallado en la consola.
+    return res.status(500).json(await error(res.statusCode));
+  } finally {
+    // you need to release query runner which is manually created:
+    await queryRunner.release();
   }
 };
 
