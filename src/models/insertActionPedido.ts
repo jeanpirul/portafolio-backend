@@ -6,7 +6,7 @@ export interface IActionPedido {
   precio: number;
   total: number;
   tipoPago: string;
-  mesa: string;
+  mesa: number;
   cantidadPersonas: number;
   detalleActionPedido: string;
 }

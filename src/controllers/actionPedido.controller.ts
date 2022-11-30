@@ -66,10 +66,10 @@ export const readActionPedido = async (
 };
 
 export const insertActionPedido = async (
-  action: IActionPedido
+  actionPedido: IActionPedido
 ): Promise<InsertResult> => {
   try {
-    const resultado = await ActionPedido.insert(action);
+    const resultado = await ActionPedido.insert(actionPedido);
     return resultado;
   } catch (err) {
     throw err;

@@ -1,14 +1,15 @@
-import { Request, Response } from "express";
-import { InsertResult } from "typeorm";
-import { error, success } from "../config/responseApi";
-import { ActionCliente } from "../entities_DB/actionCliente";
+import { Request, Response } from 'express';
+import { InsertResult } from 'typeorm';
+import { error, success } from '../config/responseApi';
+import { ActionCliente } from '../entities_DB/actionCliente';
+import { IActionCliente } from '../models/insertActionCliente';
 
 export const createActionCliente = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
   try {
-    console.log("Se ha solicitado una creación de la entidad actionCliente");
+    console.log('Se ha solicitado una creación de la entidad actionCliente');
 
     const {
       nombreResponsable,
@@ -46,7 +47,7 @@ export const readActionCliente = async (
 ): Promise<Response> => {
   try {
     const result: any = await ActionCliente.find({
-      order: { fecha: "DESC" },
+      order: { fecha: 'DESC' },
     });
     return result
       ? res.status(200).json(await success({ data: result }, res.statusCode))
@@ -57,7 +58,7 @@ export const readActionCliente = async (
 };
 
 export const insertActionCliente = async (
-  action: ActionCliente
+  action: IActionCliente
 ): Promise<InsertResult> => {
   try {
     const resultado = await ActionCliente.insert(action);

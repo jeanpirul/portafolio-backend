@@ -27,7 +27,7 @@ export class ActionPedido extends BaseEntity {
   public tipoPago: string;
 
   @Column({ type: 'varchar', nullable: true })
-  public mesa: string;
+  public mesa: number;
 
   @Column({ type: 'varchar', nullable: true })
   public cantidadPersonas: number;
