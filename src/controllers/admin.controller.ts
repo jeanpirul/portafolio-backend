@@ -65,7 +65,7 @@ export const updateRole = async (req: Request, res: Response) => {
         await insertBitacora({
           nameTableAction: 'user',
           nameRole: rolAdmin?.nameRol,
-          idUser: userExist.idUser,
+          fk_User: decodedToken.idUser,
           userName: userExist.email,
           actionDetail: `El Administrador ${decodedToken.email} actualizó el rol del usuario: ${userExist.email} a "${getRol?.nameRol}" `,
         });

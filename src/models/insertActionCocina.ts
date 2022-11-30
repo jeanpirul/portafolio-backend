@@ -1,4 +1,5 @@
 export interface IActionCocina {
+  fk_User: number;
   nombreResponsable: string;
   nombreRol?: string;
   nombrePedido: string;
