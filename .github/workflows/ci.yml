@@ -28,5 +28,4 @@ jobs:
       
     - run: npm i
     - run: npm run build --if-present
-    - run: npm run start
     - run: pm2 restart app
